@@ -53,3 +53,33 @@ p69
 - "At any moment there is just one square, say the r-th, bearing the symbol S (r) which is "in the machine". We call this square the "scanned square". The symbol on the scanned square may be called the "scanned symbol". The "scanned symbol" is the only one of which the machine is, so to speak, "directly aware"." So, the machine only reads a symbol at a time. The input is then atomic. Every action is done one at a time, and reading data is the same because it's one of the actions.
 
 p70
+
+- "However, by altering its m-configuration the machine can effectively remember some of the symbols which it has "seen" (scanned) previously." Memory retrieval is also encoded into the mconfs. Memory is also step-wise. This insistence on step-wise processes is the essence of algorithms (and perhaps constructible mathematics).
+
+- "The possible behaviour of the machine at any moment is determined by the m-configuration qn and then scanned symbol S (r). This pair qn, S (r) will be called the "configuration": thus the configuration determines the possible behaviour of the machine." Current mconf + position of the tape with associated symbol = configuration. Conf determines behaviour of the machine.
+
+- Actions that can be done by the machine: write a symbol (on a blank square, or also overwrite an existing one); erase scanned symbol. And change the square being scanned but only by one position, either left or right.
+
+p71
+
+- In addition, the m-configuration may be changed. Note: no symbol can be interpreted as a certain kind of symbol, so that erasing a symbol is merely writing this kind of symbol on the square.
+
+- "Some of the symbols written down will form the sequence of figures which is the decimal of the real number which is being computed. The others are just rough notes to "assist the memory". It will only be these rough notes which will be liable to erasure." Distinction between results and temporary calculations. A function produces and temporarily stores data that won't be outputted nor retained. Is this essential or are these temporary results *muda*?
+
+- "It is my contention that these operations include all those which are used in the computation of a number. The defense of this contention will be easier when the theory of the machines is familiar to the reader."
+
+p72
+
+- Section 2: Automatic machines.
+
+- "If at each stage the motion of a machine (in the sense of Section 1) is *completely* determined by the configuration, we shall call the machine an "automatic machine" (or a-machine)." Those are the default now.
+
+- "For some purposes we might use machines (choice machines or c-machines) whose motion is only partially determined by the configuration (hence the use of the word "possible" in Section 1)." A program waiting for input from the user is a c-machine.
+
+- "When such a machine reaches one of these ambiguous configurations, it cannot go on until some arbitrary choice has been made by an external operator. This would be the case if we were using machines to deal with axiomatic systems." Why do axioms require human and presumably non-algorithmic input? In any case, it's amazing that Turing is writing of "machines to deal with axiomatic systems."
+
+- "In this paper I deal only with automatic machines, and will therefore often omit the prefix a-."
+
+- "If an a-machine prints two kinds of symbols, of which the first kind (called figures) consists entirely of 0 and 1 (the others being called symbols of the second kind), then the machine will be called a computing machine." OK! An a-machine that prints *binary* numbers (figures, which are the end result) and also prints other symbols only for computation/scratchpad reasons, is a *computing machine*.
+
+p73
