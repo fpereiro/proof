@@ -103,3 +103,46 @@ p76
 - "If a computing machine never writes down more than a finite number of symbols of the first kind, it will be called *circular*. Otherwise it is said to be *circle-free*."
 
 - "A machine will be circular if it reaches a configuration from which there is no possible move, or if it goes on moving, and possibly printing symbols of the second kind, but cannot print any more symbols of the first kind. The significance of the term "circular" will be explained in Section 8." Petzold's note: "Turing wants his machines to keep printing digits *forever*. The circle-free machines are the good machiens. If a machine really wants to compute the binary equivalent of 1/4, it should print 0 and 1 and then continue printing 0s forever." Note: this is confusing at the beginning, because you'd expect a program to finish and give you the right result (assumption/axiom: program === computer). Definitely you don't want a program to compute 1/4 and keep on going forever. But by making correct programs keep on going forever, you only have two categories: programs that do what they are expected, and the ones that halt and do not. Otherwise you'd have three categories: programs that halt because they are done, programs that don't halt because they are doing the right thing (computing a periodic or trascendental number) and because of that cannot stop; and faulted programs. By making right programs keep on printing, even if it is an endless list of 0s, you simply divide it in two. Makes it so much easier. Also, though, it could be said that a program that keeps on printing 0s stops producing any useful information and is converting energy into 0s, but not energy into information.
+
+- "*Computable sequences and numbers*: A sequence is said to be computable if it can be computed by a circle-free machine. A machine is computable if it differes by an integer from the number computed by a circle-free machine." Number as sequence, the dot is irrelevant.
+
+p77
+
+- "We shall avoid confusion by speaking more often of computable sequences than of computable numbers."
+
+p79
+
+- "A machine can be constructed to compute the sequence 010101..."
+
+p79-80
+
+- "The machine is to have the for m-configurations b, c, k, e and is capable of printing "0" and "1". THe behavior of the machine is described in the following table in which "R" means "the machine moves so that it scans the square immediatelyon the right of the one it was scanning previously." Similarly for "L". "E" means "the scanned symbol is erased" and "P" stands for "prints"".
+
+p80
+
+- "This table (and all succeeding tables of the same kind) is to be understood to mean that for a configuration described in the first two columsn the operations in the third column are carried out successively, and the machine then goes over into the m-configuration described in the last column."
+
+- Petzold: "The table has four columns, separated into two pairs: 1) configuration: a) m-config; b) symbol; 2) behaviour: a) operations; b) final m-config." Note: configuration is input, behaviour is output; 1a) and 2b) pertain to the m-config; 1b) and 2a) pertain to the tape (both the symbols and the position). A Turing machine operates on itself. But so far it doesn't write its own m-configurations, otherwise it would be self-modifiable at that level too.
+
+- "When the second column is left blank, it is understood that the behaviour of the third and fourth columns applies for any symbol and no symbol." So, "any" symbol is anything except blank, and if the column itself is blank it means both any symbol and no symbol.
+
+- "The machine starts in the m-configuration b with a blank tape."
+
+p81
+
+- Petzold: "Turing's machines always start in m-configuration b (for *begin* (...)). Here's the long awaited machine:"
+
+```
+configuration         behaviour
+mconf   symbol   operations   final mconf
+b        none       P0, R         c
+c        none           R         k
+k        none       P1, R         f
+f        none           R         b
+```
+
+- Petzold: "Although the tape is theoretically infinite in both directions, the machines that turing describes in this paper require only that the tape extend infinitely towards the right because that's where the digits of the computable sequences are printed:" If that's the case, then why not start only with the requirement of a tape that has infinite squares but starts at 0?
+
+p82
+
+
