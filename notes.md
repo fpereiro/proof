@@ -145,4 +145,49 @@ f        none           R         b
 
 p82
 
+Some observations on this machine:
 
+- It never goes to the left. It just keeps on moving to the right.
+- It leaves a blank square between the numbers printed: 0 1 0 1, instead of 0101
+- Two configs (c and f) are the same in their operations, but they differ in which mconf they set afterwards. And you need those two different target mconfs, because one prints 0 and the other one prints 1.
+- This machine always assumes that there's no symbol on each scanned square. It doesn't account for a different case. But it is also true that the machine could never find a square that is not blank, if it's always moving right on a blank tape, and if it always move right after writing on a square. This is highly suggestive of which kinds of comparable analysis can be done to more complex machines in terms of how many provisions are required of them for them to not reach a state that's not determined by its set of mconfs.
+
+p83
+
+Petzold's machine for printing 1/4 (0 1 0 0 0...)
+
+```
+configuration         behaviour
+mconf   symbol   operations   final mconf
+b        none       P0, R         c
+c        none           R         d
+d        none       P1, R         e
+e        none           R         f
+f        none       P0, R         e
+```
+
+- Also another thing: both machines start with mconf b selected.
+- The 1/4 machine has an extra mconf. mconf e, instead of going back to b, goes back to e instead.
+- Petzold: "It should be very, very obvious that similar computing machines can be defined to compute *any rational number*. The rational numbers are not the issue here." Either my math is very limited, or the word "obvious" is very easily blandished about.
+
+p84
+
+- "If, contrary to the description in Section 1, we allow the letters *L, R* to appear more than once in the operations column we can simplify the table considerably."
+
+```
+mconf   symbol   operations   final mconf
+
+         none     P0            b
+b        0        R, R, P1      b
+         1        R, R, P0      b
+```
+
+- Petzold: "Turing will also soon allow a configuration to have multiple P operations."
+
+Then a mconf can have multiple shifting (moving the tape) and printing operations. However (and it'll be interesting to see if this changes) it can only take input (read a square) at the beginning, and then it can only set the next mconf once. No concept of function calls from within the operations.
+
+- Petzold: "The important lesson is that any particular sequence can be cmputed by a variety of different machines. However, a particular automatic machine starting with a blank tape always computes the same sequence."
+
+p85
+
+- Petzold: "Using multiple L, R and P operations in a single configuration can simplify machines considerably, but keep in mind that these simplified tables can always be converted back into the more rigid style that allows only one L, R, or P operation per state.
