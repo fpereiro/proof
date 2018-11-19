@@ -191,3 +191,55 @@ Then a mconf can have multiple shifting (moving the tape) and printing operation
 p85
 
 - Petzold: "Using multiple L, R and P operations in a single configuration can simplify machines considerably, but keep in mind that these simplified tables can always be converted back into the more rigid style that allows only one L, R, or P operation per state.
+
+- "As a slightly more difficult example we can construct a machine to compute the sequence 001011011101111011111..." Note: this means a 0, and then the following: a 0, followed by a 1. Then a 0, followed by two 1s. Then a 0, followed by three 1s.
+
+- Petzold: "What he wants to tackle now is an irrational number, and one that very likely is also trascendental." Talk about likelihood in math like this makes a case for heuristics, or at least shows they are used in certain places, if not in proofs.
+
+- Petzold: "When this new machine is printing a run of 1s, it must somehow "remember" how many 1s it printed in the previous run, and then print one more. By scanning back and forth, the machine always has access to the previous run so it can use that information to build the next run. It will be interesting to study Turing's strategy for accomplishing this feat."
+
+- "The machine is to be capable of five m-configurations, viz. "o", "q", "p", "f", "b", and of printing "e", "x", "0", "1". The first three symbols on the tape will be "ee0"; the other figures follow on alternate squares.
+
+- Petzold: "(...) he's proposing that the tape end up like this: "ee0 0 1 0 1 1 0 0 1 1 1 0 ..."".
+
+- Petzold: "The e character is known (...) as a *schwa*." Turing uses the *schwa* for what programmes call a *sentinel*. It's a special character that, in this case, indicates the boundary of the number. The machine can move its head to the very beginning of the tape by moving left whenever the scanned square is *not* the schwa."
+
+p86
+
+- Petzold: "(Why are two schwas? Only one is required in this example, but Turing later creates a machine that requires to scwas for a sentinel. Perhaps he added a second schwa in this example just for consistency.)"
+
+- Petzold: "In the first example machine, the blank squares between the 0 and 1 digits served no purpose. Here they will play an important role."
+
+- "On the intermediate squares we never print anything but "x". These letters serve to "keep the place" for us and are erased when we have finished with them."
+
+- Petzold: "Turing is dividing the squares of his tape into two categories. The machine prints the 0s and 1s on every other square. With the exception of the sentinel, no other symbols appear on these squares. Turing uses the intermediate squares as a temporary scratchpad of sorts. We can refer to "numeric squares" that contain 0s and 1s and "non-numeric squares" that can contain other symbols. (Turing later calls these F-squares and E-squares for *figures* and *erasable*." Note: the first schwa would be in a numberic square! Wouldn't this violate the strict rule of how a machine's output should look as per the definitions?
+
+- "We also arrange that in the sequence of figures on alternate squares there shall be no blanks."
+
+- Petzold: "Every new figure (...) is printed on the next available blank numeric square. No numeric squares are skipped. These restrictions are a collection of rules (...) that Emil Post later called a "Turing convention machine", which is a little more restrictive than the generalized "Turing Machine." A Turing convention machine never erases a numeric square, or writes over an existing figure on a numeric square with a different figure. These implicit rules become important later on."
+
+p87
+
+```
+configuration                        behaviour
+mconf   symbol              operations              final mconf
+
+b        none    Pe, R, Pe, R, P0, R, R, P0, L, L        o
+
+o         1      R, Px, L, L, L                          o
+o         0                                              q
+
+q        0, 1    R, R                                    q
+q        none    P1, L                                   p
+
+p         x      R, R                                    q
+p         e      R                                       f
+p        none    L, L                                    p
+
+f        any     R, R                                    f
+f        none    P0, L, L                                o
+```
+
+- multiple symbols seen can map to a set of operations.
+- set of operations can be empty! but the m-conf is changed. If in this case it changed to the same m-conf, proven circle machine if it gets to that configuration!
+- What symbols can f see?
