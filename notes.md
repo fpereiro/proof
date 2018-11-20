@@ -240,6 +240,22 @@ f        any     R, R                                    f
 f        none    P0, L, L                                o
 ```
 
-- multiple symbols seen can map to a set of operations.
-- set of operations can be empty! but the m-conf is changed. If in this case it changed to the same m-conf, proven circle machine if it gets to that configuration!
-- What symbols can f see?
+b -> ee0 0 -> ee0 0 -> ee0 0 -> ee0 0   -> ee0 0 1 -> ee0 0 1 -> ee0 0 1 -> ee0 0 1 -> ee0 0 1
+       o        q          q          q         p        p        p           f            f
+
+ee0 0 1 -> ee0 0 1   -> ee0 0 1 0 -> ee0 0 1x0 -> ee0 0 1x0 -> ee0 0 1x0 -> ee0 0 1x0 -> ee0 0 1x0
+      f            f          o          o            q              q              q              q
+
+
+
+- The machine starts at mconf `b` and never goes back into it.
+- Multiple symbols seen can map to a single set of operations.
+- Set of operations can be empty! but the m-conf is changed. If in this case it changed to the same m-conf, you can prove that you have a circle machie if it gets to that configuration!
+- What symbols can mconf `f` see?
+- `o` starts the first time seeing the first 0 (the one next to the second schwa). If it sees 0, it goes to `q`.
+- `q` goes two to the right if it sees a number (and it calls itself again, in that case). During the first time, it will go two to the right and see the second zero. Then it will call itself again, go two more to the right, and then it will be two spaces to the right of the last 0. Then it will see an empty square and print a 1, then go one to the left, then go to `p`.
+- `p` will start on the blank square between the last 0 and the one just printed by `p`. In this case, it will go two to the left and call itself. It will then be on the blank square between the two 0s. It will see a blank square, so it goes two to the left and calls itself again. Then it will be standing over a schwa. In this case, it goes one to the right, to the square with the first 0, and calls `f` (the last mconf).
+- `f` will see a 0, in which case it goes two to the right and calls itself. It will then see the second 0. It will go two to the right and call itself. Then it will see the first 1. Then it will go two to the right and call itself. Then it will see an empty square and then it will print a 0, then go two to the left (back to the first 1) and call `o`.
+- `o` now sees a 1 for the first time. It marks
+
+
