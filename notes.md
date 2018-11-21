@@ -232,7 +232,7 @@ o         0                                              q
 q        0, 1    R, R                                    q
 q        none    P1, L                                   p
 
-p         x      R, R                                    q
+p         x      E, R                                    q
 p         e      R                                       f
 p        none    L, L                                    p
 
@@ -240,13 +240,23 @@ f        any     R, R                                    f
 f        none    P0, L, L                                o
 ```
 
-b -> ee0 0 -> ee0 0 -> ee0 0 -> ee0 0   -> ee0 0 1 -> ee0 0 1 -> ee0 0 1 -> ee0 0 1 -> ee0 0 1
-       o        q          q          q         p        p        p           f            f
+  -> ee0 0 -> ee0 0 -> ee0 0 -> ee0 0   -> ee0 0 1 -> ee0 0 1 -> ee0 0 1 -> ee0 0 1 -> ee0 0 1
+b      o        q          q          q         p        p        p           f            f
 
-ee0 0 1 -> ee0 0 1   -> ee0 0 1 0 -> ee0 0 1x0 -> ee0 0 1x0 -> ee0 0 1x0 -> ee0 0 1x0 -> ee0 0 1x0
-      f            f          o          o            q              q              q              q
+ee0 0 1 -> ee0 0 1   -> ee0 0 1 0 -> ee0 0 1x0 -> ee0 0 1x0 -> ee0 0 1x0 -> ee0 0 1x0 -> ee0 0 1x0   -> ee0 0 1x0 1
+      f            f          o          o            q              q              q              q             p
 
+ee0 0 1x0 1 -> ee0 0 1 0 1 -> ee0 0 1 0 1 -> ee0 0 1 0 1   -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1
+       p               q                q                q               p              p              p
 
+ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1
+     p              p              p                 f                  f                  f                  f
+
+ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1   -> ee0 0 1 0 1 1 0 -> ee0 0 1 0 1 1x0 -> ee0 0 1 0 1x1x0
+          f                  f                  f                o                o                o
+
+ee0 0 1 0 1x1x0
+        q
 
 - The machine starts at mconf `b` and never goes back into it.
 - Multiple symbols seen can map to a single set of operations.
