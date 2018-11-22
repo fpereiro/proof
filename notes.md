@@ -240,6 +240,12 @@ f        any     R, R                                    f
 f        none    P0, L, L                                o
 ```
 
+- p goes left over E squares, erasing x and stopping on e.
+- q goes right over F squares.
+
+Execution:
+
+```
   -> ee0 0 -> ee0 0 -> ee0 0 -> ee0 0   -> ee0 0 1 -> ee0 0 1 -> ee0 0 1 -> ee0 0 1 -> ee0 0 1
 b      o        q          q          q         p        p        p           f            f
 
@@ -255,8 +261,24 @@ ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 
 ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1   -> ee0 0 1 0 1 1 0 -> ee0 0 1 0 1 1x0 -> ee0 0 1 0 1x1x0
           f                  f                  f                o                o                o
 
-ee0 0 1 0 1x1x0
-        q
+ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0   -> ee 0 0 1 0 1x1x0 1
+        q                    q                    q                    q                    q                    p
+
+ee0 0 1 0 1x1x0 1 -> ee0 0 1 0 1x1 0 1 -> ee0 0 1 0 1x1 0 1 -> ee0 0 1 0 1x1 0 1   -> ee0 0 1 0 1x1 0 1 1 ->
+             p                     q                      q                      q                     p
+
+ee0 0 1 0 1x1 0 1 1 -> ee0 0 1 0 1x1 0 1 1 -> ee0 0 1 0 1x1 0 1 1 -> ee0 0 1 0 1 1 0 1 1 -> ee0 0 1 0 1 1 0 1 1
+               p                    p                    p                       q                        q
+
+ee0 0 1 0 1 1 0 1 1 -> ee0 0 1 0 1 1 0 1 1 -> ee0 0 1 0 1 1 0 1 1   -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1
+                q                        q                        q                       p                      p
+
+ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1
+               p                      p                      p                      p                      p
+
+ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1
+     p                      p                      p                         f
+```
 
 - The machine starts at mconf `b` and never goes back into it.
 - Multiple symbols seen can map to a single set of operations.
