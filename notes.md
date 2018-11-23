@@ -240,8 +240,28 @@ f        any     R, R                                    f
 f        none    P0, L, L                                o
 ```
 
-- p goes left over E squares, erasing x and stopping on e.
-- q goes right over F squares.
+- Multiple symbols seen can map to a single set of operations.
+- Set of operations can be empty! but the m-conf is changed. If in this case it changed to the same m-conf, you can prove that you have a circle machie if it gets to that configuration!
+- The machine starts at `b`, writes `ee0 0`, sets the cursor over the first 0 and calls `o`.
+- `o` only is called on F squares that are not blank (thus, only containing 0 and 1). Its purpose is to mark the 1s with x (on the E square immediately to their right). It marks the 1s from right to left (sees the 1, puts the x to its side, then goes two squares left from the marked 1). While it sees 1s, it calls itself. When it finds a 0, it calls `q` instead.
+- `q` goes right over F squares. While there's 0s or 1s, it keeps on going right by calling itself. When it finds a blank, it prints a 1 and goes to the E square to its left, calling `p`.
+- `p` goes left over E squares, calling itself and going left while it finds empty squares. When it finds a schwa, it goes to the next F square and calls `f`. If, instead, it finds an `x`, it deletes it, goes to the next F square and calls `q`.
+- `f` goes forward over F squares, since this configuration is only called by `p` after seeing a schwa and moving one to the right. If it sees a 0 or 1, then it keeps on going to the right and calls itself. When it finds a blank F square, it prints a 0, goes two back (to the previous F square) and calls `o`. It is confusing that Turing said "any" instead of 0, 1 for this configuration, since this configuration doesn't seem to see any other symbols since it's always on F squares.
+
+Calls between configs:
+
+```
+b -> o
+o -> q
+q -> p
+p -> f & q
+f -> o;
+```
+
+- At first sight, it looks like the machine is always going to the "next" configuration (once a configuration stopped calling itself). If we ignore `b`, then the order would be `o`, `q`, `p`, `f`. `f` calls `o` so that would start over the cycle. This would be accurate except that `p` can also call `q` (the previous configuration); therein probably lies the trickiest part of the machine.
+
+
+
 
 Execution:
 
@@ -280,9 +300,6 @@ ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0
      p                      p                      p                         f
 ```
 
-- The machine starts at mconf `b` and never goes back into it.
-- Multiple symbols seen can map to a single set of operations.
-- Set of operations can be empty! but the m-conf is changed. If in this case it changed to the same m-conf, you can prove that you have a circle machie if it gets to that configuration!
 - What symbols can mconf `f` see?
 - `o` starts the first time seeing the first 0 (the one next to the second schwa). If it sees 0, it goes to `q`.
 - `q` goes two to the right if it sees a number (and it calls itself again, in that case). During the first time, it will go two to the right and see the second zero. Then it will call itself again, go two more to the right, and then it will be two spaces to the right of the last 0. Then it will see an empty square and print a 1, then go one to the left, then go to `p`.
