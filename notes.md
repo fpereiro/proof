@@ -246,7 +246,7 @@ f        none    P0, L, L                                o
 - `o` only is called on F squares that are not blank (thus, only containing 0 and 1). Its purpose is to mark the 1s with x (on the E square immediately to their right). It marks the 1s from right to left (sees the 1, puts the x to its side, then goes two squares left from the marked 1). While it sees 1s, it calls itself. When it finds a 0, it calls `q` instead.
 - `q` goes right over F squares. While there's 0s or 1s, it keeps on going right by calling itself. When it finds a blank, it prints a 1 and goes to the E square to its left, calling `p`.
 - `p` goes left over E squares, calling itself and going left while it finds empty squares. When it finds a schwa, it goes to the next F square and calls `f`. If, instead, it finds an `x`, it deletes it, goes to the next F square and calls `q`.
-- `f` goes forward over F squares, since this configuration is only called by `p` after seeing a schwa and moving one to the right. If it sees a 0 or 1, then it keeps on going to the right and calls itself. When it finds a blank F square, it prints a 0, goes two back (to the previous F square) and calls `o`. It is confusing that Turing said "any" instead of 0, 1 for this configuration, since this configuration doesn't seem to see any other symbols since it's always on F squares.
+- `f` goes forward over F squares, since this configuration is only called by `p` after seeing a schwa and moving one to the right. If it sees a 0 or 1, then it keeps on going to the right and calls itself. When it finds a blank F square, it prints a 0, goes two back (to the previous F square) and calls `o`. It is confusing that Turing said "any" instead of 0, 1 for this configuration, since this configuration doesn't see any other symbols since it's always on F squares.
 
 Calls between configs:
 
@@ -258,10 +258,7 @@ p -> f & q
 f -> o;
 ```
 
-- At first sight, it looks like the machine is always going to the "next" configuration (once a configuration stopped calling itself). If we ignore `b`, then the order would be `o`, `q`, `p`, `f`. `f` calls `o` so that would start over the cycle. This would be accurate except that `p` can also call `q` (the previous configuration); therein probably lies the trickiest part of the machine.
-
-
-
+- At first sight, it looks like the machine is always going to the "next" configuration (once a configuration stopped calling itself). If we ignore `b`, then the order would be `o`, `q`, `p`, `f`. `f` calls `o` so that would start over the cycle. This would be accurate except that `p` can also call `q` (the previous configuration); therein lies the trickiest part of the machine.
 
 Execution:
 
@@ -281,8 +278,8 @@ ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 
 ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 -> ee0 0 1 0 1 1   -> ee0 0 1 0 1 1 0 -> ee0 0 1 0 1 1x0 -> ee0 0 1 0 1x1x0
           f                  f                  f                o                o                o
 
-ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0   -> ee 0 0 1 0 1x1x0 1
-        q                    q                    q                    q                    q                    p
+ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0   -> ee0 0 1 0 1x1x0 1
+        q                    q                    q                    q                    q                   p
 
 ee0 0 1 0 1x1x0 1 -> ee0 0 1 0 1x1 0 1 -> ee0 0 1 0 1x1 0 1 -> ee0 0 1 0 1x1 0 1   -> ee0 0 1 0 1x1 0 1 1 ->
              p                     q                      q                      q                     p
@@ -300,11 +297,33 @@ ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0
      p                      p                      p                         f
 ```
 
-- What symbols can mconf `f` see?
-- `o` starts the first time seeing the first 0 (the one next to the second schwa). If it sees 0, it goes to `q`.
-- `q` goes two to the right if it sees a number (and it calls itself again, in that case). During the first time, it will go two to the right and see the second zero. Then it will call itself again, go two more to the right, and then it will be two spaces to the right of the last 0. Then it will see an empty square and print a 1, then go one to the left, then go to `p`.
-- `p` will start on the blank square between the last 0 and the one just printed by `p`. In this case, it will go two to the left and call itself. It will then be on the blank square between the two 0s. It will see a blank square, so it goes two to the left and calls itself again. Then it will be standing over a schwa. In this case, it goes one to the right, to the square with the first 0, and calls `f` (the last mconf).
-- `f` will see a 0, in which case it goes two to the right and calls itself. It will then see the second 0. It will go two to the right and call itself. Then it will see the first 1. Then it will go two to the right and call itself. Then it will see an empty square and then it will print a 0, then go two to the left (back to the first 1) and call `o`.
-- `o` now sees a 1 for the first time. It marks
+Execution (omitting steps when a mconf calls itself):
 
+```
+  -> ee0 0 -> ee0 0 -> ee0 0 1 -> ee0 0 1 -> ee0 0 1 0 -> ee0 0 1x0 -> ee0 0 1x0 1 -> ee0 0 1 0 1 -> ee0 0 1 0 1 1
+b      o        q           p       f              o          q                 p             q                 p
 
+ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 0 -> ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0 1 -> ee0 0 1 0 1x1 0 1 -> ee0 0 1 0 1x1 0 1 1
+  f                          o              q                         p                   q                       p
+
+ee0 0 1 0 1 1 0 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1
+            q                             p       f
+```
+
+Sequence of calls (skipping when a mconf calls itself), and split
+
+- boqpfoqpqpfoqpqpqpf
+
+Let's split that:
+
+- b
+- oqpf
+- oqpqpf
+- oqpqpqpf
+
+So there's this pattern starting always with `o` and ending with `f`. The interesting part is `qp`. The first time, there's only one `qp`. The second time, there's two `qp`s. The third time, three `qp`s. Basically, there's a `qp` for each 1 that needs to be printed. That is how the machine prints increasingly long series of 1s.
+
+The roles begin to become clear:
+
+- The first mconf in the repeating pattern, `o`, marks the 1s with `x`. Does it mark *all* the 1s already printed? No! It only marks those 1s it finds going left, until it finds a 0. When it finds a 0, it acts like a sentinel and `o` calls `q`.
+- The last mconf in the repeating pattern, `f`, prints the 0 after a sequence of 1s, at the very end of the sequence. It goes forward until it finds the first blank F square, prints 0 and calls `o` again.
