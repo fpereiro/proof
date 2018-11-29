@@ -306,8 +306,8 @@ b      o        q           p       f              o          q                 
 ee0 0 1 0 1 1 -> ee0 0 1 0 1 1 0 -> ee0 0 1 0 1x1x0 -> ee0 0 1 0 1x1x0 1 -> ee0 0 1 0 1x1 0 1 -> ee0 0 1 0 1x1 0 1 1
   f                          o              q                         p                   q                       p
 
-ee0 0 1 0 1 1 0 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1
-            q                             p       f
+ee0 0 1 0 1 1 0 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1 0
+            q                             p       f                                          o
 ```
 
 Sequence of calls (skipping when a mconf calls itself), and split
@@ -325,5 +325,20 @@ So there's this pattern starting always with `o` and ending with `f`. The intere
 
 The roles begin to become clear:
 
-- The first mconf in the repeating pattern, `o`, marks the 1s with `x`. Does it mark *all* the 1s already printed? No! It only marks those 1s it finds going left, until it finds a 0. When it finds a 0, it acts like a sentinel and `o` calls `q`.
+- The first mconf in the repeating pattern, `o`, marks the 1s with `x`. Does it mark *all* the 1s already printed? No! It only marks those 1s it finds going left, until it finds a 0. When it finds a 0, `o` considers it as a sentinel, stops going left and calls `q`.
 - The last mconf in the repeating pattern, `f`, prints the 0 after a sequence of 1s, at the very end of the sequence. It goes forward until it finds the first blank F square, prints 0 and calls `o` again.
+- The first mconf of the "inner loop" of the repeating pattern, `q`, goes right on F-squares until it finds a blank one, then prints a 1 and calls `p`.
+- The last mconf of the "inner loop" of the repeating pattern, `p`, is the key to the machine. If it is on a blank square, it goes left on E-squares. It is the one mconf that decides whether to call `q` again or instead go forward to `f`. `q` calls `p` again when it sees an `x` - but only after erasing the seen `x` first. If it doesn't find in x, it will go back to the beginning (the second schwa) and only then call `f` to finish the loop.
+
+We can restate the loop in these terms:
+
+- mark1: going left on F-squares, put an x next to each one until you find a 0. The first time the loop is executed, this operation is run with the head being on a 0, then nothing happens. Call print1.
+- print1: going right on F-squares, find the next blank one and print a 1. Then go back one square, to the left of the 1 just printed. Call marktoprint.
+- marktoprint: going left on E-squares, if you find an x delete it and call print1. If you are back at the beginning, call print0.
+- print0: going right on F-squares, find the next blank one and print a 0. Call mark1.
+
+The first time the loop is run: mark1 doesn't do anything. print1 prints the first 1. marktoprint goes back to the beginning without finding any 1s to mark. print0 prints the 0 after the first 1.
+
+The second time the loop is run: mark1 goes left and marks the 1 with a `x`. print1 adds a 1 at the end, after the new 0. marktoprint finds the marked 1 (the one printed on the first loop) and calls print1, which prints another 1 at the end. marktoprint goes back and doesn't find any `x`. Finally, print0 adds the 0 at the end of the sequence.
+
+The third time the loop is run: mark1 goes left and marks the two 1s printed on the last iteration with `x`.
