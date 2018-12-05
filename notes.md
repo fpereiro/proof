@@ -341,4 +341,54 @@ The first time the loop is run: mark1 doesn't do anything. print1 prints the fir
 
 The second time the loop is run: mark1 goes left and marks the 1 with a `x`. print1 adds a 1 at the end, after the new 0. marktoprint finds the marked 1 (the one printed on the first loop) and calls print1, which prints another 1 at the end. marktoprint goes back and doesn't find any `x`. Finally, print0 adds the 0 at the end of the sequence.
 
-The third time the loop is run: mark1 goes left and marks the two 1s printed on the last iteration with `x`.
+The third time the loop is run: mark1 goes left and marks the two 1s printed on the last iteration with `x`. print1 adds a 1 at the end, after the new 0. marktoprint finds the marked 1 and calls print1 after deleting one of the `x`; print1 adds another 1; marktoprint removes the last marked 1 and calls print1; print1 adds a third 1. marktoprint goes back and doesn't find any `x`. Finally, print0 adds the 0 at the end of the sequence.
+
+To sum it up even further: after mark1, we always call print1 and then marktoprint. the number of extra times that marktoprint calls print1 is equal to the amount of `x`s at the beginning of the loop.
+
+p90
+
+- Petzold: "Turng is about to show a method for notation the workings of the machine using these complete configurations - essentially snapshots of the tape together with the current m-configuration and scanned square."
+
+- "To illustrate the working of this machine a table is given below of the first few complete configurations. These complete configurations are describe by writing down the sequence of symbols which are on the tape, with the m-configuration written below the scanned symbol. The successive complete configurations are separated by colons."
+
+p91
+
+```
+ :ee0 0:ee0 0:ee0 0:ee0 0  :ee0 0 1:
+b   o     q       q       q      p
+```
+
+p92
+
+- Petzold: "While less visually satisfying than the physical tape, Turing's notation provides more information, in particular by indicating the next m-configuration at the current position of the head. Those successive complete configurations show a complete history of the machine's operations."
+
+```
+ee0 0 1:ee0 0 1:ee0 0 1:ee0 0 1:
+   p     p        f         f
+```
+
+```
+ee0 0 1:ee0 0 1  :ee0 0 1 0:
+      f         f       o
+```
+
+```
+ee0 0 1x0
+    o
+```
+
+- "This table could also be written in the form `b:eeo0 0:eeq0 0: ... (C)`, in which a space has been made on the left of the scanned symbol and the m-configuration written in this space."
+
+- Petzold: "Turing has flagged this format with the letter C (for "configuration"). He will refer to it in Section 6."
+
+p93
+
+- "This form is less easy to follow, but we shall make use of it later for theoretical purposes."
+
+- Petzold: "Actually, in a still more modified form, it will become *essential*. Turing is already gearing up for a major presentation. He will unveil a Universal Computing Machine - today commonly termed the Universal Turing Machine or UTM - that is a functional (if not exactly commercial) equivalent of a modern computer."
+
+- Petzold: "Try to notice what's *good* about this final format. The entire history of the operation of a machine has been arranged into a single stream of characters (...). Also notice that Turing has slipped the next m-configuration *in front of* the next scanned character. These two items in combination were defined by Turing as a *configuration*, and this pair of items occurs in the complete configuration in the same order as they occur in the first two columns of a machine table. You can take that m-configuration and symbol pair and scan through the *m-config* and *symbol* columns of a machine table looking for a match. (...) Turing will actually automate this searhcing process when construction his Universal Machine."
+
+- "The convention of writing the figures only on alternate squares is very useful. I shall always make use of it. I shall call the one sequence of alternate squares F-squares and the other sequence E-squares. The symbols on E-squares will be liable to erasure. The symbols on F-squares form a continuous sequence. There are no blanks until the end is reached."
+
+p94
