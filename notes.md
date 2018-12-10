@@ -310,7 +310,7 @@ ee0 0 1 0 1 1 0 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1 0 1 1 0 1 1 1 -> ee0 0 1
             q                             p       f                                          o
 ```
 
-Sequence of calls (skipping when a mconf calls itself), and split
+Sequence of calls (skipping when a mconf calls itself).
 
 - boqpfoqpqpfoqpqpqpf
 
@@ -392,3 +392,33 @@ p93
 - "The convention of writing the figures only on alternate squares is very useful. I shall always make use of it. I shall call the one sequence of alternate squares F-squares and the other sequence E-squares. The symbols on E-squares will be liable to erasure. The symbols on F-squares form a continuous sequence. There are no blanks until the end is reached."
 
 p94
+
+- "There is no need to have more than one E-square between each pair of F-squares: an apparent need of more E-squares can be satisfied byhaving a sufficiently rich variety of symbols capable of being printed on E-squares." Unlimited bits by a larger vocabulary. And having it all in one square makes it simple to parse because it's already bounded.
+
+- "If a symbol Beta is on an F-square S and a symbol Alpha is on the E-square next on the right of S, then S and Beta will be said to be *marked* with Alpha. The process of printing this Alpha will be called marking Beta (or S) with Alpha." Markings then go to the right of what they are marking. Number, then marking.
+
+- Petzold: "However, markers are not strictly needed. It is possible to define machines that use only two symbols, or which differentiate solely between a blank square and a marked square. Such an approach was explored by mathematician Emil Post in an interesting paper that independently described a configuration similar to Turing's. (...) Post doesn't actually show his worker performing real applications. Working with squares or boxes that can be only marked or unmarked is obviously much more laborious than Turing's shortcut." I wonder if it is truly possible to write programs in them, and if so if it is possible to define a general way of converting Turing machines into Post machines that will do the same thing.
+
+p99
+
+- Petzold: "Let's confront our fears head on by building machines that transcend the trivial. Let's convince ourselves that Turing Machines can indeed addd and multiply (and hence, also substract, divide, calculate powers and perhaps even write poetry). The first example is a small Turing Machine that calculates all te positive integers in sequence. This machine does *not* comply with Turing's conventions because it writes each new number over the previous one. It doesn't skip any squares when printing the results, and it replaces each result with the next highest number."
+
+```
+mconf     symbol   operations   final mconf
+
+begin      none      P0          increment
+
+            0        P1          rewind
+increment   1        P0,L        increment
+           none      P1          rewind
+
+rewind     none      L           increment
+           any       R           rewind
+```
+
+Let's simulate the machine.
+
+```
+ -> 0 -> 1 -> 1  -> 1 ->  0 -> 10 -> 10 -> 10  -> 10 -> 11 -> 11 -> 11 -> 10 ->
+b   i    r     r    i    i     r      r      r     i     r      r    i    i
+```
