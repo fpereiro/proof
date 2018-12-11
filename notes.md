@@ -419,6 +419,23 @@ rewind     none      L           increment
 Let's simulate the machine.
 
 ```
- -> 0 -> 1 -> 1  -> 1 ->  0 -> 10 -> 10 -> 10  -> 10 -> 11 -> 11 -> 11 -> 10 ->
-b   i    r     r    i    i     r      r      r     i     r      r    i    i
+ -> 0 -> 1 -> 1  -> 1 ->  0 -> 10 -> 10 -> 10  -> 10 -> 11 -> 11 -> 11 -> 10 ->  00 -> 100
+b   i    r     r    i    i     r      r      r     i     r      r    i    i     i      r
+
+100 -> 100 -> 100  -> 100 -> 101 -> 101  -> 101 -> 100 -> 110 -> 110 -> 110  -> 110 -> 111
+ r       r       r      i      r       r      i     i      r       r       r      i      r
+
+111  -> 111 -> 110 -> 100 ->  000 -> 1000 -> 1000 -> 1000 -> 1000 -> 1000  -> 1000
+   r      i     i     i      i       r        r        r        r        r       i
 ```
+
+Now, skipping steps where the configuration calls itself.
+
+```
+ -> 0 -> 1 -> 1 -> 10 -> 10 -> 11 -> 11 -> 100 -> 100 -> 101 -> 101 -> 110 -> 110 -> 111 -> 111 -> 1000
+b   i    r    i    r      i     r     i    r        i      r      i     r       i      r      i    r
+```
+
+- Whenever `increment` finds a 0, it writes a 1 and calls `rewind`.
+- If instead of finding a 0, `increment` finds a 1, it writes 0 and keeps on going left. In this way, it can overwrite contiguous sequences of 0s with 1s.
+- When `increment` finds itself on an empty square (because the leftmost filled square
