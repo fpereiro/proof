@@ -347,7 +347,7 @@ To sum it up even further: after mark1, we always call print1 and then marktopri
 
 p90
 
-- Petzold: "Turng is about to show a method for notation the workings of the machine using these complete configurations - essentially snapshots of the tape together with the current m-configuration and scanned square."
+- Petzold: "Turing is about to show a method for notation the workings of the machine using these complete configurations - essentially snapshots of the tape together with the current m-configuration and scanned square."
 
 - "To illustrate the working of this machine a table is given below of the first few complete configurations. These complete configurations are describe by writing down the sequence of symbols which are on the tape, with the m-configuration written below the scanned symbol. The successive complete configurations are separated by colons."
 
@@ -432,10 +432,36 @@ b   i    r     r    i    i     r      r      r     i     r      r    i    i     
 Now, skipping steps where the configuration calls itself.
 
 ```
- -> 0 -> 1 -> 1 -> 10 -> 10 -> 11 -> 11 -> 100 -> 100 -> 101 -> 101 -> 110 -> 110 -> 111 -> 111 -> 1000
-b   i    r    i    r      i     r     i    r        i      r      i     r       i      r      i    r
+ -> 0 -> 1 -> 1 -> 10 -> 10 -> 11 -> 11 -> 100 -> 100 -> 101 -> 101 -> 110 -> 110 -> 111 -> 111 -> 1000 -> 1000
+b   i    r    i    r      i     r     i    r        i      r      i     r       i      r      i    r          i
 ```
 
-- Whenever `increment` finds a 0, it writes a 1 and calls `rewind`.
-- If instead of finding a 0, `increment` finds a 1, it writes 0 and keeps on going left. In this way, it can overwrite contiguous sequences of 0s with 1s.
-- When `increment` finds itself on an empty square (because the leftmost filled square
+- `increment` and `rewind` call each other. `increment` goes first.
+- The function of `rewind` is to keep going right until it finds an empty square. When it finds an empty square, it goes one square to the left (the last square with a number on it) and calls `increment`.
+- If `increment` doesn't call itself, then it is called by `begin` or `rewind`. In this case, `increment` always starts at the last number of the sequence.
+- `increment` replaces 0 with 1 and 1 with 0. It also writes a 1 if it sees an empty square.
+- `increment` only moves when it sees a 0; it moves left, and it keeps on calling itself. This is the only case when it calls itself; when it sees a 0 or an empty square, it calls `rewind`.
+
+In other terms:
+
+- `rewind` actually is in charge of going to the last number of the sequence and calling `increment`.
+- Most of the logic is actually on `increment`.
+- As long as it finds 1s on its way left, `increment` will replace them with 0s. When it finds a 0 or an empty space, it will print a 1 and call `rewind`.
+- The first time it is called, `increment` replaces 0 with 1.
+- The second time, it turns 1 into 10, first by replacing the 1, then by adding one to its left.
+- The third time, it turns 10 into 11 by replacing the 0 with a 1. Notice that as soon as it replaces a 0 with a 1, it calls `rewind` again.
+- The fourth time, it turns 11 into 100, first by replacing the two 1s with 0s, then adding a 1 to the left.
+- The fifth time, it turns 100 into 101, by replacing the last 0 with a 1.
+- The sixth time, it turns 101 into 110, by replacing the last 1 with a 0 and then turning the middle 0 into a 1.
+- The seventh time, it turns 110 into 111, by replacing the last 0 with a 1.
+- The eight time, it turns 111 into 1000, by replacing all the 1s with 0s and then adding a 1 at the end.
+
+In even more succint terms:
+
+- `increment` goes right to left, replacing 1s with 0s until it finds either a blank or a 0. Either the blank or the 0 are overwritten with a 1, and then `increment` calls `rewind`.
+- When the sequence is all 1s, `increment` increases the amount of digits and sets all the previous ones to 0.
+- When the sequence is partially composed of 0s and 1s, it sets all the 1s to the right of the last 0 to 0s, then turns the rightmost 0 into a 1, in effect doing a "reset" of the numeric sequence from the rightmost 0 onwards.
+
+p100
+
+- Petzold: "This is a machine that adheres to Turing's conventions and calculates the square root of 2 in binary. Actually, if the binary point is assumed to precede all the digits, the machine calculates (2 ^ 1/2) / 2."
