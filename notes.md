@@ -465,3 +465,23 @@ In even more succint terms:
 p100
 
 - Petzold: "This is a machine that adheres to Turing's conventions and calculates the square root of 2 in binary. Actually, if the binary point is assumed to precede all the digits, the machine calculates (2 ^ 1/2) / 2."
+
+- Petzold: "The algorithm implemented by the machine calculates one binary digit at a time. Suppose the machine has been running awhile and has already determined the first four digits. The first four digits of 2 ^ 1/2 in binary are 1.011, equivalent to 1.375 in decimal. What is hte next digit?" Interesting that in when computing a binary number you only have two options for the digit. A ver limited output, done more times.
+
+- Petzold: "The machine's strategy is always to assume that the next digit is 1. To test whether this is correct, multiply 1.0111 by itself:"
+
+p101
+
+1.0111 x 1.0111 = 10.00010001
+
+Note: 10 is 2
+
+- Petzold: "The product exceeds 2, so that assumption was incorrect. The fifth digit is instead 0, so the first five digits are 1.0110. Let's determine the sixth digit similarly. Assume that the sixth digit is 1 and mlutiply 1.01101 by itself."
+
+1.01101 x 1.01101 = 1.1111101001
+
+- Petzold: "The result is less than 2, so the assumption was good. We now have six digits: 1.01101, which in decimal is 1.40625. Obviously, the square-root-of-2 machine needs to multiply. In general, a multiplicatino of two multidigit numbers requires that each digit of one number be multiplied by each digit of the other number. If one number has *n* digits, and the other number *m* digits, the total number of digit-times-digit multiplications is (`n` x `m`). When doing multiplication by hand, we generally multiply a single digit of one number by the whole other number, yielding *n* or *m* partial products, which are then added together. The machine I'll show does the multiplication a little differently - by maintaining a running total during the multiplication. The result of ach bit-by-bit multiplication is added to this running total. What makes this particular addition tricky is that each bit-by-bit product is generally *not* added to the least singificant bit of the running total, but somewhere in the middle of it."
+
+p101/102
+
+- Petzold: "For example, consider the multiplication of 1.01101 by itself. Each of the six bits must be multiplied by itself and by the five other bits, so 36 bit-by-bit multiplications are required. The multiplications themselves are trivial: when multiplying 1 times 1, the result is 1; otherwise, the result is 0. Where this result is deposited in the running total depends on the placement of bits within the number. If the third bit from the right is multiplied by the fourth bit from the right, the result is added to the sixth place from the right in the running total. (This makes more sense when you number the bits beginning with zero: the third bit from the right is 2; the fourth bit from the right is bit 3; the sum is 5, and that's the bit position where the product goes.)" If we use 1-based numbering, the multiplication of bits n & m goes in bit n+m-1 (i.e: 4 & 3 go in 4 + 3 - 1 = bit 6; bits 1 & 1 go on bit 1; bits 2 & 1 already go on bit 2).
