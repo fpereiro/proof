@@ -484,4 +484,40 @@ Note: 10 is 2
 
 p101/102
 
-- Petzold: "For example, consider the multiplication of 1.01101 by itself. Each of the six bits must be multiplied by itself and by the five other bits, so 36 bit-by-bit multiplications are required. The multiplications themselves are trivial: when multiplying 1 times 1, the result is 1; otherwise, the result is 0. Where this result is deposited in the running total depends on the placement of bits within the number. If the third bit from the right is multiplied by the fourth bit from the right, the result is added to the sixth place from the right in the running total. (This makes more sense when you number the bits beginning with zero: the third bit from the right is 2; the fourth bit from the right is bit 3; the sum is 5, and that's the bit position where the product goes.)" If we use 1-based numbering, the multiplication of bits n & m goes in bit n+m-1 (i.e: 4 & 3 go in 4 + 3 - 1 = bit 6; bits 1 & 1 go on bit 1; bits 2 & 1 already go on bit 2).
+- Petzold: "For example, consider the multiplication of 1.01101 by itself. Each of the six bits must be multiplied by itself and by the five other bits, so 36 bit-by-bit multiplications are required. The multiplications themselves are trivial: when multiplying 1 times 1, the result is 1; otherwise, the result is 0. Where this result is deposited in the running total depends on the placement of bits within the number. If the third bit from the right is multiplied by the fourth bit from the right, the result is added to the sixth place from the right in the running total. (This makes more sense when you number the bits beginning with zero: the third bit from the right is 2; the fourth bit from the right is bit 3; the sum is 5, and that's the bit position where the product goes.)" Note: If we use 1-based numbering, the multiplication of bits n & m goes in bit n+m-1 (i.e: 4 & 3 go in 4 + 3 - 1 = bit 6; bits 1 & 1 go on bit 1; bits 2 & 1 already go on bit 2).
+
+- Petzold: "The machine I'll be showing adheres to Turing's conventions, which means that the only things it prints in the F-squares are the successive digits of the square root of 2 as they are being calculated. Everything else - including maintaining the running total of the multiplication - is done on E-squares."
+
+- Petzold: "The machine begins in m-configuration *being*. The machine uses an @ sign rather than a schwa for the sentinel. (...) The machine begins by printing the sentinel and the digit 1:
+
+```
+mconf     symbol   operations   final mconf
+
+begin      none    P@, R, P1     new
+```
+
+- Petzold: "Thus, the only initial assumption the machine makes is that the square root of 2 is at least 1 but less than 2. The machine always comes back to the m-configuration *new* when it's ready to calculate a new digit. The configuration moves the head to the leftmost digit:"
+
+```
+mconf     symbol   operations   final mconf
+
+begin      none    P@, R, P1    new
+
+new         @      R            mark-digits
+           else    L            new
+```
+
+- Petzold: "In preparation for the multiplication, the machien marks the digits of the number. (Recall that Turing defined "marking" as printing a symbol to the right of a figure.) The machine uses multiple *x* markers in a manner similar to Turing's Example II (page 85) machine. The m-configuration *mark-digits* marks all the known digits with x, the unkwown digit with a *z* (which I'll explain shortly) and prints one *r* in the least significant place of the running total:"
+
+```
+mconf        symbol  operations   final mconf
+
+begin        none    P@,R,P1      new
+
+new          @       R            mark-digits
+             else    L            new
+
+             0       R,Px,R       mark-digits
+mark-digits  1       R,Px,R       mark-digits
+             none    R,Pz,R,R,Pr  find-x
+```
