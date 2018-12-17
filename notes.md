@@ -507,7 +507,15 @@ new         @      R            mark-digits
            else    L            new
 ```
 
-- Petzold: "In preparation for the multiplication, the machien marks the digits of the number. (Recall that Turing defined "marking" as printing a symbol to the right of a figure.) The machine uses multiple *x* markers in a manner similar to Turing's Example II (page 85) machine. The m-configuration *mark-digits* marks all the known digits with x, the unkwown digit with a *z* (which I'll explain shortly) and prints one *r* in the least significant place of the running total:"
+- Petzold: "The rest of the machine will be easier to understand if we look at what it does after it's already calculated a few digits. Here's the tape with the first three digits already computed, which is the binary equivalent of 1.25. The machine will print the fourth digit (which I'll refer to as the "unknown" digit) in the square marked with the question mark:"
+
+```
+@1 0 1 ?
+```
+
+- Petzold: "The question mark is for our benefit only; it does not actually appear on the tape (...)."
+
+- Petzold: "In preparation for the multiplication, the machine marks the digits of the number. (Recall that Turing defined "marking" as printing a symbol to the right of a figure.) The machine uses multiple *x* markers in a manner similar to Turing's Example II (page 85) machine. The m-configuration *mark-digits* marks all the known digits with x, the unkwown digit with a *z* (which I'll explain shortly) and prints one *r* in the least significant place of the running total:"
 
 ```
 mconf        symbol  operations   final mconf
@@ -517,7 +525,34 @@ begin        none    P@,R,P1      new
 new          @       R            mark-digits
              else    L            new
 
-             0       R,Px,R       mark-digits
-mark-digits  1       R,Px,R       mark-digits
+mark-digits  0,1     R,Px,R       mark-digits
              none    R,Pz,R,R,Pr  find-x
 ```
+
+p103
+
+- Petzold: "The tape is now: `@1x0x1x?z r`. That *r* is the least significant digit of the running total and should be interpreted as a 0. The next section prints two more *r*'s for every *x*, erasing the *x* markers in the process."
+
+```
+mconf        symbol  operations   final mconf
+
+begin        none    P@,R,P1      new
+
+new          @       R            mark-digits
+             else    L            new
+
+mark-digits  0,1     R,Px,R       mark-digits
+             none    R,Pz,R,R,Pr  find-x
+
+             x       E            first-r
+find-x       @       N            find-digits
+             else    L,L          find-x
+
+first-r      r       R,R          last-r
+             else    R,R          first-r
+
+last-r       r       R,R          last-r
+             none    Pr,R,R,Pr    find-x
+```
+
+Note: Petzold seems to use *N* for no operation.
