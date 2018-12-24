@@ -515,7 +515,7 @@ new         @      R            mark-digits
 
 - Petzold: "The question mark is for our benefit only; it does not actually appear on the tape (...)."
 
-- Petzold: "In preparation for the multiplication, the machine marks the digits of the number. (Recall that Turing defined "marking" as printing a symbol to the right of a figure.) The machine uses multiple *x* markers in a manner similar to Turing's Example II (page 85) machine. The m-configuration *mark-digits* marks all the known digits with x, the unkwown digit with a *z* (which I'll explain shortly) and prints one *r* in the least significant place of the running total:"
+- Petzold: "In preparation for the multiplication, the machine marks the digits of the number. (Recall that Turing defined "marking" as printing a symbol to the right of a figure.) The machine uses multiple *x* markers in a manner similar to Turing's Example II (page 85) machine. The m-configuration *mark-digits* marks all the known digits with x, the unknown digit with a *z* (which I'll explain shortly) and prints one *r* in the least significant place of the running total:"
 
 ```
 mconf        symbol  operations   final mconf
@@ -556,3 +556,92 @@ last-r       r       R,R          last-r
 ```
 
 Note: Petzold seems to use *N* for no operation.
+
+- Petzold: "The tape now has a 7-digit running total zymbolizing an initial value of 0000000:
+
+```
+@1 0 1 ?z r r r r r r r
+```
+
+- Petzold: "The bit order of the running total is reversed from that of the calcluated number. The least significant bit of the running total is on the left. The seven initialized digits of the running total are sufficient if the assumption is correct than the unknown digit is a 1. If an eight digit is required, then the unknown digit is 0."
+
+- Petzold: "The number the machine must multiply by itself consists of the number computed already (101 in this example) and a new digit assumed to be 1, so the number is actually 1011. To keep track of what digits are being multiplied by each other, the machine marks the digits with *x*, *y* and *z* characters. At any time during the multiplication, only one digit is marked with *x* and one digit with *y*, and the digit marked *x* is multiplied by the digit marked *y*. If the *x* and *y* markers happen to coincide, the character *z* is used, so any digit marked *z* is multiplied by itself."
+
+- Petzold: "That's why the unknown digit (assumed to be 1) is initially marked with a *z*. The first multiplication involves that unknown digit times itself; however, it will help in the analysis of the following confiturations to keep in mind that during the multiplication, any digit could be marked with *x* and any digit with *y*, or just one digit with *z*."
+
+p104
+
+- Petzold: "We're now ready for the first bit-by-bit multiplication. THe machine multiplies either the two digits marked *x* and *y* by each other, or the single digit marked *z* by itself. The m-configuration *find-digits* first goes back to the sentinel and then goes to find-1st-digit to find the left-most digit marked *x*, *x*, or *z*.
+
+```
+mconf        symbol  operations   final mconf
+
+begin        none    P@,R,P1      new
+
+new          @       R            mark-digits
+             else    L            new
+
+mark-digits  0,1     R,Px,R       mark-digits
+             none    R,Pz,R,R,Pr  find-x
+
+             x       E            first-r
+find-x       @       N            find-digits
+             else    L,L          find-x
+
+first-r      r       R,R          last-r
+             else    R,R          first-r
+
+last-r       r       R,R          last-r
+             none    Pr,R,R,Pr    find-x
+
+find-digits  @       R,R          find-1st-digit
+             else    L,L          find-digits
+
+                x    L            found-1st-digit
+find-1st-digit  y    L            found-1st-digit
+                z    L            found-2nd-digit
+               none  R,R          find-1st-digit
+
+found-1st-digit  0   R            add-zero
+                 1   R,R,R        find-2nd-digit
+
+                 x   L            found-2nd-digit
+find-2nd-digit   y   L            found-2nd-digit
+               none  R,R          find-2nd-digit
+
+                 0   R            add-zero
+found-2nd-digit  1   R            add-one
+                none R            add-one
+
+                 r   Ps           add-finished
+add-zero         u   Pv           add-finished
+                else R,R          add-zero
+
+                 r   Pv           add-finished
+add-one          u   Ps,R,R       carry
+                else R,R          add-one
+
+                 r   Pu           add-finished
+carry           none Pu           new-digit-is-zero
+                 u   Pr,R,R       carry
+
+add-finished     @   R,R          erase-old-x
+                else L,L          add-finished
+
+                 x   E,L,L        print-new-x
+erase-old-x      z   Py,L,L       print-new-x
+                else R,R          erase-old-x
+
+                 @   R,R          erase-old-y
+print-new-x      y   Pz           find-digits
+                none Px           find-digits
+
+erase-old-y      y   E,L,L        print-new-y
+                else R,R          erase-old-y
+
+print-new-y      @   R            new-digit-is-one
+                else Py,R         reset-new-y
+
+reset-new-x     none R,Px         flag-result-digits
+                else R,R          reset-new-x
+```
