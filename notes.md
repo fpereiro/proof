@@ -574,6 +574,16 @@ p104
 - Petzold: "We're now ready for the first bit-by-bit multiplication. THe machine multiplies either the two digits marked *x* and *y* by each other, or the single digit marked *z* by itself. The m-configuration *find-digits* first goes back to the sentinel and then goes to find-1st-digit to find the left-most digit marked *x*, *x*, or *z*.
 
 ```
+  -> @1   -> @1           -> @1x z r      -> @1  z r   -> @1  z r        -> @1  z r r r      -> @1  z r r r
+b     new     mark-digits          find-x      first-r            last-r              find-x    find-digits
+
+@1  z r r r      -> @1  z r r r
+  find-1st-digit       found-2nd-digit
+
+
+```
+
+```
 mconf        symbol  operations   final mconf
 
 begin        none    P@,R,P1      new
@@ -644,4 +654,29 @@ print-new-y      @   R            new-digit-is-one
 
 reset-new-x     none R,Px         flag-result-digits
                 else R,R          reset-new-x
+
+                   s Pt,R,R       unflag-result-digits
+flag-result-digits v Pw,R,R       unflag-result-digits
+                else R,R          flag-result-digits
+
+                     s Pr,R,R     unflag-result-digits
+unflag-result-digits v Pu,R,R     unflag-result-digits
+                  else N          find-digits
+
+new-digit-is-zero @   R           print-zero-digit
+                 else L           new-digit-is-zero
+
+                  0   R,E,R       print-zero-digit
+print-zero-digit  1   R,E,R       print-zero-digit
+                 none P0,R,R,R    cleanup
+
+new-digit-is-one  @   R           print-one-digit
+                 else L           new-digit-is-one
+
+                  0   R,E,R       print-one-digit
+print-one-digit   1   R,E,R       print-one-digit
+                 none P0,R,R,R    cleanup
+
+cleanup          none N           new
+                 else E,R,R       cleanup
 ```
