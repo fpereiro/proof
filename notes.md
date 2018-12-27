@@ -573,15 +573,6 @@ p104
 
 - Petzold: "We're now ready for the first bit-by-bit multiplication. THe machine multiplies either the two digits marked *x* and *y* by each other, or the single digit marked *z* by itself. The m-configuration *find-digits* first goes back to the sentinel and then goes to find-1st-digit to find the left-most digit marked *x*, *x*, or *z*.
 
-```
-  -> @1   -> @1           -> @1x z r      -> @1  z r   -> @1  z r        -> @1  z r r r      -> @1  z r r r
-b     new     mark-digits          find-x      first-r            last-r              find-x    find-digits
-
-@1  z r r r      -> @1  z r r r
-  find-1st-digit       found-2nd-digit
-
-
-```
 
 ```
 mconf        symbol  operations   final mconf
@@ -650,7 +641,7 @@ erase-old-y      y   E,L,L        print-new-y
                 else R,R          erase-old-y
 
 print-new-y      @   R            new-digit-is-one
-                else Py,R         reset-new-y
+                else Py,R         reset-new-x
 
 reset-new-x     none R,Px         flag-result-digits
                 else R,R          reset-new-x
@@ -680,3 +671,51 @@ print-one-digit   1   R,E,R       print-one-digit
 cleanup          none N           new
                  else E,R,R       cleanup
 ```
+
+```
+      -> @1   -> @1           -> @1x z r      -> @1  z r   -> @1  z r        -> @1  z r r r      -> @1  z r r r
+begin     new     mark-digits          find-x      first-r            last-r              find-x    find-digits
+
+@1  z r r r      -> @1  z r r r        -> @1  z r r r -> @1  z s r r        -> @1  z s r r -> @1  y s r r
+  find-1st-digit       found-2nd-digit        add-one          add-finished      erase-old-x    print-new-x
+
+@1x y s r r   -> @1x y s r r      -> @1x y s r r      -> @1x y s r r        -> @1x y s r r        -> @1x y s r r
+  find-digits      find-1st-digit     found-1st-digit        find-2nd-digit       found-2nd-digit        add-one
+
+@1x y s v r          -> @1x y s v r  -> @1  y s v r -> @1  y s v r   -> @1    s v r   -> @1y   s v r    -> @1y x s v r
+        add-finished      erase-old-x   print-new-x      erase-old-y      print-new-y       reset-new-x        flag-result-digits
+```
+
+begin                -> @1
+                         .
+new                  -> @1
+                         .
+mark-digits          -> @1x z r
+                              .
+find-x               -> @1  z r
+                          .
+first-r              -> @1  z r
+                                .
+last-r
+find-x
+find-digits
+find-1st-digit
+found-2nd-digit
+add-one
+add-finished
+erase-old-x
+print-new-x
+find-digits
+find-1st-digit
+found-1st-digit
+find-2nd-digit
+found-2nd-digit
+add-one
+add-finished
+erase-old-x
+print-new-x
+erase-old-y
+print-new-y
+reset-new-x          ->
+flag-result-digits   ->
+
