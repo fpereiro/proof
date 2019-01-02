@@ -686,36 +686,65 @@ begin     new     mark-digits          find-x      first-r            last-r    
         add-finished      erase-old-x   print-new-x      erase-old-y      print-new-y       reset-new-x        flag-result-digits
 ```
 
+```
 begin                -> @1
-                         .
+                         _
 new                  -> @1
-                         .
+                              _
 mark-digits          -> @1x z r
-                              .
+                          _
 find-x               -> @1  z r
-                          .
+                                _
 first-r              -> @1  z r
-                                .
-last-r
-find-x
-find-digits
-find-1st-digit
-found-2nd-digit
-add-one
-add-finished
-erase-old-x
-print-new-x
-find-digits
-find-1st-digit
-found-1st-digit
-find-2nd-digit
-found-2nd-digit
-add-one
-add-finished
-erase-old-x
-print-new-x
-erase-old-y
-print-new-y
-reset-new-x          ->
-flag-result-digits   ->
+                                  _
+last-r               -> @1  z r r r
+                        _
+find-x               -> @1  z r r r
 
+                          _
+find-digits          -> @1  z r r r
+                           _
+find-1st-digit       -> @1  z r r r
+                            _
+found-2nd-digit      -> @1  z r r r
+                              _
+add-one              -> @1  z s r r
+                          _
+add-finished         -> @1  z s r r
+                          _
+erase-old-x          -> @1  y s r r
+                          _
+print-new-x          -> @1x y s r r
+                          _
+find-digits          -> @1x y s r r
+                         _
+find-1st-digit       -> @1x y s r r
+                            _
+found-1st-digit      -> @1x y s r r
+                           _
+find-2nd-digit       -> @1x y s r r
+                            _
+found-2nd-digit      -> @1x y s r r
+                                _
+add-one              -> @1x y s v r
+                          _
+add-finished         -> @1x y s v r
+                        _
+erase-old-x          -> @1  y s v r
+                          _
+print-new-x          -> @1  y s v r
+                          _
+erase-old-y          -> @1    s v r
+                           _
+print-new-y          -> @1y   s v r
+                            _
+reset-new-x          -> @1y x s v r
+                                _
+flag-result-digits   -> @1y x t v r
+                                  _
+unflag-result-digits -> @1y x t u r
+                          _
+find-digits          -> @1y x t u r
+                         _
+find-1st-digit       -> @1y x t u r
+```
