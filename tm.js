@@ -2,21 +2,38 @@ var dale   = require ('dale');
 var teishi = require ('teishi');
 
 var tm = function (machine, initial, iterations) {
-   var ic = 0, pos = 0, tape = '', config = machine [initial];
+   var ic = 0, pos = 0, tape = [], config = initial, longestName = 0;
+   dale.do (machine, function (v, k) {
+      if (k.length > longestName) longestName = k.length;
+   });
+
+   var pad = function (s, l) {
+      if ((s + '').length < l) return s + dale.do (dale.times (l - (s + '').length), function () {return ' '}).join ('');
+   }
+
    var run = function () {
       var scanned = tape [pos];
-      if (scanned === undefined || scanned === ' ') scanned = 'none';
-      var actions = config [scanned];
-      if (! actions) config ['else'];
-      if (! actions) return console.log ('ERROR: No matching config for scanned symbol', scanned);
+      if (scanned === undefined) {
+         scanned = tape [pos] = ' ';
+      }
+      if (scanned === ' ') scanned = 'none';
+      var actions = machine [config] [scanned];
+      if (! actions) actions = machine [config] ['else'];
+      if (! actions) return console.log ('ERROR: No matching config for scanned symbol', scanned, 'with config', config);
       dale.do (actions.slice (0, -1), function (action) {
          if (action === 'L') return pos--;
-         if (action === 'R') return pos++;
+         if (action === 'R') {
+            pos++;
+            if (tape [pos] === undefined) tape [pos] = ' ';
+            return;
+         }
          if (action === 'E') return tape [pos] = ' ';
          if (action.match (/^P.$/)) return tape [pos] = action [1];
       });
+      console.log (pad ('', 4), pad ('',     longestName), '  ', pad ('', pos) + '_');
+      console.log (pad (ic, 4), pad (config, longestName), '->', tape.join (''));
       if (++ic > iterations) return;
-      config = machine [actions [actions.length - 1]];
+      config = actions [actions.length - 1];
       run ();
    }
    run ();
@@ -28,11 +45,12 @@ var sqroot2 = {
    },
    new:   {
       '@':  ['R', 'mark-digits'],
-      else: ['R', 'new'],
+      else: ['L', 'new'],
    },
    'mark-digits': {
-      '0,1': ['R', 'Px', 'R',            'mark-digits'],
-      none:  ['R', 'Pz', 'R', 'R', 'Pr', 'find-x'],
+      0:    ['R', 'Px', 'R',            'mark-digits'],
+      1:    ['R', 'Px', 'R',            'mark-digits'],
+      none: ['R', 'Pz', 'R', 'R', 'Pr', 'find-x'],
    },
    'find-x': {
       x:    ['E',      'first-r'],
@@ -136,11 +154,14 @@ var sqroot2 = {
       else: ['L', 'new-digit-is-one'],
    },
    'print-one-digit': {
-      '0,1': ['R', 'E', 'R',       'print-one-digit'],
-      none:  ['P0', 'R', 'R', 'R', 'cleanup'],
+      0:    ['R', 'E', 'R',       'print-one-digit'],
+      1:    ['R', 'E', 'R',       'print-one-digit'],
+      none: ['P0', 'R', 'R', 'R', 'cleanup'],
    },
    cleanup: {
       none: [               'new'],
       else: ['E', 'R', 'R', 'cleanup'],
    }
 }
+
+tm (sqroot2, 'begin', process.argv [2]);
