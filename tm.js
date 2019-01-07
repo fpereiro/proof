@@ -8,10 +8,11 @@ var tm = function (machine, initial, iterations) {
    });
 
    var pad = function (s, l) {
+      if (l === 0 || (s + '').length === l) return s;
       if ((s + '').length < l) return s + dale.do (dale.times (l - (s + '').length), function () {return ' '}).join ('');
    }
 
-   var run = function () {
+   var run = function (lastConfig) {
       var scanned = tape [pos];
       if (scanned === undefined) {
          scanned = tape [pos] = ' ';
@@ -30,9 +31,11 @@ var tm = function (machine, initial, iterations) {
          if (action === 'E') return tape [pos] = ' ';
          if (action.match (/^P.$/)) return tape [pos] = action [1];
       });
-      console.log (pad ('', 4), pad ('',     longestName), '  ', pad ('', pos) + '_');
-      console.log (pad (ic, 4), pad (config, longestName), '->', tape.join (''));
-      if (++ic > iterations) return;
+      if (ic++ > iterations) return;
+      if (config !== actions [actions.length - 1]) {
+         console.log (pad ('', 4), pad ('',     longestName), '  ', pad ('', pos) + '_');
+         console.log (pad (ic, 4), pad (config, longestName), '->', tape.join (''));
+      }
       config = actions [actions.length - 1];
       run ();
    }

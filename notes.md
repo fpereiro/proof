@@ -488,7 +488,7 @@ p101/102
 
 - Petzold: "The machine I'll be showing adheres to Turing's conventions, which means that the only things it prints in the F-squares are the successive digits of the square root of 2 as they are being calculated. Everything else - including maintaining the running total of the multiplication - is done on E-squares."
 
-- Petzold: "The machine begins in m-configuration *being*. The machine uses an @ sign rather than a schwa for the sentinel. (...) The machine begins by printing the sentinel and the digit 1:
+- Petzold: "The machine begins in m-configuration *begin*. The machine uses an @ sign rather than a schwa for the sentinel. (...) The machine begins by printing the sentinel and the digit 1:
 
 ```
 mconf     symbol   operations   final mconf
@@ -557,7 +557,7 @@ last-r       r       R,R          last-r
 
 Note: Petzold seems to use *N* for no operation.
 
-- Petzold: "The tape now has a 7-digit running total zymbolizing an initial value of 0000000:
+- Petzold: "The tape now has a 7-digit running total symbolizing an initial value of 0000000:
 
 ```
 @1 0 1 ?z r r r r r r r
@@ -701,7 +701,6 @@ first-r              -> @1  z r
 last-r               -> @1  z r r r
                         _
 find-x               -> @1  z r r r
-
                           _
 find-digits          -> @1  z r r r
                            _
