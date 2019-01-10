@@ -466,7 +466,7 @@ p100
 
 - Petzold: "This is a machine that adheres to Turing's conventions and calculates the square root of 2 in binary. Actually, if the binary point is assumed to precede all the digits, the machine calculates (2 ^ 1/2) / 2."
 
-- Petzold: "The algorithm implemented by the machine calculates one binary digit at a time. Suppose the machine has been running awhile and has already determined the first four digits. The first four digits of 2 ^ 1/2 in binary are 1.011, equivalent to 1.375 in decimal. What is hte next digit?" Interesting that in when computing a binary number you only have two options for the digit. A ver limited output, done more times.
+- Petzold: "The algorithm implemented by the machine calculates one binary digit at a time. Suppose the machine has been running awhile and has already determined the first four digits. The first four digits of 2 ^ 1/2 in binary are 1.011, equivalent to 1.375 in decimal. What is the next digit?" Note: interesting that in when computing a binary number you only have two options for the digit. A very limited output, done more times to yield the same amount of information.
 
 - Petzold: "The machine's strategy is always to assume that the next digit is 1. To test whether this is correct, multiply 1.0111 by itself:"
 
@@ -478,9 +478,11 @@ Note: 10 is 2
 
 - Petzold: "The product exceeds 2, so that assumption was incorrect. The fifth digit is instead 0, so the first five digits are 1.0110. Let's determine the sixth digit similarly. Assume that the sixth digit is 1 and mlutiply 1.01101 by itself."
 
+```
 1.01101 x 1.01101 = 1.1111101001
+```
 
-- Petzold: "The result is less than 2, so the assumption was good. We now have six digits: 1.01101, which in decimal is 1.40625. Obviously, the square-root-of-2 machine needs to multiply. In general, a multiplicatino of two multidigit numbers requires that each digit of one number be multiplied by each digit of the other number. If one number has *n* digits, and the other number *m* digits, the total number of digit-times-digit multiplications is (`n` x `m`). When doing multiplication by hand, we generally multiply a single digit of one number by the whole other number, yielding *n* or *m* partial products, which are then added together. The machine I'll show does the multiplication a little differently - by maintaining a running total during the multiplication. The result of ach bit-by-bit multiplication is added to this running total. What makes this particular addition tricky is that each bit-by-bit product is generally *not* added to the least singificant bit of the running total, but somewhere in the middle of it."
+- Petzold: "The result is less than 2, so the assumption was good. We now have six digits: 1.01101, which in decimal is 1.40625. Obviously, the square-root-of-2 machine needs to multiply. In general, a multiplication of two multidigit numbers requires that each digit of one number be multiplied by each digit of the other number. If one number has *n* digits, and the other number *m* digits, the total number of digit-times-digit multiplications is (`n` x `m`). When doing multiplication by hand, we generally multiply a single digit of one number by the whole other number, yielding *n* or *m* partial products, which are then added together. The machine I'll show does the multiplication a little differently - by maintaining a running total during the multiplication. The result of each bit-by-bit multiplication is added to this running total. What makes this particular addition tricky is that each bit-by-bit product is generally *not* added to the least significant bit of the running total, but somewhere in the middle of it."
 
 p101/102
 
@@ -748,3 +750,9 @@ find-digits          -> @1y x t u r
                          _
 find-1st-digit       -> @1y x t u r
 ```
+
+Put a z next to the square where you'll put the next digit.
+If you want to calculate the nth digit, put 2n - 1 rs on E squares to the right of the z.
+multiplication is written right to left, after the known digits
+x marks first multiplicand, y second; if they are the same, it's a z. only one of (x, y) OR z, then.
+r, s, t symbolize 0; u, v, w symbolize 1;
