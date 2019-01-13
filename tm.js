@@ -1,5 +1,5 @@
-var dale   = require ('dale');
-var teishi = require ('teishi');
+var dale   = require ('../hack/dale');
+var teishi = require ('../hack/teishi');
 
 var tm = function (machine, initial, iterations) {
    var ic = 0, pos = 0, tape = [], config = initial, longestName = 0;
@@ -112,13 +112,13 @@ var sqroot2 = {
       else: ['L', 'L', 'add-finished'],
    },
    'erase-old-x': {
-      x:    ['E', 'L', 'L',  'print-new-x'],
+      x:    ['E',  'L', 'L', 'print-new-x'],
       z:    ['Py', 'L', 'L', 'print-new-x'],
       else: ['R', 'R',       'erase-old-x']
    },
    'print-new-x': {
       '@':  ['R', 'R', 'erase-old-y'],
-      y:    ['Px',     'find-digits'],
+      y:    ['Pz',     'find-digits'],
       none: ['Px',     'find-digits'],
    },
    'erase-old-y': {
@@ -159,7 +159,7 @@ var sqroot2 = {
    'print-one-digit': {
       0:    ['R', 'E', 'R',       'print-one-digit'],
       1:    ['R', 'E', 'R',       'print-one-digit'],
-      none: ['P0', 'R', 'R', 'R', 'cleanup'],
+      none: ['P1', 'R', 'R', 'R', 'cleanup'],
    },
    cleanup: {
       none: [               'new'],

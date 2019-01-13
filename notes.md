@@ -501,10 +501,6 @@ begin      none    P@, R, P1     new
 - Petzold: "Thus, the only initial assumption the machine makes is that the square root of 2 is at least 1 but less than 2. The machine always comes back to the m-configuration *new* when it's ready to calculate a new digit. The configuration moves the head to the leftmost digit:"
 
 ```
-mconf     symbol   operations   final mconf
-
-begin      none    P@, R, P1    new
-
 new         @      R            mark-digits
            else    L            new
 ```
@@ -519,33 +515,16 @@ new         @      R            mark-digits
 
 - Petzold: "In preparation for the multiplication, the machine marks the digits of the number. (Recall that Turing defined "marking" as printing a symbol to the right of a figure.) The machine uses multiple *x* markers in a manner similar to Turing's Example II (page 85) machine. The m-configuration *mark-digits* marks all the known digits with x, the unknown digit with a *z* (which I'll explain shortly) and prints one *r* in the least significant place of the running total:"
 
+p103
+
 ```
-mconf        symbol  operations   final mconf
-
-begin        none    P@,R,P1      new
-
-new          @       R            mark-digits
-             else    L            new
-
 mark-digits  0,1     R,Px,R       mark-digits
              none    R,Pz,R,R,Pr  find-x
 ```
-
-p103
 
 - Petzold: "The tape is now: `@1x0x1x?z r`. That *r* is the least significant digit of the running total and should be interpreted as a 0. The next section prints two more *r*'s for every *x*, erasing the *x* markers in the process."
 
 ```
-mconf        symbol  operations   final mconf
-
-begin        none    P@,R,P1      new
-
-new          @       R            mark-digits
-             else    L            new
-
-mark-digits  0,1     R,Px,R       mark-digits
-             none    R,Pz,R,R,Pr  find-x
-
              x       E            first-r
 find-x       @       N            find-digits
              else    L,L          find-x
@@ -575,6 +554,27 @@ p104
 
 - Petzold: "We're now ready for the first bit-by-bit multiplication. THe machine multiplies either the two digits marked *x* and *y* by each other, or the single digit marked *z* by itself. The m-configuration *find-digits* first goes back to the sentinel and then goes to find-1st-digit to find the left-most digit marked *x*, *x*, or *z*.
 
+```
+find-digits  @       R,R          find-1st-digit
+             else    L,L          find-digits
+
+                x    L            found-1st-digit
+find-1st-digit  y    L            found-1st-digit
+                z    L            found-2nd-digit
+               none  R,R          find-1st-digit
+```
+
+- Petzold: "If find-1st-digit detects an x, y or z, it positions the head over the digit. Depending on the letter, the machine goes to found-1st-digit or found-2nd-digit. If the first marked digit is 0, the second digit isn't required because the product will be 0 anyway. So we can add 0 to the running total by going to add-zero."
+
+```
+found-1st-digit  0   R            add-zero
+                 1   R,R,R        find-2nd-digit
+```
+
+- Petzold: "If the first difit is a 1, the second digit must be found. The machine searches for the second digit marked x or y."
+
+
+Full machine:
 
 ```
 mconf        symbol  operations   final mconf
@@ -668,7 +668,7 @@ new-digit-is-one  @   R           print-one-digit
 
                   0   R,E,R       print-one-digit
 print-one-digit   1   R,E,R       print-one-digit
-                 none P0,R,R,R    cleanup
+                 none P1,R,R,R    cleanup
 
 cleanup          none N           new
                  else E,R,R       cleanup
@@ -751,8 +751,9 @@ find-digits          -> @1y x t u r
 find-1st-digit       -> @1y x t u r
 ```
 
-Put a z next to the square where you'll put the next digit.
-If you want to calculate the nth digit, put 2n - 1 rs on E squares to the right of the z.
-multiplication is written right to left, after the known digits
-x marks first multiplicand, y second; if they are the same, it's a z. only one of (x, y) OR z, then.
-r, s, t symbolize 0; u, v, w symbolize 1;
+- Start the calculation of a new digit (`new`).
+- Mark known digits with x and mark the square where you'll put the next unknown digit with a z. Mark the square after the z with an r. That empty square represents the least significant digit of the running total (`mark-digits`).
+- If you want to find the nth digit, add 2n r on the E squares. You'll end up with 2n+1 r-marked empty squares. On these empty squares marked with r we'll put the running total of the multiplication. The digits are reversed, with less significant ones to the left and their significance growing left to right. As well as adding all these rs, we delete all the xs (`find-x`, `first-r`, `last-r`).
+- The number that will be multiplied by itself is the number you already have plus a 1 digit. If you start with 1, then the multiplication to do is 11 by itself.
+- x marks first multiplicand, y second; if they are the same, it's a z. only one of (x, y) OR z, then.
+- r, s, t symbolize 0; u, v, w symbolize 1;
