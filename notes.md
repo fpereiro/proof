@@ -753,7 +753,17 @@ find-1st-digit       -> @1y x t u r
 
 - Start the calculation of a new digit (`new`).
 - Mark known digits with x and mark the square where you'll put the next unknown digit with a z. Mark the square after the z with an r. That empty square represents the least significant digit of the running total (`mark-digits`).
-- If you want to find the nth digit, add 2n r on the E squares. You'll end up with 2n+1 r-marked empty squares. On these empty squares marked with r we'll put the running total of the multiplication. The digits are reversed, with less significant ones to the left and their significance growing left to right. As well as adding all these rs, we delete all the xs (`find-x`, `first-r`, `last-r`).
-- The number that will be multiplied by itself is the number you already have plus a 1 digit. If you start with 1, then the multiplication to do is 11 by itself.
-- x marks first multiplicand, y second; if they are the same, it's a z. only one of (x, y) OR z, then.
-- r, s, t symbolize 0; u, v, w symbolize 1;
+- If you want to find the nth digit, add 2n r on the E squares. You'll end up with 2n+1 r-marked empty squares. On these empty squares marked with r we'll put the running total of the multiplication. The digits are reversed, with less significant ones to the left and their significance growing from left to right. As well as adding all these rs, we delete all the xs (`find-x`, `first-r`, `last-r`).
+- The number that will be multiplied by itself is the number you already have plus a 1 digit. Given the fact that we start with 1, then the first multiplication would be 11 by itself.
+- x marks first multiplicand, y second; if they are the same, it's a z. only one of (x, y) OR z, then. `mark-digits` places a z on the next digit to calculate, presumably because we start by multiplying it by itself.
+- r, s, t symbolize 0; u, v, w symbolize 1; these symbols go on E-squares and mark F-squares.
+- Find leftmost x, y or z (`find-digits` & `find-1st-digit`).
+- If leftmost is x or y AND it marks a 0, we call `add-zero` (because 0 * x is 0).
+- If leftmost is x or y AND it marks a 1, we call `find-2nd-digit`.
+- When `find-2nd-digit` finds either a x or a y, it calls `found-2nd-digit`.
+- If leftmost is z, we also call `found-2nd-digit`.
+- If the second digit is 0, we call `add-zero`. Otherwise, we call `add-one`. The latter happens because if we're already finding the second digit, it's because the first one was a one too; thus the result of the multiplication cannot be 0.
+- So far, all the logic ends up invoking `add-zero` or `add-one`, which will add either a 0 or a 1 to the running total of the general multiplication.
+- `add-zero` and `add-one` have comparable structures. `add-zero` finds the leftmost r or u. If it is an r, it changes it to an s (s symbolizes 0); if it is an u, it changes it to a v (v symbolizes 1 and so does u). It then calls `add-finished`.
+- `add-one` also finds the leftmost r or u. If it's an r, it changes it to a v (from something symbolizing 0 to 1); then it calls `add-finished`. If it is an u, it changes it to an s (u symbolizes 1 and s symbolizes 0), and it calls `carry` instead.
+- `carry` goes right through us until it finds either an r or an empty square. If it finds an r, it replaces it with an u (symbolizing a 1). If it instead finds an empty square, we then know that the big number we're multiplying against itself exceeded 2 (because all the possible digits were already marked with r, so if we find a blank, we exceeded our scratchpad space). Then it invokes `new-digit-is-zero` (which means that the new digit to be added is a 0, not a 1). If, instead, `carry` found an r, it calls `add-finished`.
