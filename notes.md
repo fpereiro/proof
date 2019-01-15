@@ -766,4 +766,19 @@ find-1st-digit       -> @1y x t u r
 - So far, all the logic ends up invoking `add-zero` or `add-one`, which will add either a 0 or a 1 to the running total of the general multiplication.
 - `add-zero` and `add-one` have comparable structures. `add-zero` finds the leftmost r or u. If it is an r, it changes it to an s (s symbolizes 0); if it is an u, it changes it to a v (v symbolizes 1 and so does u). It then calls `add-finished`.
 - `add-one` also finds the leftmost r or u. If it's an r, it changes it to a v (from something symbolizing 0 to 1); then it calls `add-finished`. If it is an u, it changes it to an s (u symbolizes 1 and s symbolizes 0), and it calls `carry` instead.
-- `carry` goes right through us until it finds either an r or an empty square. If it finds an r, it replaces it with an u (symbolizing a 1). If it instead finds an empty square, we then know that the big number we're multiplying against itself exceeded 2 (because all the possible digits were already marked with r, so if we find a blank, we exceeded our scratchpad space). Then it invokes `new-digit-is-zero` (which means that the new digit to be added is a 0, not a 1). If, instead, `carry` found an r, it calls `add-finished`.
+- `carry` goes right through us until it finds either an r or an empty square. If it finds an r, it replaces it with an u (symbolizing a 1) and invokes `add-finished`. If it instead finds an empty square, we then know that the big number we're multiplying against itself exceeded 2 (because all the possible digits were already marked with r, so if we find a blank, we exceeded our scratchpad space). Then it invokes `new-digit-is-zero` (which means that the new digit to be added is a 0, not a 1). If, instead, `carry` found an r, it calls `add-finished`.
+- `add-finished` goes left until the sentinel, then calls `erase-old-x`.
+- `erase-old-x` goes right until it finds either an x or a z. If it finds an x, it deletes it. If it finds a z, it replaces it by a y. In both cases, it calls `print-new-x`.
+
+p107
+
+Petzold: "The multiplication completes in one of two ways, both of which you've already seen. If the machine attempts a carry from the running total into a blank square, then the result is known to exceed 2, the unknown digit is known to be 0, and the configuration becomes new-digit-is-zero. Otherwise, if the next destination for the y marker is the sentinel, then the entire multiplication has completed without the running total exceeding 2, and new-digit-is-one takes over."
+
+Per new digit to be added:
+
+new -> mark-digits -> BIT BY BIT MULTIPLICATIONS -> new-digit-is-zero OR new-digit-is-one -> print-zero-digit/print-one-digit -> cleanup -> new
+
+Per bit-by-bit multiplication:
+
+add-finished
+
