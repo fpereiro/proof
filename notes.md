@@ -782,3 +782,30 @@ Per bit-by-bit multiplication:
 
 add-finished
 
+zrrr -> add-one -> zvrr -> erase-old-x -> yvrr -> add-one -> yvvr -> erase-old-y ->  vvr -> reset-new-x -> xvvr
+xvvr -> flag-result-digits -> xwvr -> unflag-result-digits -> xwur -> add-one -> xwsr -> carry -> xwsu -> erase-old-x ->  wsu
+ wsu -> add-one ->  wss -> carry ->  wssu -> new-digit-is-zero
+
+1
+zrrr  add-one
+zvrr  erase-old-x
+yvrr  add-one
+yvvr  erase-old-y
+ vvr  reset-new-x
+xvvr  flag-result-digits
+xwvr  unflag-result-digits
+xwur  add-one
+xwsr  carry
+xwsu  erase-old-x
+ wsu  add-one
+ wss  carry
+ wssu new-digit-is-zero
+10
+zrrrrr  add-one
+zvrrrr  erase-old-x
+yvrrrr  add-zero
+yvsrrr  add-one
+yvsvrr  erase-old-y
+ vsvrr  reset-new-x
+
+
