@@ -786,26 +786,49 @@ zrrr -> add-one -> zvrr -> erase-old-x -> yvrr -> add-one -> yvvr -> erase-old-y
 xvvr -> flag-result-digits -> xwvr -> unflag-result-digits -> xwur -> add-one -> xwsr -> carry -> xwsu -> erase-old-x ->  wsu
  wsu -> add-one ->  wss -> carry ->  wssu -> new-digit-is-zero
 
-1
-zrrr  add-one
-zvrr  erase-old-x
-yvrr  add-one
-yvvr  erase-old-y
- vvr  reset-new-x
-xvvr  flag-result-digits
-xwvr  unflag-result-digits
-xwur  add-one
-xwsr  carry
-xwsu  erase-old-x
- wsu  add-one
- wss  carry
- wssu new-digit-is-zero
-10
-zrrrrr  add-one
-zvrrrr  erase-old-x
-yvrrrr  add-zero
-yvsrrr  add-one
-yvsvrr  erase-old-y
- vsvrr  reset-new-x
+begin                          1
+mark-new-digits      xzr       1
+find-x                zr       1
+last-r                zrrr     1
+add-one               zvrr     1
+erase-old-x           yvrr     1
+print-new-x          xyvrr     1
+add-one              xyvvr     1
+erase-old-x           yvvr     1
+erase-old-y            vvr     1
+print-new-y          y vvr     1
+reset-new-x          yxvvr     1
+flag-result-digits   yxwvr     1
+unflag-result-digits yxwur     1
+add-one              yxwsr     1
+carry                yxwsu     1
+erase-old-x          y wsu     1
+print-new-x          z wsu     1
+add-one              z wss     1
+carry                z wssu    1
+print-zero-digit       wssu    10
+cleanup                        10
 
-
+mark-digits          xxzr
+find-x               x zr
+last-r               x zrrr
+find-x                 zrrr
+last-r                 zrrrrr
+add-one                zvrrrr
+erase-old-x            yvrrrr
+print-new-x           xyvrrrr
+add-zero              xyvsrrr
+erase-old-x            yvsrrr
+print-new-x          x yvsrrr
+add-one              x yvsvrr
+erase-old-x            yvsvrr
+erase-old-y             vsvrr
+print-new-y           y vsvrr
+reset-new-x           yxvsvrr
+unflag-result-digits  yxwrurr
+add-zero              yxwsurr
+erase-old-x           y wsurr
+print-new-x           z wsurr
+add-zero              z wsvrr
+erase-old-x           y wsvrr
+print-new-x          xy wsvrr (2xx)
