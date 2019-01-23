@@ -689,7 +689,6 @@ begin     new     mark-digits          find-x      first-r            last-r    
 ```
 
 ```
-                         _
 begin                -> @1
                          _
 new                  -> @1
@@ -751,43 +750,42 @@ find-digits          -> @1y x t u r
 find-1st-digit       -> @1y x t u r
 ```
 
-- Start the calculation of a new digit (`new`).
-- Mark known digits with x and mark the square where you'll put the next unknown digit with a z. Mark the square after the z with an r. That empty square represents the least significant digit of the running total (`mark-digits`).
-- If you want to find the nth digit, add 2n r on the E squares. You'll end up with 2n+1 r-marked empty squares. On these empty squares marked with r we'll put the running total of the multiplication. The digits are reversed, with less significant ones to the left and their significance growing from left to right. As well as adding all these rs, we delete all the xs (`find-x`, `first-r`, `last-r`).
-- The number that will be multiplied by itself is the number you already have plus a 1 digit. Given the fact that we start with 1, then the first multiplication would be 11 by itself.
-- x marks first multiplicand, y second; if they are the same, it's a z. only one of (x, y) OR z, then. `mark-digits` places a z on the next digit to calculate, presumably because we start by multiplying it by itself.
-- r, s, t symbolize 0; u, v, w symbolize 1; these symbols go on E-squares and mark F-squares.
-- Find leftmost x, y or z (`find-digits` & `find-1st-digit`).
-- If leftmost is x or y AND it marks a 0, we call `add-zero` (because 0 * x is 0).
-- If leftmost is x or y AND it marks a 1, we call `find-2nd-digit`.
-- When `find-2nd-digit` finds either a x or a y, it calls `found-2nd-digit`.
-- If leftmost is z, we also call `found-2nd-digit`.
-- If the second digit is 0, we call `add-zero`. Otherwise, we call `add-one`. The latter happens because if we're already finding the second digit, it's because the first one was a one too; thus the result of the multiplication cannot be 0.
-- So far, all the logic ends up invoking `add-zero` or `add-one`, which will add either a 0 or a 1 to the running total of the general multiplication.
-- `add-zero` and `add-one` have comparable structures. `add-zero` finds the leftmost r or u. If it is an r, it changes it to an s (s symbolizes 0); if it is an u, it changes it to a v (v symbolizes 1 and so does u). It then calls `add-finished`.
-- `add-one` also finds the leftmost r or u. If it's an r, it changes it to a v (from something symbolizing 0 to 1); then it calls `add-finished`. If it is an u, it changes it to an s (u symbolizes 1 and s symbolizes 0), and it calls `carry` instead.
-- `carry` goes right through us until it finds either an r or an empty square. If it finds an r, it replaces it with an u (symbolizing a 1) and invokes `add-finished`. If it instead finds an empty square, we then know that the big number we're multiplying against itself exceeded 2 (because all the possible digits were already marked with r, so if we find a blank, we exceeded our scratchpad space). Then it invokes `new-digit-is-zero` (which means that the new digit to be added is a 0, not a 1). If, instead, `carry` found an r, it calls `add-finished`.
-- `add-finished` goes left until the sentinel, then calls `erase-old-x`.
-- `erase-old-x` goes right until it finds either an x or a z. If it finds an x, it deletes it. If it finds a z, it replaces it by a y. In both cases, it calls `print-new-x`.
-
 p107
 
 Petzold: "The multiplication completes in one of two ways, both of which you've already seen. If the machine attempts a carry from the running total into a blank square, then the result is known to exceed 2, the unknown digit is known to be 0, and the configuration becomes new-digit-is-zero. Otherwise, if the next destination for the y marker is the sentinel, then the entire multiplication has completed without the running total exceeding 2, and new-digit-is-one takes over."
 
-Per new digit to be added:
+Cycle of configurations per new digit to be added:
 
-new -> mark-digits -> BIT BY BIT MULTIPLICATIONS -> new-digit-is-zero OR new-digit-is-one -> print-zero-digit/print-one-digit -> cleanup -> new
+new -> mark-digits -> find-x/last-r -> BIT BY BIT MULTIPLICATIONS -> new-digit-is-zero OR new-digit-is-one -> print-zero-digit/print-one-digit -> cleanup -> new
 
-Per bit-by-bit multiplication:
+The cycle above comprises all of the machine, except for the initial `begin` configuration which prints `@1`. It can be summarized as:
+- Mark existing digits with x.
+- Mark the square where the next digit will go with a z.
+- Mark a number of squares to the right with r. The number is 1 plus twice the amount of existing digits. So when calculating the second digit, it's three rs. When calculating the third, it's five rs.
+- Perform all bit by bit multiplications.
+- Print either a zero or one.
+- Clean up all the E-squares except for the sentinel.
 
-add-finished
+The hard part of the machine is in understanding the bit by bit multiplications. Let's understand the symbols used by it first:
+- x, y and z are multiplication markers, indicating which digit is being multiplied. x represents the first digit, y the second. If they are present, z is absent. If z is present, both x and y are absent. z represents a digit multiplying itself.
+- r, s, t symbolize 0.
+- u, v, w symbolize 1.
+- Reminder: all of these symbols only go on E-squares. F-squares are untouched during bit-by-bit multiplication.
+- There's nine mconfs that write changes to the tape during bit-by-bit multiplication:
+   - Two add a digit to the running total: `add-zero/add-one`. `add-zero` prints s and v. `add-one` prints v and s.
+   - Three print x, y and z: `print-new-x/print-new-y` (`print-new-x` also prints z). reset-new-x prints x.
+   - Two erase x and y: `print-new-x/print-new-y` (`print-new-x` replaces z with y).
+   - Two unflag the digits: `flag-result-digits/unflag-result-digits`. The first prints t and w. The second one prints r and u.
+   - Carry prints u and r.
 
-zrrr -> add-one -> zvrr -> erase-old-x -> yvrr -> add-one -> yvvr -> erase-old-y ->  vvr -> reset-new-x -> xvvr
-xvvr -> flag-result-digits -> xwvr -> unflag-result-digits -> xwur -> add-one -> xwsr -> carry -> xwsu -> erase-old-x ->  wsu
- wsu -> add-one ->  wss -> carry ->  wssu -> new-digit-is-zero
+exit: - new-digit-is-one from print-new-y when finding the sentinel.
+- new-digit-is-zero from carry when finding empty square.
 
+
+Here's a list of the mconfigs that write the tape, and how the tape looks afterwards (E-squares are compacted and the sentinel is ommitted; then to the right you see the F-squares with the current number).
+```
 begin                          1
-mark-new-digits      xzr       1
+mark-digits          xzr       1
 find-x                zr       1
 last-r                zrrr     1
 add-one               zvrr     1
@@ -809,26 +807,46 @@ carry                z wssu    1
 print-zero-digit       wssu    10
 cleanup                        10
 
-mark-digits          xxzr
-find-x               x zr
-last-r               x zrrr
-find-x                 zrrr
-last-r                 zrrrrr
-add-one                zvrrrr
-erase-old-x            yvrrrr
-print-new-x           xyvrrrr
-add-zero              xyvsrrr
-erase-old-x            yvsrrr
-print-new-x          x yvsrrr
-add-one              x yvsvrr
-erase-old-x            yvsvrr
-erase-old-y             vsvrr
-print-new-y           y vsvrr
-reset-new-x           yxvsvrr
-unflag-result-digits  yxwrurr
-add-zero              yxwsurr
-erase-old-x           y wsurr
-print-new-x           z wsurr
-add-zero              z wsvrr
-erase-old-x           y wsvrr
-print-new-x          xy wsvrr (2xx)
+mark-digits          xxzr      10
+find-x               x zr      10
+last-r               x zrrr    10
+find-x                 zrrr    10
+last-r                 zrrrrr  10
+add-one                zvrrrr  10
+erase-old-x            yvrrrr  10
+print-new-x           xyvrrrr  10
+add-zero              xyvsrrr  10
+erase-old-x            yvsrrr  10
+print-new-x          x yvsrrr  10
+add-one              x yvsvrr  10
+erase-old-x            yvsvrr  10
+erase-old-y             vsvrr  10
+print-new-y           y vsvrr  10
+reset-new-x           yxvsvrr  10
+unflag-result-digits  yxwrurr  10
+add-zero              yxwsurr  10
+erase-old-x           y wsurr  10
+print-new-x           z wsurr  10
+add-zero              z wsvrr  10
+erase-old-x           y wsvrr  10
+print-new-x          xy wsvrr  10
+add-zero             xy wsvsr  10
+erase-old-x           y wsvsr  10
+erase-old-y             wsvsr  10
+print-new-y          y  wsvsr  10
+reset-new-x          y xwsvsr  10
+flag-result-digits   y xwtvsr  10
+unflag-result-digits y xwturr  10
+add-one              y xwtsrr  10
+carry                y xwtsur  10
+erase-old-x          y  wtsur  10
+print-new-x          yx wtsur  10
+add-zero             yx wtsvr  10
+erase-old-x          y  wtsvr  10
+print-new-x          z  wtsvr  10
+add-one              z  wtsvv  10
+erase-old-x          y  wtsvv  10
+erase-old-y             wtsvv  10
+print-one-digit         wtsvv  101
+cleanup                        101
+```
