@@ -771,18 +771,35 @@ The hard part of the machine is in understanding the bit by bit multiplications.
 - r, s, t symbolize 0.
 - u, v, w symbolize 1.
 - Reminder: all of these symbols only go on E-squares. F-squares are untouched during bit-by-bit multiplication.
-- There's nine mconfs that write changes to the tape during bit-by-bit multiplication:
-   - Two add a digit to the running total: `add-zero/add-one`. `add-zero` prints s and v. `add-one` prints v and s.
-   - Three print x, y and z: `print-new-x/print-new-y` (`print-new-x` also prints z). reset-new-x prints x.
-   - Two erase x and y: `print-new-x/print-new-y` (`print-new-x` replaces z with y).
-   - Two unflag the digits: `flag-result-digits/unflag-result-digits`. The first prints t and w. The second one prints r and u.
-   - Carry prints u and r.
+- There's ten mconfs that write changes to the tape during bit-by-bit multiplication. Let's see what they find and what do they overwrite it with. Let's also see what mconf they call next on each of the cases.
 
-exit: - new-digit-is-one from print-new-y when finding the sentinel.
-- new-digit-is-zero from carry when finding empty square.
+```
+erase-old-x           x:  z:y         print-new-x          ibid
+erase-old-y           y:              print-new-y
+print-new-x           :x y:z          find-digits
+print-new-y           :y              reset-new-x          ibid
+reset-new-x           :x              flag-result-digits
+add-zero             r:s u:v          add-finished         ibid
+add-one              r:v u:s          add-finished         carry
+flag-result-digits   s:t v:w          unflag-result-digits ibid
+unflag-result-digits s:r v:u          unflag-result-digits ibid
+carry                r:u  :u u:r      add-finished         new-digit-is-zero carry
+```
 
+Within the above group there's two types of mconfs: those that concern themselves with marking/unmarking the digits with x, y and z (erase-old..., print-new..., reset-new-x); and those which actually multiply and mark/unmark the digits with r, s, t, u, v, w.
+
+Each bit-by-bit multiplication consists of:
+- Finding the digits (`find...`, `found...`).
+- Call `add-zero` or `add-one`.
+
+
+
+The entire bit-by-bit multiplication concludes only in two ways:
+- The multiplication doesn't exceed 0, then `new-digit-is-one` will be called. This comes from `print-new-y` when it finds the sentinel.
+- The multiplication exceeds 1, then `new-digit-is-zero` will be called. This comes from `carry` when it finds an empty square.
 
 Here's a list of the mconfigs that write the tape, and how the tape looks afterwards (E-squares are compacted and the sentinel is ommitted; then to the right you see the F-squares with the current number).
+
 ```
 begin                          1
 mark-digits          xzr       1
