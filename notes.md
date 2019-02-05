@@ -808,6 +808,7 @@ erase-old-x            yvsvrr  10
 erase-old-y             vsvrr  10
 print-new-y           y vsvrr  10
 reset-new-x           yxvsvrr  10
+flag-result-digits    yxwsvrr  10
 unflag-result-digits  yxwrurr  10
 add-zero              yxwsurr  10
 erase-old-x           y wsurr  10
@@ -840,6 +841,8 @@ The entire bit-by-bit multiplication concludes only in two ways:
 - The multiplication doesn't exceed 0, then `new-digit-is-one` will be called. This comes from `print-new-y` when it finds the sentinel.
 - The multiplication exceeds 1, then `new-digit-is-zero` will be called. This comes from `carry` when it finds an empty square.
 
+- If we're calculating the nth digit, there's n * n bit by bit multiplications. For example, if we're calculating the second digit, we're multiplying 11 by itself, so there's four bit by bit multiplications, all of them 1 * 1. If we're calculating the third digit, we multiply 101 by itself, so there's nine bit by bit multiplications.
+
 The hard part of the machine is in understanding the bit by bit multiplications. Let's understand the symbols used by it first:
 - x, y and z are multiplication markers, indicating which digit is being multiplied. x represents the first digit, y the second. If they are present, z is absent. If z is present, both x and y are absent. z represents a digit multiplying itself.
 - r, s, t symbolize 0.
@@ -848,26 +851,25 @@ The hard part of the machine is in understanding the bit by bit multiplications.
 - There's ten mconfs that write changes to the tape during bit-by-bit multiplication. Let's see what they find and what do they overwrite it with. Let's also see what mconf they call next on each of the cases.
 
 ```
-erase-old-x          x:  z:y     print-new-x
-erase-old-y          y:          print-new-y
-print-new-x           :x y:z     find-digits
-print-new-y           :y         reset-new-x
-reset-new-x           :x         flag-result-digits
+erase-old-x          x:_ z:y     print-new-x
+erase-old-y          y:_         print-new-y
+print-new-x          _:x y:z     find-digits
+print-new-y          _:y         reset-new-x
+reset-new-x          _:x         flag-result-digits
 add-zero             r:s u:v     add-finished
 add-one              r:v u:s     add-finished         carry
 flag-result-digits   s:t v:w     unflag-result-digits
 unflag-result-digits s:r v:u     unflag-result-digits
-carry                r:u  :u u:r add-finished         new-digit-is-zero carry
+carry                r:u _:u u:r add-finished         new-digit-is-zero carry
 ```
 
 Within the above group there's two types of mconfs: five that concern themselves with marking/unmarking the digits with x, y and z (`erase-old...`, `print-new...`, `reset-new-x`); and five which mark/unmark the digits with r, s, t, u, v, w (`add...`, `flag/unflag-result-digits` and `carry`).
 
 Each bit-by-bit multiplication consists of:
-- Finding the digits (`find...`, `found...`).
+- Finding the digits (`find...`, `found...`), which always starts with `find-digits`.
 - Call `add-zero` or `add-one`.
-- add-one calls carry if it finds u. Otherwise, like add-zero, calls, add-finished.
-- carry either escapes
-- add-finished
-
-
-- If we're calculating the nth digit, there's n * n bit by bit multiplications. For example, if we're calculating the second digit, we're multiplying 11 by itself, so there's four bit by bit multiplications, all of them 1 * 1. If we're calculating the third digit, we multiply 101 by itself, so there's nine bit by bit multiplications.
+- `add-one` calls `carry` if it finds u. Otherwise, like `add-zero`, it instead calls `add-finished`.
+- `carry` also calls `add-finished`, except for the case where it overflows the existing space and calling instead `new-digit-is-zero`, finishing all the bit by bit multiplications.
+- `add-finished` goes back to the sentinel and calls `erase-old-x`.
+- Who calls `find-digits` to restart the process? Two configurations: `unflag-result-digits` (this config always ends up calling `find-digits`) and `print-new-x` (almost always, except for when it finds the sentinel).
+- The `flag/unflag` configurations are perhaps the trickiest to understand. Only `reset-new-x` calls `flag-new-digits`, and only `flag-new-digits` calls `unflag-new-digits`. These configs are not always called in each bit-by-bit multiplication.
