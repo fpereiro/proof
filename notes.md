@@ -873,3 +873,17 @@ Each bit-by-bit multiplication consists of:
 - `add-finished` goes back to the sentinel and calls `erase-old-x`.
 - Who calls `find-digits` to restart the process? Two configurations: `unflag-result-digits` (this config always ends up calling `find-digits`) and `print-new-x` (almost always, except for when it finds the sentinel).
 - The `flag/unflag` configurations are perhaps the trickiest to understand. Only `reset-new-x` calls `flag-new-digits`, and only `flag-new-digits` calls `unflag-new-digits`. These configs are not always called in each bit-by-bit multiplication.
+
+- `x` actually fulfills two purposes. One is as a placeholder of sorts to make the machine print enough `r`s. After this initial stage, `x`s are used to mark the first digit of the multiplication.
+
+- We can note by looking at the outputs above that the E-squares are divided in two areas: the left area with `xyz`, and the right area with `rstuvw`. The left area of the E-squares has n characters when calculating the nth digit (2 with the second, 3 with the third, etc.), while the right area has 1 plus twice the amount of existing digits (3 with the second, 5 with the third, etc.).
+
+Let's see how digits (the left area) are marked before `add-zero` or `add-one` (`_` represents a blank):
+- Second digit (4 bit by bit multiplications): `_z`, `xy`, `yx`, `z_`.
+- Third digit (9 bit by bit multiplications): `__z`, `_xy`, `x_y`, `_yx`, `_z_`, `xy_`, `y_x`, `yx_`, `z__`.
+
+
+Let's look at the bit-by-bit multiplications in detail:
+- The first one always calls `add-one`, since the unknown digit is assumed to be 1.
+
+- xyz area to the right, other letters to the left?
