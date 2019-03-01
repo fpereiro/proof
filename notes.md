@@ -544,7 +544,7 @@ Note: Petzold seems to use *N* for no operation.
 @1 0 1 ?z r r r r r r r
 ```
 
-- Petzold: "The bit order of the running total is reversed from that of the calcluated number. The least significant bit of the running total is on the left. The seven initialized digits of the running total are sufficient if the assumption is correct than the unknown digit is a 1. If an eight digit is required, then the unknown digit is 0."
+- Petzold: "The bit order of the running total is reversed from that of the calculated number. The least significant bit of the running total is on the left. The seven initialized digits of the running total are sufficient if the assumption is correct than the unknown digit is a 1. If an eight digit is required, then the unknown digit is 0."
 
 - Petzold: "The number the machine must multiply by itself consists of the number computed already (101 in this example) and a new digit assumed to be 1, so the number is actually 1011. To keep track of what digits are being multiplied by each other, the machine marks the digits with *x*, *y* and *z* characters. At any time during the multiplication, only one digit is marked with *x* and one digit with *y*, and the digit marked *x* is multiplied by the digit marked *y*. If the *x* and *y* markers happen to coincide, the character *z* is used, so any digit marked *z* is multiplied by itself."
 
@@ -878,12 +878,23 @@ Each bit-by-bit multiplication consists of:
 
 - We can note by looking at the outputs above that the E-squares are divided in two areas: the left area with `xyz`, and the right area with `rstuvw`. The left area of the E-squares has n characters when calculating the nth digit (2 with the second, 3 with the third, etc.), while the right area has 1 plus twice the amount of existing digits (3 with the second, 5 with the third, etc.).
 
-Let's see how digits (the left area) are marked before `add-zero` or `add-one` (`_` represents a blank):
-- Second digit (4 bit by bit multiplications): `_z`, `xy`, `yx`, `z_`.
-- Third digit (9 bit by bit multiplications): `__z`, `_xy`, `x_y`, `_yx`, `_z_`, `xy_`, `y_x`, `yx_`, `z__`.
+- Let's see how digits (the left area) are marked before `add-zero` or `add-one` (`_` represents a blank):
+   - Second digit (4 bit by bit multiplications): `_z`, `xy`, `yx`, `z_`.
+   - Third digit (9 bit by bit multiplications): `__z`, `_xy`, `x_y`, `_yx`, `_z_`, `xy_`, `y_x`, `yx_`, `z__`.
 
+- We can see then that we start always with the less significant (rightmost) digits. Except for the very first one, y always marks the "permanent" spot and the x moves around it (we should actually see z as a y with an x on top of it). The y moves left and the x moves also left, but around it, both starting at the righmost position. This is quite straightforward.
 
-Let's look at the bit-by-bit multiplications in detail:
-- The first one always calls `add-one`, since the unknown digit is assumed to be 1.
+- It's important to notice that `xyz` and `rstuvw` don't mix, but they are side by side. The former occupy n spaces (when calculating the nth digit) and the latter occupy 2n - 1 spaces (when calculating the nth digit).
 
-- xyz area to the right, other letters to the left?
+- Let's see now how this `rstuvw` business works, which is probably the hardest part to understand within the hardest part of this machine (the bit by bit multiplications). Let's start by seeing the actual bit by bit multiplications done on the first two digit calculations:
+   - Second digit (4 bit by bit multiplications): 1, 1, 1, 1
+   - Third digit (9 bit by bit multiplications):  1, 0, 1, 0, 0, 0, 1, 0, 1
+
+- We've seen that all of `rst` represent 0 and all of `uvw` represent 1. We need to distinguish the symbols within these two groups. We'll call `ru` of degree 1, `sv` of degree 2, and `tw` of degree 3.
+
+- Second digit I, second digit II: `add-one` + `r` (d1) = `v` (d2).
+- XXX remaining ones
+
+Two modifications of the `rstuvw`: not just `add-zero` and `add-one`, but `flag/unflag-result-digits`.
+
+Unless overflow with `new-digit-is-one` (therefore ending the bit by bit multiplications for the calculated digit), `print-new-y` calls `reset-new-x`. And `reset-new-x` is the only configuration that can call `flag-result-digits` (and indirectly, `unflag-result-digits`.
