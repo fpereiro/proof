@@ -876,7 +876,7 @@ Each bit-by-bit multiplication consists of:
 
 - `x` actually fulfills two purposes. One is as a placeholder of sorts to make the machine print enough `r`s. After this initial stage, `x`s are used to mark the first digit of the multiplication.
 
-- We can note by looking at the outputs above that the E-squares are divided in two areas: the left area with `xyz`, and the right area with `rstuvw`. The left area of the E-squares has n characters when calculating the nth digit (2 with the second, 3 with the third, etc.), while the right area has 1 plus twice the amount of existing digits (3 with the second, 5 with the third, etc.).
+- We can note by looking at the outputs above that the E-squares are divided in two areas: the left area with `xyz`, and the right area with `rstuvw`. The left area of the E-squares has n characters when calculating the nth digit (2 with the second, 3 with the third, etc.), while the right area has twice n minus 1 (when calculating the nth digit): 3 with the second, 5 with the third, etc.
 
 - Let's see how digits (the left area) are marked before `add-zero` or `add-one` (`_` represents a blank):
    - Second digit (4 bit by bit multiplications): `_z`, `xy`, `yx`, `z_`.
@@ -892,9 +892,35 @@ Each bit-by-bit multiplication consists of:
 
 - We've seen that all of `rst` represent 0 and all of `uvw` represent 1. We need to distinguish the symbols within these two groups. We'll call `ru` of degree 1, `sv` of degree 2, and `tw` of degree 3.
 
-- Second digit I, second digit II: `add-one` + `r` (d1) = `v` (d2).
-- XXX remaining ones
+- While calculating the second digit, these are the changes to the rightmost (`rstuvw`) section (we also mark which digits change and the degrees of the digits between parenthesis):
+   - `rrr` -> `vrr`  (211,  1st, `add-one`).
+   - `vrr` -> `vvr`  (221,  2nd, `add-one`).
+   - `vvr` -> `wvr`  (321,  1st, `flag-result-digits`).
+   - `wvr` -> `wur`  (311,  2nd, `unflag-result-digits`).
+   - `wur` -> `wsr`  (321,  2nd, `add-one`).
+   - `wsr` -> `wsu`  (321,  3rd, `carry`).
+   - `wsu` -> `wss`  (322,  3rd, `add-one`).
+   - `wss` -> `wssu` (3221, 4th, `carry`).
+- And while calculating the third digit:
+   - `rrrrr` -> `vrrrr` (21111, 1st, `add-one`).
+   - `vrrrr` -> `vsrrr` (22111, 2nd, `add-zero`).
+   - `vsrrr` -> `vsvrr` (22211, 3rd, `add-one`).
+   - `vsvrr` -> `wsvrr` (32211, 1st, `flag-result-digits`).
+   - `wsvrr` -> `wrurr` (31111, 2nd & 3rd, `unflag-result-digits`).
+   - `wrurr` -> `wsurr` (32111, 2nd, `add-zero`).
+   - `wsurr` -> `wsvrr` (32211, 3rd, `add-zero`).
+   - `wsvrr` -> `wsvsr` (32221, 4th, `add-zero`).
+   - `wsvsr` -> `wtvsr` (33221, 2nd, `flag-result-digits`).
+   - `wtvsr` -> `wturr` (33111, 3rd & 4th, `unflag-result-digits`).
+   - `wturr` -> `wtsrr` (33211, 3rd, `add-one`).
+   - `wtsrr` -> `wtsur` (33211, 4th, `carry`).
+   - `wtsur` -> `wtsvr` (33221, 4th, `add-zero`).
+   - `wtsvr` -> `wtsvv` (33222, 5th, `add-one`).
 
-Two modifications of the `rstuvw`: not just `add-zero` and `add-one`, but `flag/unflag-result-digits`.
-
-Unless overflow with `new-digit-is-one` (therefore ending the bit by bit multiplications for the calculated digit), `print-new-y` calls `reset-new-x`. And `reset-new-x` is the only configuration that can call `flag-result-digits` (and indirectly, `unflag-result-digits`.
+- Once degree 3 is there, nothing unmarks it. It's a way of ignoring that area altogether.
+- All configurations change one of these at a time, except for `unflag-result-digits` which seems to do it always in 2s.
+- `carry` doesn't affect degree. `unflag-result-digits` lowers degrees by one. All three remaining (`add-zero`, `add-one` and `flag-result-digits`) all increase the degree by one.
+- `carry` can create a new `rstuvw` but not necessarily.
+- `add-zero` and `add-one` seem to always affect the leftmost digit of degree 1.
+- `flag-result-digits` converts the leftmost 1 or 2 (always 2, really) into a 3.
+- `unflag-result-digits` converts all 2s into a 1.
