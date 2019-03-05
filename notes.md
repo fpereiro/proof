@@ -918,9 +918,13 @@ Each bit-by-bit multiplication consists of:
    - `wtsvr` -> `wtsvv` (33222, 5th, `add-one`).
 
 - Once degree 3 is there, nothing unmarks it. It's a way of ignoring that area altogether.
-- All configurations change one of these at a time, except for `unflag-result-digits` which seems to do it always in 2s.
-- `carry` doesn't affect degree. `unflag-result-digits` lowers degrees by one. All three remaining (`add-zero`, `add-one` and `flag-result-digits`) all increase the degree by one.
-- `carry` can create a new `rstuvw` but not necessarily.
-- `add-zero` and `add-one` seem to always affect the leftmost digit of degree 1.
-- `flag-result-digits` converts the leftmost 1 or 2 (always 2, really) into a 3.
-- `unflag-result-digits` converts all 2s into a 1.
+- All configurations change one of these characters at a time, except for `unflag-result-digits` which seems to do it always in twos.
+- `flag-result-digits` converts the leftmost degree 2 into a degree 3.
+- `unflag-result-digits` converts all degree 2 into degree 1.
+- `carry`, `add-zero` and `add-one` all operate on the leftmost character with degree 1. `carry` doesn't affect degree. `add-zero` and `add-one` increase the degree from 1 to 2.
+- `carry` can create a new character but not necessarily, only if it's fired and there's already an `u`.
+
+- When calculating the second digit, there's only two positions for `y`, three `rstuvw` positions and four bit by bit multiplications. The first two are stored on the `rstuvw` digits 1st and 2nd; the last two on the digits 2nd and third.
+- When calculating the second digit, there's three positions for `y`, five `rstuvw` positions and and nine bit by bit multiplications. The first three are stored on the `rstuvw` digits 1st, 2nd and 3rd; multiplications 4-6 are stored on the digits 2nd, 3rd and 4th; the last three multiplications are stored on digits 3rd, 4th and 5th.
+
+- Because these digits are binary, if we're multiplying a number of two digits (maximum value: 3), the maximum value it may have is 9, which requires
