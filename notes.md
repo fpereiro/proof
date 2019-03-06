@@ -927,4 +927,101 @@ Each bit-by-bit multiplication consists of:
 - When calculating the second digit, there's only two positions for `y`, three `rstuvw` positions and four bit by bit multiplications. The first two are stored on the `rstuvw` digits 1st and 2nd; the last two on the digits 2nd and third.
 - When calculating the second digit, there's three positions for `y`, five `rstuvw` positions and and nine bit by bit multiplications. The first three are stored on the `rstuvw` digits 1st, 2nd and 3rd; multiplications 4-6 are stored on the digits 2nd, 3rd and 4th; the last three multiplications are stored on digits 3rd, 4th and 5th.
 
-- Because these digits are binary, if we're multiplying a number of two digits (maximum value: 3), the maximum value it may have is 9, which requires
+- Let's see how we would do these multiplications ourselves in paper. For the second digit, it is 11x11, and for the third one, 101x101.
+
+```
+  11
+ x11
+====
+  11
+ 110
+====
+1001
+
+```
+  101
+ x101
+=====
+  101
+ 0000
+10100
+=====
+11001
+```
+
+- Notice how the first multiplication requires three spaces for expressing the digits of the partial products (`11 and `110`), and how the second one requires five spaces (`101`, `0000` and `10100`). Notice also how the first multiplication exceeds those three digits in the result, which means that there is an overflow and therefore the digit must be 0.
+
+- The running total that Petzold speaks of is a way of compressing those partial products (`11`, `110` and `101`, `0000` and `10100`) into a single (yet changing) set of characters! Degree 3 (`tw`) represents the 0s to the right and degree 2 (`sv`) represents digits already accounted for in the current multiplication line. The leftmost character of degree one (`ru`) represents the next place where to add the digit! If we were to see the multiplications above but with the degrees instead on the partial product lines, we'd see this (at the end):
+
+```
+  11
+ x11
+====
+  22
+ 223
+====
+1001
+
+  101
+ x101
+=====
+  222
+ 2223
+22233
+=====
+11001
+```
+
+Inverting the partial products, we'd have: `22` and `322` for the first multiplication; and `222`, `3222` and `33222` for the second one.
+
+- If we replace the degree numbers by the actual characters (taking into account whether they are 0s or 1s), we'd get:
+
+```
+  11
+ x11
+====
+  vv  (11)
+ svt (110)
+====
+1001
+
+  101
+ x101
+=====
+  vsv   (101)
+ ssst  (0000)
+vsvtt (10100)
+=====
+11001
+```
+
+- We might as well add the `r`s! They go on the empty spaces.
+
+```
+  11
+ x11
+====
+ rvv  (11)
+ svt (110)
+====
+1001
+
+  101
+ x101
+=====
+rrvsv   (101)
+rssst  (0000)
+vsvtt (10100)
+=====
+11001
+```
+
+- These finished partial products map to the moments when the machine is about to call `flag-result-digits`. For the first line of each multiplication, we can see that they indeed map to what we have on the tape (after inverting it): `rvv` maps to `vvr` and `rrvsv` maps to `vsvrr`.
+
+- Regarding the second partial product for each multilpication, for the first multiplication we don't reach `flag-result-digits` but we have `wssu` after the `carry`; and for the second one we have `wsvrr` before flagging the digits. Inverting this yields `ussw` and `rrvsw`. We need, on our hand multiplications above, to sum the lines (preserving the highest degree): `rvv` + `svt` = `vssw` (compare `vssw` with `ussw`); and `rrvsv` + `rssst` = `rsvsw` (compare `rsvsw` which `rsvsw`, they are the same!).
+
+- Why the discrepancy in the first case? Because `carry` is called and there's an overflow, the `u` is not marked as a second degree character yet, so it's not turned into a `v`. Notice however how the second partial product of the second multiplication matches exactly the state of the tape before flagging the digits for the second time.
+
+- Let's see the third and final partial product. The tape contains `wtsvv`, which inverted is `vvstw`. In our multiplications, we need to sum `rrvsv` + `rssst` + `vsvtt`, which yields `vvstw`! We can see how both strings match exactly.
+
+- By using three degrees of characters, Petzold distinguishes the next character where to place the digit (degree 1, `ru`), characters already used on the partial multiplication (degree 2, `sv`) and characters that represent "rightmost zeroes" on a given partial multiplication (degree 3, `uw`). In this way, the running total is maintained.
