@@ -938,7 +938,6 @@ Each bit-by-bit multiplication consists of:
 ====
 1001
 
-```
   101
  x101
 =====
