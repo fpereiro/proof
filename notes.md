@@ -1025,3 +1025,161 @@ vsvtt (10100)
 - Let's see the third and final partial product. The tape contains `wtsvv`, which inverted is `vvstw`. In our multiplications, we need to sum `rrvsv` + `rssst` + `vsvtt`, which yields `vvstw`! We can see how both strings match exactly.
 
 - By using three degrees of characters, Petzold distinguishes the next character where to place the digit (degree 1, `ru`), characters already used on the partial multiplication (degree 2, `sv`) and characters that represent "rightmost zeroes" on a given partial multiplication (degree 3, `uw`). In this way, the running total is maintained.
+
+I believe I now understand this machine; but I'm not sure if my explanation has been good enough. If you don't fully understand it and you'd like to, please open a pull request or send me a message.
+
+p109
+
+- Petzold: "On a real computer, you'd at least have the convenience of addition and multiplication. If you were faced with the job of implementing several different types of functions on a Turing Machine, you might consider assembling a collection of common machine tables that you could then use as building blocks in implementing more complex tables. This is precisely what Turing does next, although his real goal is a Universal Machine that can simulate any other machine."
+
+p111
+
+- Petzold: "It might be advantageous to determine beforehand that certain similar m-configurations will be required in a machine, and to predefine special m-configurations just for those chores. Doing so might help clarify certain strategies used in programming a Turing Machine, and to make the final job easier."
+
+p111/112
+
+- Petzold: "Let's call the m-configuration that moves the head back to the sentinel `goto-sentinel`. Then, when we're writing the states for a particular machine, and we want the head to be positioned over the figure to the right of the sentinel, we just specify `goto-sentinel` and we don't have to figure out how to do it all over again. Not only would it make the machine description a bit smaller, but (in theory) it would help anyone who had to look at the machine understand it. We might define `goto-sentinel` on its own like so:"
+
+```
+goto-sentinel   @       R    ?????
+                else    L    goto-sentinel
+```
+
+- Petzold: "and immediately we see a problem indicatedby that insistent squad of question marks. AFter the machine finds the sentinel, it must go into some other m-configuration, but that isn't known until we actually need to use `goto-sentinel` in a machine. We need some way to specify the final m-configuration in a general way so that `goto-sentinel` remains flexible."
+z
+
+- Petzold:" The solution is to define `goto-sentinel` much like a mathematical function, where the final destination is an argument to the function:
+
+```
+goto-sentinel (A)       @   R   A
+                     else   L   goto-sentinel (A)
+```
+
+- Petzold: "The `new`, `new-digit-is-zero` and `new-digit-is-one` m-configurations can now be eliminated. At the beginning of the square-root machine, instead of having `begin` go to `new`, and `new` go to `mark-digits`, we can specify:"
+
+```
+begin     none P@,R,P1    goto-sentinel (mark-digits)
+```
+
+- Instead of defining `carry` to go to `new-digit-is-zero` (...) it can instead refer to `goto-sentinel` to go back to the sentinel and then switch to `print-zero-digit`:
+
+```
+               r      Pu       add-finished
+carry       none      Pu       goto-sentinel (print-zero-digit)
+               u      Pr,R,R   carry
+```
+
+- Petzold: "We can profitably define a generalized `print-digit` function. The argument for this function is the character to print:
+
+```
+                     0    R,E,R      print-digit (a)
+print-digit (a)      1    R,E,R      print-digit (a)
+                  none    Pa,R,R,R   cleanup
+```
+
+- Petzold: "Notice the `Pa` operation in the last line indicating that the character to be printed is the argument to `print-digit`. Now the m-configuration `carry` becomes:
+
+```
+               r      Pu       add-finished
+carry       none      Pu       goto-sentinel (print-digit (0))
+               u      Pr,R,R   carry
+```
+
+- Petzold: "The m-configuration `print-new-y` (...) now becomes:
+
+```
+print-new-y      @        R      goto-sentinel (print-digit (1))
+                 else     Py,R   reset-new-x
+```
+
+- Notice that Petzold uses `A` as a configuration placeholder, and `a` as a scanned symbol placeholder.
+
+- In the same vein, we can eliminate `find-digits` with `goto-sentinel` by changing `find-x`, `print-new-x`, `print-new-y` and `unflag-result-digits. Likewise with `add-finished`, by removing it from `add-zero`, `add-one` and `carry`.
+
+- When is it correct to do this replacement? If a configuration only has two branches: 1) `@` to call a single mconf and 2) otherwise go two left and call itself. `find-x` is not like this because it has three branches, so it cannot be replaced in the same manner.
+
+- How does the new version of the machine look like?
+
+```
+mconf        symbol  operations   final mconf
+
+goto-sentinel (A) @    R          A
+                  else L          goto-sentinel (A)
+
+begin        none    P@,R,P1      goto-sentinel (mark-digits)
+
+mark-digits  0,1     R,Px,R       mark-digits
+             none    R,Pz,R,R,Pr  find-x
+
+             x       E            first-r
+find-x       @       N            goto-sentinel (find-1st-digit)
+             else    L,L          find-x
+
+first-r      r       R,R          last-r
+             else    R,R          first-r
+
+last-r       r       R,R          last-r
+             none    Pr,R,R,Pr    find-x
+
+                x    L            found-1st-digit
+find-1st-digit  y    L            found-1st-digit
+                z    L            found-2nd-digit
+               none  R,R          find-1st-digit
+
+found-1st-digit  0   R            add-zero
+                 1   R,R,R        find-2nd-digit
+
+                 x   L            found-2nd-digit
+find-2nd-digit   y   L            found-2nd-digit
+               none  R,R          find-2nd-digit
+
+                 0   R            add-zero
+found-2nd-digit  1   R            add-one
+                none R            add-one
+
+                 r   Ps           goto-sentinel (erase-old-x)
+add-zero         u   Pv           goto-sentinel (erase-old-x)
+                else R,R          add-zero
+
+                 r   Pv           goto-sentinel (erase-old-x)
+add-one          u   Ps,R,R       carry
+                else R,R          add-one
+
+                 0    R,E,R       print-digit (a)
+print-digit (a)  1    R,E,R       print-digit (a)
+                 none Pa,R,R,R    cleanup
+
+                 r   Pu           goto-sentinel (erase-old-x)
+carry           none Pu           goto-sentinel (print-digit (0))
+                 u   Pr,R,R       carry
+
+                 x   E,L,L        print-new-x
+erase-old-x      z   Py,L,L       print-new-x
+                else R,R          erase-old-x
+
+                 @   R,R          erase-old-y
+print-new-x      y   Pz           goto-sentinel (find-1st-digit)
+                none Px           goto-sentinel (find-1st-digit)
+
+erase-old-y      y   E,L,L        print-new-y
+                else R,R          erase-old-y
+
+print-new-y      @   R            goto-sentinel (print-digit (1))
+                else Py,R         reset-new-x
+
+reset-new-x     none R,Px         flag-result-digits
+                else R,R          reset-new-x
+
+                   s Pt,R,R       unflag-result-digits
+flag-result-digits v Pw,R,R       unflag-result-digits
+                else R,R          flag-result-digits
+
+                     s Pr,R,R     unflag-result-digits
+unflag-result-digits v Pu,R,R     unflag-result-digits
+                  else N          goto-sentinel (find-1st-digit)
+
+cleanup          none N           new
+                 else E,R,R       cleanup
+```
+
+- We have gone from 27 to 22 configurations.
