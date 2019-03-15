@@ -1076,6 +1076,8 @@ print-digit (a)      1    R,E,R      print-digit (a)
                   none    Pa,R,R,R   cleanup
 ```
 
+p113
+
 - Petzold: "Notice the `Pa` operation in the last line indicating that the character to be printed is the argument to `print-digit`. Now the m-configuration `carry` becomes:
 
 ```
@@ -1182,3 +1184,30 @@ cleanup          none N           new
 ```
 
 - We have gone from 27 to 22 configurations.
+
+- Petzold: "Today's programmers will recognize this concept immediately. Although different programming languages provide this facility in the form of *procedures* or *functions* or *methods*, the most general term is *subroutine*. For decades, subroutines have been the most universal structural element of computer programs."
+
+- Petzold: "These configurations exist primarily to clarify the structure of Turing Machines and to make them easier to write. There's no concept of "calling" one of these configurations or of "returning from a configuration." But if it's not that, is it merely a replacement?
+
+- Petzold: "Turing calls these configurations with arguments "skeleton tables" before settling on the better term "m-function". A machine table that makes use of skeleton tables he calls an "abbreviated table".
+
+p113/114
+
+- Turing: "4. Abbreviated tables: There are certain types of process used by nearly all machines, and these, in some machines, are used in many connections. These processes include copying down sequences of symbols, comparing sequences, erasing all symbols of a given form, etc. Where such processes are concerned we can abbreviate the tables for the m-configurations considerably by the use of "skeleton tables". In skeleton tables there appear capital German letters and small Greek letters. These are of the nature of "variables". By replacing each capital German letter through by an m-configuration and each small Greek letter by a symbol, we obtain the table for an m-configuration. The skeleton tables are to be regarded as nothing but abbreviations: they are not essential. So long as the reader understands how to obtain the complete tables from the skeleton tables, there is no need to give any exact definitions in this connection."
+
+- Some observations: two types of variables, those representing m-configurations and those representing scanned symbols. Division between code and data. It implies a system with two types.
+
+XXX
+
+```
+f (E, B, alpha)    @        L      f1 (E, B, alpha)
+                   not @    L      f  (E, B, alpha)
+
+                   alpha      N   E
+f1 (E, B, alpha)   not alpha  R   f1 (E, B, alpha)
+                   none       R   f2 (E, B, alpha)
+
+                   alpha      N   E
+f2 (E, B, alpha)   not alpha  R   f1 (E, B, alpha)
+                   none       R   B
+```
