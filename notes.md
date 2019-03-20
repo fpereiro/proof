@@ -1193,21 +1193,32 @@ cleanup          none N           new
 
 p113/114
 
-- Turing: "4. Abbreviated tables: There are certain types of process used by nearly all machines, and these, in some machines, are used in many connections. These processes include copying down sequences of symbols, comparing sequences, erasing all symbols of a given form, etc. Where such processes are concerned we can abbreviate the tables for the m-configurations considerably by the use of "skeleton tables". In skeleton tables there appear capital German letters and small Greek letters. These are of the nature of "variables". By replacing each capital German letter through by an m-configuration and each small Greek letter by a symbol, we obtain the table for an m-configuration. The skeleton tables are to be regarded as nothing but abbreviations: they are not essential. So long as the reader understands how to obtain the complete tables from the skeleton tables, there is no need to give any exact definitions in this connection."
+- Turing: "4. Abbreviated tables: There are certain types of process used by nearly all machines, and these, in some machines, are used in many connections. These processes include copying down sequences of symbols, comparing sequences, erasing all symbols of a given form, etc. Where such processes are concerned we can abbreviate the tables for the m-configurations considerably by the use of "skeleton tables". In skeleton tables there appear capital German letters and small Greek letters. These are of the nature of "variables". By replacing each capital German letter through by an m-configuration and each small Greek letter by a symbol, we obtain the table for an m-configuration. The skeleton tables are to be regarded as nothing but abbreviations: they are not essential. So long as the reader understands how to obtain the complete tables from the skeleton tables, there is no need to give any exact definitions in this connection. These are of the nature of "variables". By replacing each capital German letter throught by an m-configuration and each small Greek letter by a symbol, we obtain the table for an m-configuration."
 
 - Some observations: two types of variables, those representing m-configurations and those representing scanned symbols. Division between code and data. It implies a system with two types.
 
-XXX
+- Note: to represent Greek letters, I will use gA for alpha, gB for beta, gG for gamma, etc. For capital German letters, I'll simply use uppercase latin characters.
+
+- Petzold: "For Turing, however, the skeleton tables exist solely to make his larger machines easier to construct (from his perspective) and easier to read and understand (from our perspective).
+
+- Turing: "The skeleton tables are to be regarded as nothing but abbreviations: they are not essential. So long as the reader understands how to obtain the complete tables from the skeleton tables, there is no need to give any exact definitions in this connection."
+
+- How to convert from skeleton tables to the expanded tables? I believe this is the core question of this section. We need to understand how things can be replaced. Is a mere textual replacement enough, or do we have to keep track of nested calls? How can we prove that the skeleton tables can be always converted to expanded tables?
+
+- Petzold: "The skeleton tables are not essential, he says, and that's true. (...) Turing is setting the stage for his universal machine, which makes *extensive* use of the skeleton tables presented in this section. Without these tables, the Universal Machine would be much longer and more complex than it is. For that reason, knowing a little about Turing's ultimate intentions dcan help make these tables just a bit more comprehensible. As he will discuss in Section 7, the Universal Machine interprets a tape that contains a computing machine encoded as a series of letters. At the far left is a schwa sentinel. The tape alternates between F-squares and E-squares. The E-squares are, as usual, erasable. In the Universal Machine, the F-squares contain mostly letters than digits. Even so, the machine always prints the F-squares sequentially from left to right, and without erasing a previous symbol. For that reason, two blank squares in a row indicate that no F-squares exist to the right of that point."
+
 
 ```
-f (E, B, alpha)    @        L      f1 (E, B, alpha)
-                   not @    L      f  (E, B, alpha)
+f (E, B, gA)    @          L   f1 (E, B, gA)
+                not @      L   f  (E, B, gA)
 
-                   alpha      N   E
-f1 (E, B, alpha)   not alpha  R   f1 (E, B, alpha)
-                   none       R   f2 (E, B, alpha)
+                gA N       E
+f1 (E, B, gA)   not gA     R   f1 (E, B, gA)
+                none       R   f2 (E, B, gA)
 
-                   alpha      N   E
-f2 (E, B, alpha)   not alpha  R   f1 (E, B, alpha)
-                   none       R   B
+                gA         N   E
+f2 (E, B, gA)   not gA     R   f1 (E, B, gA)
+                none       R   B
 ```
+
+- Notes: nested tables happen when received capital argument (m-configuration) is passed as argument to final function (instead of being used directly; this should not happen with characters, since they are replaced in situ).
