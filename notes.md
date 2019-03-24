@@ -1025,7 +1025,7 @@ vsvtt (10100)
 
 - By using three degrees of characters, Petzold distinguishes the next character where to place the digit (degree 1, `ru`), characters already used on the partial multiplication (degree 2, `sv`) and characters that represent "rightmost zeroes" on a given partial multiplication (degree 3, `uw`). In this way, the running total is maintained.
 
-I believe I now understand this machine; but I'm not sure if my explanation has been good enough. If you don't fully understand it and you'd like to, please open a pull request or send me a message.
+I believe I now understand this machine; but I'm not sure if my explanation has been good enough. If you don't fully understand it and you'd like to, please open an issue or send me a message.
 
 p109
 
@@ -1197,7 +1197,7 @@ p113/114
 
 - Some observations: two types of variables, those representing m-configurations and those representing scanned symbols. Division between code and data. It implies a system with two types.
 
-- Note: to represent Greek letters, I will use gA for alpha, gB for beta, gG for gamma, etc. For capital German letters, I'll simply use uppercase latin characters.
+- Note: to represent Greek letters, I will use sA for alpha, sB for beta, sG for gamma, etc. (the small `s` stands for "symbol"). For capital German letters, I'll use mA for the German letter A, mB for the German letter B, etc. (the small letter `m` stands for "m-conf").
 
 - Petzold: "For Turing, however, the skeleton tables exist solely to make his larger machines easier to construct (from his perspective) and easier to read and understand (from our perspective).
 
@@ -1209,16 +1209,63 @@ p113/114
 
 
 ```
-f (E, B, gA)    @          L   f1 (E, B, gA)
-                not @      L   f  (E, B, gA)
+f (mC, mB, sA)   @          L   f1 (mC, mB, sA)
+                 not @      L   f  (mC, mB, sA)
 
-                gA N       E
-f1 (E, B, gA)   not gA     R   f1 (E, B, gA)
-                none       R   f2 (E, B, gA)
+                 sA         N   mC
+f1 (mC, mB, sA)  not sA     R   f1 (mC, mB, sA)
+                 none       R   f2 (mC, mB, sA)
 
-                gA         N   E
-f2 (E, B, gA)   not gA     R   f1 (E, B, gA)
-                none       R   B
+                 sA         N   mC
+f2 (mC, mB, sA)  not sA     R   f1 (mC, mB, sA)
+                 none       R   B
 ```
 
-- Notes: nested tables happen when received capital argument (m-configuration) is passed as argument to final function (instead of being used directly; this should not happen with characters, since they are replaced in situ).
+- `f` cares only about whether it sees a `@` (the schwa marking the beginning of the tape) or not. If it does, it goes left and calls `f1` with the same arguments it received. Otherwise, it also goes left but instead calls itself with the same arguments it received. Note: interestingly enough, if it sees a `@`, it goes one to the left of it, to the "out of range" section of the tape.
+
+- `f1` has three cases. If it sees `sA` (alpha), it doesn't do anything and calls `mC`, the first m-conf it received as its argument. If it scans a symbol that is neither `sA` nor a blank, it goes right and calls itself with the same arguments. If it scans a blank, it also goes right but instead calls `f2` with the same arguments it received. Note: if `f1` doesn't receive `@` as `sA`, then, after being gone to the left of the schwa, `f1` will bring the scanned index back to the working area of the tape.
+
+- `f2` also has three cases, the conditions being the same as those from `f1`. If it sees `sA`, it doesn't do anything and calls `mC` (exactly as `f1` did). If it scans a symbol that is neither `sA` nor a blank, it goes right and calls `f1` with the same arguments it received (unlike `f1`, which instead called itself in this case). If it scans a blank, it goes right and calls `mB`.
+
+- Observation: the branch/condition to be picked by a Turing Machine is determined by the scanned symbol.
+
+- Observation: nested tables happen when received capital argument (m-configuration) is passed as argument to final function (instead of being used directly; this should not happen with characters, since they are replaced in situ).
+
+- Petzold: "So, `f` stands for `find`. If it finds an `sA`, it goes to m-configuration `mC`, the first argument to `f`, and the head will be sitting on the first (leftmost) `sA`. If it can't find an `sA`, then it goes to m-configuration `mB`."
+
+- Petzold: "In a table for a complete machine, this skeleton table would be referred to by an entry in the final m-config column that looks something like this:"
+
+```
+m-config    symbol   operations   final m-config
+                                    f (mQ, mR, x)
+```
+
+- Petzold: "The m-configurations `mQ` and `mR` would be defined elsewhere in the machine, and `x` would be a symbol used by the machine.
+
+- Turing: "If we were to replace `mC` throughout by `mQ` (say), `mB` by `mR`, and `sA` by `x`, we should have a complete table for the m-configuration `f (mQ, mR, x)`.
+
+- Petzold: "in the context of the complete machine, this skeleton table effectively expands into this table:"
+
+```
+m-config    symbol   operations   final m-config
+
+f            @          L          f1
+             not @      L          f
+
+             x          R          mQ
+f1           not x      R          f1
+             none       R          f2
+
+
+             x          R          mQ
+f2           not x      R          f1
+             none       R          mR
+```
+
+- Petzold: "Because the f function may be used several times in the same machine, the expanded versions of the m-configurations f, f1 and f2 would all need different names each time they're used.
+
+- Turing: "f is called an "m-configuration function" or "m-function" The only expressions which are admissible for substitution in an m-function are the m-configurations and symbols of the machine. These have to be enumerated more or less explicitly: they may include expressions such as p (mE, x); indeed they must if there are an m-functions used at all."
+
+- Petzold: "If an m-function named p has been defined, and if a machine refers to m-function in its final m-config column, then p must be considered to be an m-configuration of the machine. Turing is a little nervous here because arguments to m-functions can be other m-functions. In other words, m-functions can be *nested*. (...) The problem results from implicitly allowing infinite recursion - that is, a function referring to itself, or referring to a second function which in turn refers to the first. If infinite recursion is allowed, then a machine could end up with an infinite number of m-configurations, and that's in violation of Turing's original definition of a computing machine."
+
+- Solution to prevent infinite recursion: create a graphic of dependencies from one m-configuration to another. The graph should be a direct acyclic graph. The two conditions to avoid are: 1) a depending on b and b depending on a; 2) a depending on b, b depending on c, c depending on a. If these two conditions are avoided, then repeated substitution can take place and the machine can be expanded to its full length without going into an infinite recurse.
