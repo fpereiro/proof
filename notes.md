@@ -1269,3 +1269,18 @@ f2           not x      R          f1
 - Petzold: "If an m-function named p has been defined, and if a machine refers to m-function in its final m-config column, then p must be considered to be an m-configuration of the machine. Turing is a little nervous here because arguments to m-functions can be other m-functions. In other words, m-functions can be *nested*. (...) The problem results from implicitly allowing infinite recursion - that is, a function referring to itself, or referring to a second function which in turn refers to the first. If infinite recursion is allowed, then a machine could end up with an infinite number of m-configurations, and that's in violation of Turing's original definition of a computing machine."
 
 - Solution to prevent infinite recursion: create a graphic of dependencies from one m-configuration to another. The graph should be a direct acyclic graph. The two conditions to avoid are: 1) a depending on b and b depending on a; 2) a depending on b, b depending on c, c depending on a. If these two conditions are avoided, then repeated substitution can take place and the machine can be expanded to its full length without going into an infinite recurse.
+
+- Turing: "If we did not insist on this explicit enumeration, but simply stated that the achine had certain m-configurations (enumerated) and all m-configurations obtainable by substitution of m-configurations in certain m-functions, we should usually get an infinity of m-configurations; e.g., we might say that the machine was to have the m-configuration q and all m-configurations obtainable by substituting an m-configuration for `mC` in `p (mC)`. Then it would have q, p (q), p (p (q)), p (p (p (q))), ... as m-configurations.
+
+- Turing: "Our interpretation rule then is this. We are given the names of the m-configurations of the machine, mostly expressed in terms of m-functions. We are also given skeleton tables. All we want is the complete table for the m-configurations of the machine. This is obtained by repeated substitution in the skeleton tables."
+
+- Turing: "Further examples (in the explanations, the symbol `->` is used to signify "the machine goes into the m-configuration...").
+
+- Petzold: "The columns of these tables are rather smushed together, and there are no column headings. Some tables contain only m-configurations and final m-configurations. Others contain columns for scanned characters and operations that must be differentiated based on their contents. Turing's next example shows an m-function that appears as an argument to another m-function."
+
+```
+e  (mC, mB, sA)        f (e1 (mC, mB, sA), mB, sA)
+e1 (mC, mB, sA)   E    mC
+```
+
+Petzold: "The `e` stands for "erase". This function starts by using f to search for the first (leftmost) occurrence of `sA`, which will leave the head positioned over the character. Notice how the first argument of f is the function e1. What that means is that when f finds the character `sA`, it will then go to `e1`, which simply erases the character and goes to m-configuration `mC`. If f doesn't find the character `sA`, then it goes to `mB`. [e1] could be defined more simply as `e1 (mC)`."
