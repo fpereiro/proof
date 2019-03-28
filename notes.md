@@ -1303,6 +1303,29 @@ e (mB, sA)      e (e (mB, sA), mB, sA)
 From e (mB, sA) all letters sA are erased and -> mB
 ```
 
+p119
+
 - PE: "The definition of two different functions with the same name but distinguished by a different number of arguments is a rather advanced programming technique (called function overloading) that is not allowed in many older programming languages. This two-argument version of e makes use of the three argument vesrion to rease the first sA, but notice that it specifies the two-argument e as the first argument to the three-argument version! When the three-argument e has successfully located and reased the first sA, it then goes to the two argument version, which proceeds to use the three-argument version again to erase the next sA. This continues until all the sA characters have been erased. (...) Nevertheless, the use of the two-argument e as an argument to the three-argument e to implement the two-argument e seems to invoke the dreaded specter of infinite nesting of m-configurations."
 
 - TU: "The last example seems somewhat more difficult to interpret than most. Let us suppose that in the list of m-configurations of some machine, there appears e (mB, x) (= q, say)."
+
+- TU: "The m-function e can only play a role in a machine only if it appears somewhere in the machine's final m-config column (...). We can now say that e (b, x) is another m-configuration of the machine and - as long as we haven't used q to represent any other m-configuration in the machine - we can also refer to this m-configuration as q. By using e (b, x) in the final m-config column of the machine, we've essentially added another state to the machine, which Turing gives in two different forms:"
+
+```
+          e (b, x)       e (e (b, x), b, x)
+or          q            e (q, b, x)
+```
+
+- PE: "This table implies that the m-configuration e (q, b, x) is also another m-configuration of the machine, as well as e1 (q, b, x), as shown by the following expansion:
+
+p120
+
+```
+q                  e (q, b, x)
+e (q, b, x)        f (e1 (q, b, x), b, x)
+e1 (q, b, x)  E    q
+```
+
+- PE: "Notice that after erasing the character, e1 goes back to q, which is already a m-configuration of the machine, so there's no infinite generation of m-configurations.
+
+- TU: "In this we could replace e1 (q, b, x) by q' and then give the table for f (with the right substitutions) and eventually reach a table in which no m-functions appeared.
