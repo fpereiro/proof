@@ -1329,3 +1329,14 @@ e1 (q, b, x)  E    q
 - PE: "Notice that after erasing the character, e1 goes back to q, which is already a m-configuration of the machine, so there's no infinite generation of m-configurations.
 
 - TU: "In this we could replace e1 (q, b, x) by q' and then give the table for f (with the right substitutions) and eventually reach a table in which no m-functions appeared.
+
+- PE: "Just as Turing used q to represent the configuration e (b, x), he can use q' to represent the configuration e1 (q, b, x), and additional configurations to represent e1 and f."
+
+- PE: "to construct his Universal Machine, Turing requires several common types of functions useful in manipulating individual characters and strings of characters. You've already seen find and erase functions. He essentially needs cut, copy, and paste as well, and some standard printing routines. The pe function stands for "print at the end". It prints the symbol represented by sB in the first blank F-square."
+
+```
+pe (mC, sB)                   f (pe1 (mC, sB), mC, @)
+
+pe1 (mC, sB)    Any  R,R      pe1 (mC, sB)
+                None PsB      mC
+```
