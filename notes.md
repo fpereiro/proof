@@ -1340,3 +1340,25 @@ pe (mC, sB)                   f (pe1 (mC, sB), mC, @)
 pe1 (mC, sB)    Any  R,R      pe1 (mC, sB)
                 None PsB      mC
 ```
+
+p120/121
+
+- PE: "Some implicit assumptions hide inside this function. The f function normally finds the leftmost occurrence of its third argument, but here that argument is a schwa, which is the same symbol f looks for to get to the far left of the sequence. The pe function is therefore assuming there are *two* schwas in a row, just as in Turing's second machine example on page 85. The m-function f first finds the rightmost of the two schwas (the one on an E-square) and then moves the head left to be positioned on the left schwa, which is on a F-square. The pe1 function then moves right along F-squares until it finds a blank. It prints a sB, which for most computing machines will be either a 0 or 1. (...) Turing first defines functions named l (for left) and r (for right) and then uses them in cojunctio with f to create two more functions f' and f'' that move the head let or right after finding the desired character."
+
+```
+l (mC)             L     mC                    From f' (mC, mB, sA) it does the same as for f (mC, mB, sA)
+r (mC)             R     mC                    but moves to the left before -> mC
+f'  (mC, mB, sA)         f (l (mC), mB, sA)
+f'' (mC, mB, sA)         f (r (mC), mB, sA)
+```
+
+- PE: "I would have called them fl and fr rather than f' and f'', but that's me. "
+
+- PE: The Universal Machine will require moving characters from one location to another on the tape. The c function performs a "copy"".
+
+```
+c  (mC, mB, sA)             f' (c1 (mC), mB, sA)    c (mC, mB, sA). The machine writes
+c1 (mC)             sB      pe (mC, sB)             at the end the first symbol sA and -> mC
+```
+
+- PE: "Notice the function uses f' to find the sA character, so that the head ends up to the left of the marker, which is the figure that the marker marks."
