@@ -1361,4 +1361,28 @@ c  (mC, mB, sA)             f' (c1 (mC), mB, sA)    c (mC, mB, sA). The machine 
 c1 (mC)             sB      pe (mC, sB)             at the end the first symbol sA and -> mC
 ```
 
-- PE: "Notice the function uses f' to find the sA character, so that the head ends up to the left of the marker, which is the figure that the marker marks."
+- PE: "Notice the function uses f' to find the sA character, so that the head ends up to the left of the marker, which is the figure that the marker marks. The c1 function has an unusual syntax: the scanned character becomes the second argument to pe."
+
+- TU: "The lsat line stands for the totality of lines obtainable from it by replacing sB by any symbol which may occur on the tape of the machine concerned." Note: then, for every symbol that this configuration will employ, then that m-function needs to be expanded to comprise each of these variants (one for a, one for b, etc.).
+
+p122
+
+- PE: "The ce function stands for copy and erase. It exists in two-argument and three-argument versions."
+
+```
+ce (mC, mB, sA)               c (e (mC, mB, sA), mB, sA)       ce (mB, sA). The machine copies down in order at the
+ce (mB, sA)                   ce (ce (mB, sA), mB, sA)         end all symbols marked sAand erases the letters sA; -> mB
+```
+
+- Note: in the two-argument version, the first argument (`ce (mB, sA)`) is executed *after* the first (outer) invocation. This is why the function doesn't go into an infinite recourse. It will call itself only after calling the three-argument version. In normal programming, the nested functions are executed first, but here, as Petzold said earlier, we're passing references to functions.
+
+- PE: "The three-argument ce first uses c to copy the leftmost figure marked with sA and then uses e to erase that marker. The two-argument version of ce uses the three-argument version to copy the first figure and erase the marker, but then goes back to the two-character version. (...) all symbols marked with sA are copied to the end of the tape in the first available F-squares. (Turing's second example on page 87 could have used this function to copy a run of 1s to the end of the tape.)"
+
+- PE: "A more efficint scheme has ce erasing the marker when it's first located and before it copies the character (...) But turing is not interested in mundane issues of efficiency."
+
+- PE: "The re function is "replace". The sA and sB arguments are assumed to be markers. The function finds the leftmost sA and replaces it with sB. (We know that sA and sB are markers because Turing doesn't allow replacing figures already marked on F-squares."
+
+```
+re  (mC, mB, sA, sB)                   f (re1 (mC, mB, sA, sB), mB, sA)    re (mC, mB, sA, sB). The machine replaces
+re1 (mC, mB, sA, sB)     E, PsB        mC                                  the first sA by sB and -> mC -> mB if there's no sA.
+```
