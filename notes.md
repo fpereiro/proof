@@ -1386,3 +1386,60 @@ ce (mB, sA)                   ce (ce (mB, sA), mB, sA)         end all symbols m
 re  (mC, mB, sA, sB)                   f (re1 (mC, mB, sA, sB), mB, sA)    re (mC, mB, sA, sB). The machine replaces
 re1 (mC, mB, sA, sB)     E, PsB        mC                                  the first sA by sB and -> mC -> mB if there's no sA.
 ```
+
+- PE: "The three argument version replaces all sA markers with sB."
+
+```
+re (mB, sA, sB)                        re (re (mB, sA, sB), mB, sA, sB)    re (mB, sA, sB). The machine replaces all
+                                                                           letters sA by sB. -> mB
+```
+
+p123
+
+- PE: "The ce function is "copy and replace".
+
+```
+cr (mC, mB, sA)         c (re (mC, mB, sA, sA), mB, sA)          cr (mB, sA) differs from ce (mB, sA) only in that the letters sA
+cr (mB, sA)             cr (cr (mB, sA), re (mB, sA, sA), sA)    are not erased. The m-configuration cr (mB, sA) is taken up when
+                                                                 no letters sA are on the tape.
+```
+
+- PE: "These functions are not used elsewhere in Turing's paper. The Unviersal Machine requires a facility to "search and replace", and Turing next presents half a page of functions that begin with the letters cp ("compare") and cpe ("compare and erase"). The final m-configurations in these functions are so long that Turing's explanations appear under each table instead of at the right."
+
+```
+cp  (mC, mA, mE, sA, sB)                f' (cp1 (mC, mA, sB), f (mA, mE, sB), sA)
+cp1 (mC, mA, sB)            sG          f' (cp2 (mC, mA, sG), mA, sB)
+cp2 (mC, mA, sG)            sG          mC
+                            not sG      mA
+
+The first symbol marked sA and the first marked sB are compared. If there is neither sA nor sB, -> mE. If there are both and the symbols are alike, -> mC. Otherwise -> mA.
+
+cpe (mC, mA, mC, sA, sB)       cp (e (e (mC, mC, sB), mC, sA), mA, mE, sA, sB)
+
+cpe (mC, mA, mC, sA, sB) differs from cp (mC, mA, mE, sA, sB) in that in the case when there is similarity the first sA and sB are erased.
+
+cpe (mA, mE, sA, sB)           cpe (cpe (mA, mE, sA, sB), mA, mE, sA, sB)
+
+cpe (mA, mC, sA, sB). The sequence of symbols marked sA is compared with the sequence marked sB. -> mC if they are similar. Otherwise -> mA. Some of the symbols sA and sB are erased.
+```
+
+- Note: Turing always lists the m-configuration arguments before the symbolic arguments.
+
+p124
+
+- PE: "Turing has now exhausted his supply of mnemonic function names, for he names the next one simply q, which unfortunately is the same letter he will shortly use to represent m-configurations in general. (...) I believe that Turing meant for thsi function to be named g rathern than g. Just as the f function finds the first (that is, leftmost) occurrence of a particular symbol, this function finds the last (rightmost) occurrence of a symbol (...) I'll refer to it as g."
+
+- PE: "The single-argument version of g moves to the right until it finds to blanks in a row. That is assumed to be the rightmost end of the tape. The two-argument version of g first uses the one-argument g and then moves left looking for the character sA."
+
+```
+g  (mC)      any          R       g  (mC)
+             none         R       g1 (mC)
+
+g1 (mC)      any          R       g (mC)
+             none                 mC
+
+g  (mC, sA)                       g (g1 (mC, sA))
+
+g1 (mC, sA)  sA                   mC
+             not sA       L       g1 (mC, sA)
+```
