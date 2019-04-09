@@ -1456,7 +1456,7 @@ p125
 
 ```
 ce2 (mB, sA, sB)                   ce (ce (mB, sB), sA)         ce3 (mB, sA, sB, sG). The machine copies down at the end first
-ce2 (mB, sA, sB, sG)               ce (ce2 (mB, sB, sG), sA)    the symbols marked sA, then those marked sB and finally those
+ce3 (mB, sA, sB, sG)               ce (ce2 (mB, sB, sG), sA)    the symbols marked sA, then those marked sB and finally those
                                                                 marked sG; it erases the symbols sA, sB, sG.
 ```
 
@@ -1475,91 +1475,172 @@ e1 (mC)     any           R,E,R        e1 (mC)
 - List of all m-functions presented by Turing in this chapter:
 
 ```
-f (mC, mB, sA)   @          L     f1 (mC, mB, sA)
-                 not @      L     f  (mC, mB, sA)
+f (mC, mB, sA)           @         L        f1 (mC, mB, sA)
+                         not @     L        f  (mC, mB, sA)
 
-                 sA         N     mC
-f1 (mC, mB, sA)  not sA     R     f1 (mC, mB, sA)
-                 none       R     f2 (mC, mB, sA)
+                         sA        N        mC
+f1 (mC, mB, sA)          not sA    R        f1 (mC, mB, sA)
+                         none      R        f2 (mC, mB, sA)
 
-                 sA         N     mC
-f2 (mC, mB, sA)  not sA     R     f1 (mC, mB, sA)
-                 none       R     B
+                         sA        N        mC
+f2 (mC, mB, sA)          not sA    R        f1 (mC, mB, sA)
+                         none      R        B
 
 // From e (mC, mB, sA) the first sA is erased and -> mC. If there's no sA -> mB.
-
-e  (mC, mB, sA)                   f (e1 (mC, mB, sA), mB, sA)
-e1 (mC, mB, sA)             E     mC
+e  (mC, mB, sA)                             f (e1 (mC, mB, sA), mB, sA)
+e1 (mC, mB, sA)                    E        mC
 
 // From e (mB, sA) all letters sA are erased and -> mB
+e (mB, sA)                                  e (e (mB, sA), mB, sA)
 
-e (mB, sA)                        e (e (mB, sA), mB, sA)
+pe (mC, sB)                                 f (pe1 (mC, sB), mC, @)
 
-pe (mC, sB)                       f (pe1 (mC, sB), mC, @)
-
-pe1 (mC, sB)     any        R,R   pe1 (mC, sB)
-                 none       PsB   mC
+pe1 (mC, sB)             any       R,R      pe1 (mC, sB)
+                         none      PsB      mC
 
 // From f' (mC, mB, sA) it does the same as for f (mC, mB, sA) but moves to the left before -> mC
-
-l (mC)                      L     mC
-r (mC)                      R     mC
-f'  (mC, mB, sA)                  f (l (mC), mB, sA)
-f'' (mC, mB, sA)                  f (r (mC), mB, sA)
+l (mC)                             L        mC
+r (mC)                             R        mC
+f'  (mC, mB, sA)                            f (l (mC), mB, sA)
+f'' (mC, mB, sA)                            f (r (mC), mB, sA)
 
 // c (mC, mB, sA). The machine writes at the end the first symbol sA and -> mC
+c  (mC, mB, sA)                             f' (c1 (mC), mB, sA)
+c1 (mC)                  sB                 pe (mC, sB)
 
-c  (mC, mB, sA)                   f' (c1 (mC), mB, sA)
-c1 (mC)          sB               pe (mC, sB)
+// ce (mB, sA). The machine copies down in order at the end all symbols marked sA and erases the letters sA; -> mB
+ce (mC, mB, sA)                             c (e (mC, mB, sA), mB, sA)
+ce (mB, sA)                                 ce (ce (mB, sA), mB, sA)
 
-ce (mC, mB, sA)                   c (e (mC, mB, sA), mB, sA)       ce (mB, sA). The machine copies down in order at the
-ce (mB, sA)                       ce (ce (mB, sA), mB, sA)         end all symbols marked sAand erases the letters sA; -> mB
+//re (mC, mB, sA, sB). The machine replaces the first sA by sB and -> mC -> mB if there's no sA.
+re  (mC, mB, sA, sB)                        f (re1 (mC, mB, sA, sB), mB, sA)
+re1 (mC, mB, sA, sB)               E, PsB   mC
 
-re  (mC, mB, sA, sB)                   f (re1 (mC, mB, sA, sB), mB, sA)    re (mC, mB, sA, sB). The machine replaces
-re1 (mC, mB, sA, sB)     E, PsB        mC                                  the first sA by sB and -> mC -> mB if there's no sA.
+// re (mB, sA, sB). The machine replaces all letters sA by sB. -> mB
+re (mB, sA, sB)                             re (re (mB, sA, sB), mB, sA, sB)
 
-re (mB, sA, sB)                        re (re (mB, sA, sB), mB, sA, sB)    re (mB, sA, sB). The machine replaces all
-                                                                           letters sA by sB. -> mB
-
-cr (mC, mB, sA)         c (re (mC, mB, sA, sA), mB, sA)          cr (mB, sA) differs from ce (mB, sA) only in that the letters sA
-cr (mB, sA)             cr (cr (mB, sA), re (mB, sA, sA), sA)    are not erased. The m-configuration cr (mB, sA) is taken up when
-                                                                 no letters sA are on the tape.
+// cr (mB, sA) differs from ce (mB, sA) only in that the letters sA are not erased. The m-configuration cr (mB, sA) is taken up when no letters sA are on the tape.
+cr (mC, mB, sA)                             c (re (mC, mB, sA, sA), mB, sA)
+cr (mB, sA)                                 cr (cr (mB, sA), re (mB, sA, sA), sA)
 
 // The first symbol marked sA and the first marked sB are compared. If there is neither sA nor sB, -> mE. If there are both and the symbols are alike, -> mC. Otherwise -> mA.
+cp  (mC, mA, mE, sA, sB)                    f' (cp1 (mC, mA, sB), f (mA, mE, sB), sA)
+cp1 (mC, mA, sB)         sG                 f' (cp2 (mC, mA, sG), mA, sB)
+cp2 (mC, mA, sG)         sG                 mC
+                         not sG             mA
 
-cp  (mC, mA, mE, sA, sB)                f' (cp1 (mC, mA, sB), f (mA, mE, sB), sA)
-cp1 (mC, mA, sB)            sG          f' (cp2 (mC, mA, sG), mA, sB)
-cp2 (mC, mA, sG)            sG          mC
-                            not sG      mA
+// cpe (mC, mA, mC, sA, sB) differs from cp (mC, mA, mE, sA, sB) in that in the case when there is similarity the first sA and sB are erased.
+cpe (mC, mA, mC, sA, sB)                    cp (e (e (mC, mC, sB), mC, sA), mA, mE, sA, sB)
 
-cpe (mC, mA, mC, sA, sB)       cp (e (e (mC, mC, sB), mC, sA), mA, mE, sA, sB)
+// cpe (mA, mC, sA, sB). The sequence of symbols marked sA is compared with the sequence marked sB. -> mC if they are similar. Otherwise -> mA. Some of the symbols sA and sB are erased.
+cpe (mA, mE, sA, sB)                        cpe (cpe (mA, mE, sA, sB), mA, mE, sA, sB)
 
-cpe (mC, mA, mC, sA, sB) differs from cp (mC, mA, mE, sA, sB) in that in the case when there is similarity the first sA and sB are erased.
+// g (mC, sA). The machine finds the last symbol of form sA -> mC.
+g  (mC)                  any       R        g  (mC)
+                         none      R        g1 (mC)
 
-cpe (mA, mE, sA, sB)           cpe (cpe (mA, mE, sA, sB), mA, mE, sA, sB)
+g1 (mC)                  any       R        g (mC)
+                         none               mC
 
-cpe (mA, mC, sA, sB). The sequence of symbols marked sA is compared with the sequence marked sB. -> mC if they are similar. Otherwise -> mA. Some of the symbols sA and sB are erased.
+g  (mC, sA)                                 g (g1 (mC, sA))
 
-g  (mC)      any          R       g  (mC)          g (mC, sA). The machine finds the last symbol of form sA -> mC.
-             none         R       g1 (mC)
+g1 (mC, sA)              sA                 mC
+                         not sA    L        g1 (mC, sA)
 
-g1 (mC)      any          R       g (mC)
-             none                 mC
+// pe2 (mC, sA, sB). The machine prints sA sB at the end.
+pe2 (mC, sA, sB)                            pe (pe (mC, mB), sA)
 
-g  (mC, sA)                       g (g1 (mC, sA))
+// ce3 (mB, sA, sB, sG). The machine copies down at the end first the symbols marked sA, then those marked sB and finally those marked sG; it erases the symbols sA, sB, sG.
+ce2 (mB, sA, sB)                            ce (ce (mB, sB), sA)
+ce3 (mB, sA, sB, sG)                        ce (ce2 (mB, sB, sG), sA)
 
-g1 (mC, sA)  sA                   mC
-             not sA       L       g1 (mC, sA)
+// From e (mC) the marks are erased from all marked symbols. -> mC.
+e  (mC)                  @         R        e1 (mC)
+                         not @     L        e  (mC)
 
-pe2 (mC, sA, sB)       pe (pe (mC, mB), sA)      pe2 (mC, sA, sB). The machine prints sA sB at the end.
-
-ce2 (mB, sA, sB)                   ce (ce (mB, sB), sA)         ce3 (mB, sA, sB, sG). The machine copies down at the end first
-ce2 (mB, sA, sB, sG)               ce (ce2 (mB, sB, sG), sA)    the symbols marked sA, then those marked sB and finally those
-                                                                marked sG; it erases the symbols sA, sB, sG.
-
-e  (mC)     @             R            e1 (mC)      From e (mC) the marks are erased from all marked symbols. -> mC.
-            not @         L            e  (mC)
-
-e1 (mC)     any           R,E,R        e1 (mC)
-            none                       mC
+e1 (mC)                  any       R,E,R    e1 (mC)
+                         none               mC
 ```
+
+And now without comments:
+
+```
+f (mC, mB, sA)           @         L        f1 (mC, mB, sA)
+                         not @     L        f  (mC, mB, sA)
+
+                         sA        N        mC
+f1 (mC, mB, sA)          not sA    R        f1 (mC, mB, sA)
+                         none      R        f2 (mC, mB, sA)
+
+                         sA        N        mC
+f2 (mC, mB, sA)          not sA    R        f1 (mC, mB, sA)
+                         none      R        B
+
+e  (mC, mB, sA)                             f (e1 (mC, mB, sA), mB, sA)
+e1 (mC, mB, sA)                    E        mC
+
+e (mB, sA)                                  e (e (mB, sA), mB, sA)
+
+pe (mC, sB)                                 f (pe1 (mC, sB), mC, @)
+
+pe1 (mC, sB)             any       R,R      pe1 (mC, sB)
+                         none      PsB      mC
+
+l (mC)                             L        mC
+r (mC)                             R        mC
+f'  (mC, mB, sA)                            f (l (mC), mB, sA)
+f'' (mC, mB, sA)                            f (r (mC), mB, sA)
+
+c  (mC, mB, sA)                             f' (c1 (mC), mB, sA)
+c1 (mC)                  sB                 pe (mC, sB)
+
+ce (mC, mB, sA)                             c (e (mC, mB, sA), mB, sA)
+ce (mB, sA)                                 ce (ce (mB, sA), mB, sA)
+re  (mC, mB, sA, sB)                        f (re1 (mC, mB, sA, sB), mB, sA)
+re1 (mC, mB, sA, sB)               E, PsB   mC
+re (mB, sA, sB)                             re (re (mB, sA, sB), mB, sA, sB)
+cr (mC, mB, sA)                             c (re (mC, mB, sA, sA), mB, sA)
+cr (mB, sA)                                 cr (cr (mB, sA), re (mB, sA, sA), sA)
+
+cp  (mC, mA, mE, sA, sB)                    f' (cp1 (mC, mA, sB), f (mA, mE, sB), sA)
+cp1 (mC, mA, sB)         sG                 f' (cp2 (mC, mA, sG), mA, sB)
+
+cp2 (mC, mA, sG)         sG                 mC
+                         not sG             mA
+
+cpe (mC, mA, mC, sA, sB)                    cp (e (e (mC, mC, sB), mC, sA), mA, mE, sA, sB)
+cpe (mA, mE, sA, sB)                        cpe (cpe (mA, mE, sA, sB), mA, mE, sA, sB)
+
+g  (mC)                  any       R        g  (mC)
+                         none      R        g1 (mC)
+
+g1 (mC)                  any       R        g (mC)
+                         none               mC
+
+g  (mC, sA)                                 g (g1 (mC, sA))
+
+g1 (mC, sA)              sA                 mC
+                         not sA    L        g1 (mC, sA)
+
+pe2 (mC, sA, sB)                            pe (pe (mC, mB), sA)
+ce2 (mB, sA, sB)                            ce (ce (mB, sB), sA)
+ce3 (mB, sA, sB, sG)                        ce (ce2 (mB, sB, sG), sA)
+
+e  (mC)                  @         R        e1 (mC)
+                         not @     L        e  (mC)
+
+e1 (mC)                  any       R,E,R    e1 (mC)
+                         none               mC
+```
+
+f: 3 args (2+1)
+f1: 3 args (2+1)
+f2: 3 args (2+1)
+e: 3 args (2+1); 2 args (1+1)
+e1: 3 args (2+1)
+pe: 2 args (1+1)
+pe1: 2 args (1+1)
+l: 1 arg (1)
+r: 1 arg (1)
+
+p144
