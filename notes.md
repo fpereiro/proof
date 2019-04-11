@@ -1633,12 +1633,12 @@ e1 (mC)                  any       R,E,R    e1 (mC)
                          none               mC
 ```
 
-Compact list of all the functions, counting their variants (by arguments received, both *m*-functions and *s*ymbols).
+Compact list of all the functions, counting their variants (by arguments received, both *m*-functions and *s*ymbols). 28 functions in total, 35 if we count as separate functions those that take a different number of arguments.
 
 ```
-f    (2m+1s) // Go left until schwa is found; when schwa is found, go one more to the left and call f1 with same arguments.
-f1   (2m+1s) // Go right until 3rd (symbolic) argument OR empty square is found; if 3rd argument found, -> to the 1st argument; if empty square is found, go one to the right and call f2 with the same arguments.
-f2   (2m+1s) //
+f    (2m+1s)
+f1   (2m+1s)
+f2   (2m+1s)
 e    (2m+1s); (1m+1s)
 e1   (2m+1s)
 pe   (1m+1s)
@@ -1666,40 +1666,54 @@ e    (1m)
 e1   (1m)
 ```
 
-Same list but describing functions and tracking interdependencies.
+- Same list but describing functions and tracking interdependencies.
+- Notes: If a configuration calls itself, we ignore that for interdependency purposes. A n argument version of a function x will be referred to as "narg x".
 
 ```
 f    (2m+1s) // Go left until schwa is found; when schwa is found, go one more to the left and call f1 with the same arguments.
 f1   (2m+1s) // Go right until 3rd (symbolic) argument OR empty square is found; if 3rd argument found, -> to the 1st argument; if empty square is found, go one to the right and call f2 with the same arguments.
 f2   (2m+1s) // If the square is blank, go one to the right and -> to the 2nd argument; if it contains the 3rd argument, -> to the 1st argument; if it is not blank and it does not contain the 3rd argument, go one to the right and call f1 with the same arguments.
 
-f1 and f2 are for internal use of f (that is, they're only called by f and no other function). f is called by e, pe, f', f'', re and cp.
+f1 and f2 are for internal use of f (that is, they're only called by f and no other function). f is called by 3arg e, pe, f', f'', 3arg re and cp.
 
-e    (2m+1s); (1m+1s)
-e1   (2m+1s)
+e  (2m+1s) //
+e  (1m+1s)
+e  (1m)
+e1 (2m+1s)
+e1 (1m)
+
+3arg e is called by 2arg e, 3arg ce and 5arg cpe. 2arg e and 1arg e are not called by other functions. 3arg e1 is for internal use of 3arg e, and 1arg e1 is for internal use of 1arg e.
+
+
 pe   (1m+1s)
 pe1  (1m+1s)
+pe2  (1m+2s)
+
 l    (1m)
 r    (1m)
 f'   (2m+1s)
 f''  (2m+1s)
+
 c    (2m+1s)
 c1   (1m)
+
 ce   (2m+1s); (1m+1s)
+ce2  (1m+2s)
+ce3  (1m+3s)
+
 re   (2m+1s); (2m+2s)
 re1  (2m+2s)
+
 cr   (2m+1s); (1m+1s)
+
 cp   (3m+2s)
 cp1  (2m+1s)
 cp2  (2m+1s)
+
 cpe  (3m+2s); (2m+2s)
+
 g    (1m+1s); (1m)
 g1   (1m+1s); (1m)
-pe2  (1m+2s)
-ce2  (1m+2s)
-ce3  (1m+3s)
-e    (1m)
-e1   (1m)
 ```
 
 
