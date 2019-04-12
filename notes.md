@@ -1676,14 +1676,26 @@ f2   (2m+1s) // If the square is blank, go one to the right and -> to the 2nd ar
 
 f1 and f2 are for internal use of f (that is, they're only called by f and no other function). f is called by 3arg e, pe, f', f'', 3arg re and cp.
 
-e  (2m+1s) //
+f can then be described to do this, if we include f1 and f2 as part of it:
+- Go left until schwa is found.
+- When schwa is found:
+   - Go one more to the left.
+   - Go right until 3rd (symbolic argument) OR empty square is found.
+   - If 3rd symbolic is found, -> 1arg.
+   - If empty square is found:
+      - Go one to the right.
+      - If square is blank:
+         - Go one to the right.
+         - Call
+
+
+e  (2m+1s) // call f with three arguments: `e1 (1arg, 2arg, 3arg)`, 2arg and 3arg.
 e  (1m+1s)
 e  (1m)
-e1 (2m+1s)
+e1 (2m+1s) // erase symbol, then -> 1arg. 2arg and 3arg are not used.
 e1 (1m)
 
 3arg e is called by 2arg e, 3arg ce and 5arg cpe. 2arg e and 1arg e are not called by other functions. 3arg e1 is for internal use of 3arg e, and 1arg e1 is for internal use of 1arg e.
-
 
 pe   (1m+1s)
 pe1  (1m+1s)
@@ -1715,6 +1727,8 @@ cpe  (3m+2s); (2m+2s)
 g    (1m+1s); (1m)
 g1   (1m+1s); (1m)
 ```
+
+- Note: while 3arg e1 doesn't use its second and third arguments, its three arguments distinguish it from the 1arg version, which is different. That's likely the reason for which Turing defined it as a 3arg function that only uses 1arg.
 
 
 p144
