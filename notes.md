@@ -1692,14 +1692,18 @@ f can then be described to do this, if we include f1 and f2 as part of it:
 
 In other words: f will go to the leftmost of the tape, then go right until it finds either the 3rd argument or two blanks in a row. If it finds the 3rd argument, -> 1arg. If it finds two blanks in a row, it advances one more position and -> 2arg.
 
-
-e  (2m+1s) // call f with three arguments: `e1 (1arg, 2arg, 3arg)`, 2arg and 3arg.
-e  (1m+1s)
-e  (1m)
+e  (2m+1s) // call f with these arguments: `e1 (1arg, 2arg, 3arg)`, 2arg and 3arg.
+e  (1m+1s) // call 3arg e with these arguments: `e (1arg, 2arg)`, 1arg and 2arg.
 e1 (2m+1s) // erase symbol, then -> 1arg. 2arg and 3arg are not used.
-e1 (1m)
+
+e  (1m) // Go left until finding the schwa, then go one to the right and call 1arg e1.
+e1 (1m) // until you find a blank, go one to the right, delete the square and go one more to the right. In effect, delete alternate squares.
 
 3arg e is called by 2arg e, 3arg ce and 5arg cpe. 2arg e and 1arg e are not called by other functions. 3arg e1 is for internal use of 3arg e, and 1arg e1 is for internal use of 1arg e.
+
+1arg e erases all E-squares from left to right until it finds the first blank E-square.
+
+3arg e calls f. If f finds 3arg, it will be deleted (by e1) and -> 1arg. If not,
 
 pe   (1m+1s)
 pe1  (1m+1s)
