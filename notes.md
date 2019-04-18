@@ -1670,11 +1670,16 @@ e1   (1m)
 - Notes: If a configuration calls itself, we ignore that for interdependency purposes. A n argument version of a function x will be referred to as "narg x".
 
 ```
+
+## f (find)
+
 f    (2m+1s) // Go left until schwa is found; when schwa is found, go one more to the left and call f1 with the same arguments.
 f1   (2m+1s) // Go right until 3rd (symbolic) argument OR blank square is found; if 3rd argument found, -> to the 1st argument; if blank square is found, go one to the right and call f2 with the same arguments.
 f2   (2m+1s) // If the square is blank, go one to the right and -> to the 2nd argument; if it contains the 3rd argument, -> to the 1st argument; if it is not blank and it does not contain the 3rd argument, go one to the right and call f1 with the same arguments.
 
-f1 and f2 are for internal use of f (that is, they're only called by f and no other function). f is called by 3arg e, pe, f', f'', 3arg re and cp.
+Interdependencies:
+   - f1 and f2 are for internal use of f (that is, they're only called by f and no other function).
+   - f is called by 3arg e, pe, f', f'', 3arg re and cp.
 
 f can then be described to do this, if we include f1 and f2 as part of it:
 - Go left until schwa is found.
@@ -1690,7 +1695,9 @@ f can then be described to do this, if we include f1 and f2 as part of it:
          - -> 2arg
       - If the square is neither blank nor contains the 3rd argument, go to (*).
 
-In other words: f will go to the leftmost of the tape, then go right until it finds either the 3rd argument or two blanks in a row. If it finds the 3rd argument, -> 1arg. If it finds two blanks in a row, it advances one more position and -> 2arg.
+In other words: f will go to the leftmost of the tape, then goes right until it finds either the 3rd argument or two blanks in a row. If it finds the 3rd argument, -> 1arg. If it finds two blanks in a row, it advances one more position and -> 2arg.
+
+## e (erase)
 
 e  (2m+1s) // call f with these arguments: `e1 (1arg, 2arg, 3arg)`, 2arg and 3arg.
 e  (1m+1s) // call 3arg e with these arguments: `e (1arg, 2arg)`, 1arg and 2arg.
@@ -1699,11 +1706,18 @@ e1 (2m+1s) // erase symbol, then -> 1arg. 2arg and 3arg are not used.
 e  (1m) // Go left until finding the schwa, then go one to the right and call 1arg e1.
 e1 (1m) // until you find a blank, go one to the right, delete the square and go one more to the right. In effect, delete alternate squares.
 
-3arg e is called by 2arg e, 3arg ce and 5arg cpe. 2arg e and 1arg e are not called by other functions. 3arg e1 is for internal use of 3arg e, and 1arg e1 is for internal use of 1arg e.
+Interdependencies:
+   - 3arg e is called by 2arg e, 3arg ce and 5arg cpe.
+   - 2arg e and 1arg e are not called by other functions.
+   - 3arg e1 is for internal use of 3arg e, and 1arg e1 is for internal use of 1arg e.
 
-1arg e erases all E-squares from left to right until it finds the first blank E-square.
+1arg e (taken as a whole together with 1arg e1) goes back to the leftmost of the tape and then goes right, erasing all E-squares from left to right until it finds the first blank E-square.
 
-3arg e calls f. If f finds 3arg, it will be deleted (by e1) and -> 1arg. If not,
+3arg e (taken as a whole with 3arg e1 and f) goes to the leftmost of the tape, then starts going right until finding either the 3arg or two blanks in a row. If 3arg is found, it will be deleted and -> 1arg. If two blanks in a row are found, it advances one more position and -> 2arg.
+
+2arg e (taken as a whole with 3arg e) goes to the leftmost of the tape, then starts going right until finding either the 3arg or two blanks in a row. If 3arg is found, it will be deleted and 2arg e will be called again with the same arguments. If two blanks in a row are found, it advances one more position and -> 2arg. While 3arg e deletes only the first 3arg it sees, 2arg e will delete all such symbols from the tape until two blanks are found.
+
+## pe (print and erase)
 
 pe   (1m+1s)
 pe1  (1m+1s)
