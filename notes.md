@@ -1719,9 +1719,15 @@ Interdependencies:
 
 ## pe (print and erase)
 
-pe   (1m+1s)
-pe1  (1m+1s)
+pe   (1m+1s) // Call f with `pe1 (1arg, 2arg)`, 1arg and @.
+pe1  (1m+1s) // While not finding a blank, go right in twos. When finding a blank, print the 2arg and -> 1arg.
 pe2  (1m+2s)
+
+Interdependencies:
+   - pe is called by pe2 and c1.
+   - pe1 is for internal use of pe only.
+
+pe (taken as a whole together with pe1 and f) goes to the leftmost of the tape, then starts going right until finding either @ (this is interesting - it probably means that it will be always going right, since the @ can only be at the left of the tape!) or two blanks in a row. This basically means that then the function will look for two blanks in a row. When finding them, it will advance one more position and start going right in twos. When finding a blank, it will print the 2arg and -> 1arg.
 
 l    (1m)
 r    (1m)
