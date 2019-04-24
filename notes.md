@@ -1447,7 +1447,7 @@ g1 (mC, sA)  sA                   mC
 - PE: "Turing finishes this sectino with a few miscellaneous functions with familiar names. (...) The pe2 function prints two characters in the last two F-squares."
 
 ```
-pe2 (mC, sA, sB)       pe (pe (mC, mB), sA)      pe2 (mC, sA, sB). The machine prints sA sB at the end.
+pe2 (mC, sA, sB)       pe (pe (mC, sB), sA)      pe2 (mC, sA, sB). The machine prints sA sB at the end.
 ```
 
 - PE: "Similarly, the ce function copied characters marked with sA to the end. The ce2 function copies symbols marked with sA and sB, while c3 copies characters marked sA, sB and sG."
@@ -1622,7 +1622,7 @@ g  (mC, sA)                                 g (g1 (mC, sA))
 g1 (mC, sA)              sA                 mC
                          not sA    L        g1 (mC, sA)
 
-pe2 (mC, sA, sB)                            pe (pe (mC, mB), sA)
+pe2 (mC, sA, sB)                            pe (pe (mC, sB), sA)
 ce2 (mB, sA, sB)                            ce (ce (mB, sB), sA)
 ce3 (mB, sA, sB, sG)                        ce (ce2 (mB, sB, sG), sA)
 
@@ -1717,17 +1717,21 @@ Interdependencies:
 
 2arg e (taken as a whole with 3arg e) goes to the leftmost of the tape, then starts going right until finding either the 3arg or two blanks in a row. If 3arg is found, it will be deleted and 2arg e will be called again with the same arguments. If two blanks in a row are found, it advances one more position and -> 2arg. While 3arg e deletes only the first 3arg it sees, 2arg e will delete all such symbols from the tape until two blanks are found.
 
-## pe (print and erase)
+## pe (print at the end)
 
 pe   (1m+1s) // Call f with `pe1 (1arg, 2arg)`, 1arg and @.
 pe1  (1m+1s) // While not finding a blank, go right in twos. When finding a blank, print the 2arg and -> 1arg.
-pe2  (1m+2s)
+pe2  (1m+2s) // Call pe with `pe (1arg, 2arg)` and 2arg.
 
 Interdependencies:
    - pe is called by pe2 and c1.
    - pe1 is for internal use of pe only.
 
-pe (taken as a whole together with pe1 and f) goes to the leftmost of the tape, then starts going right until finding either @ (this is interesting - it probably means that it will be always going right, since the @ can only be at the left of the tape!) or two blanks in a row. This basically means that then the function will look for two blanks in a row. When finding them, it will advance one more position and start going right in twos. When finding a blank, it will print the 2arg and -> 1arg.
+In other words: f will go to the leftmost of the tape, then goes right until it finds either the 3rd argument or two blanks in a row. If it finds the 3rd argument, -> 1arg. If it finds two blanks in a row, it advances one more position and -> 2arg.
+
+pe (taken as a whole together with pe1 and f) goes to the leftmost of the tape, then starts going right until finding either @ (this is interesting - it probably means that it will be always going right, since the @ can only be at the left of the tape!) or two blanks in a row. This means that the function will look for two blanks in a row. When finding them, it will advance one more position and start going right in twos. When finding a blank (which could be immediately), it will print the 2arg and -> 1arg.
+
+pe2 (taken as a whole together with pe1) goes to the leftmost of the tape, then goes right until finding two blanks in a row. Then it will advance one more position and start going right in twos. When finding a blank (which could be immediately), it will print 2arg. Then it will repeat the whole thing until it finds two blanks again - then it'll advance one more position and print 3arg and -> 1arg.
 
 l    (1m)
 r    (1m)
