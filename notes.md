@@ -1727,16 +1727,31 @@ Interdependencies:
    - pe is called by pe2 and c1.
    - pe1 is for internal use of pe only.
 
-In other words: f will go to the leftmost of the tape, then goes right until it finds either the 3rd argument or two blanks in a row. If it finds the 3rd argument, -> 1arg. If it finds two blanks in a row, it advances one more position and -> 2arg.
-
 pe (taken as a whole together with pe1 and f) goes to the leftmost of the tape, then starts going right until finding either @ (this is interesting - it probably means that it will be always going right, since the @ can only be at the left of the tape!) or two blanks in a row. This means that the function will look for two blanks in a row. When finding them, it will advance one more position and start going right in twos. When finding a blank (which could be immediately), it will print the 2arg and -> 1arg.
 
 pe2 (taken as a whole together with pe1) goes to the leftmost of the tape, then goes right until finding two blanks in a row. Then it will advance one more position and start going right in twos. When finding a blank (which could be immediately), it will print 2arg. Then it will repeat the whole thing until it finds two blanks again - then it'll advance one more position and print 3arg and -> 1arg.
 
-l    (1m)
+## f' (find left)
+
+l    (1m) // go one left and -> 1arg
+f'   (2m+1s) // call f with `l (1arg)`, 2arg, 3arg
+
+Interdependencies:
+   - f' is called by c, cp and cp1.
+   - l is for internal use of f' only.
+
+f' (taken as a whole together with l and f) will go to the leftmost of the tape, then goes right until finding either 3arg or two blanks in a row.  If it finds the 3rd argument, it will move one to the left and -> 1arg. If it finds two blanks in a row, it advances one more position and -> 2arg. So f', if it finds 3arg, will call 1arg after positioning the head just before the place where 3arg was found.
+
+## f'' (find right)
+
 r    (1m)
-f'   (2m+1s)
 f''  (2m+1s)
+
+Interdependencies:
+   - f'' is not called by any functions in this section - but presumably it will be used later.
+   - r is for internal use of f'' only.
+
+f'' (taken as a whole together with r and f) will go to the leftmost of the tape, then goes right until finding either 3arg or two blanks in a row.  If it finds the 3rd argument, it will move one to the right and -> 1arg. If it finds two blanks in a row, it advances one more position and -> 2arg. So f'', if it finds 3arg, will call 1arg after positioning the head just after the place where 3arg was found.
 
 c    (2m+1s)
 c1   (1m)
