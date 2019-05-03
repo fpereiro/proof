@@ -1671,7 +1671,7 @@ e1   (1m)
 
 ```
 
-## f (find)
+## f (find leftmost)
 
 f    (2m+1s) // Go left until schwa is found; when schwa is found, go one more to the left and call f1 with the same arguments.
 f1   (2m+1s) // Go right until 3rd (symbolic) argument OR blank square is found; if 3rd argument found, -> to the 1st argument; if blank square is found, go one to the right and call f2 with the same arguments.
@@ -1753,23 +1753,43 @@ Interdependencies:
 
 f'' (taken as a whole together with r and f) will go to the leftmost of the tape, then goes right until finding either 3arg or two blanks in a row.  If it finds the 3rd argument, it will move one to the right and -> 1arg. If it finds two blanks in a row, it advances one more position and -> 2arg. So f'', if it finds 3arg, will call 1arg after positioning the head just after the place where 3arg was found.
 
-c    (2m+1s)
-c1   (1m)
+## c (copy)
+
+c    (2m+1s) // call f' with `c1 (1arg)`, 2arg and 3arg.
+c1   (1m)    // if seeing 2arg, pe (1arg, 2arg)
+
+Note: in c1, sB is mentioned but not passed!
+
+Interdependencies:
+   - c is called by 3arg ce and 3arg cr.
+   - c1 is for internal use of c only.
+
+## ce (copy and erase)
 
 ce   (2m+1s); (1m+1s)
 ce2  (1m+2s)
 ce3  (1m+3s)
 
+## re (replace)
+
 re   (2m+1s); (2m+2s)
 re1  (2m+2s)
 
+## cr (copy and replace)
+
 cr   (2m+1s); (1m+1s)
+
+## cp (compare)
 
 cp   (3m+2s)
 cp1  (2m+1s)
 cp2  (2m+1s)
 
+## cpe (compare and erase)
+
 cpe  (3m+2s); (2m+2s)
+
+## g (find rightmost)
 
 g    (1m+1s); (1m)
 g1   (1m+1s); (1m)
