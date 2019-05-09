@@ -1695,7 +1695,11 @@ f can then be described to do this, if we include f1 and f2 as part of it:
          - -> 2arg
       - If the square is neither blank nor contains the 3rd argument, go to (*).
 
-In other words: f will go to the leftmost of the tape, then goes right until it finds either the 3rd argument or two blanks in a row. If it finds the 3rd argument, -> 1arg. If it finds two blanks in a row, it advances one more position and -> 2arg.
+In other words: f will
+   1) go to the leftmost of the tape
+   2) go right until it finds either the 3rd argument or two blanks in a row
+   3-1) if it finds the 3rd argument, -> 1arg.
+   3-2) if it finds two blanks in a row, it advances one more position and -> 2arg.
 
 ## e (erase)
 
@@ -1711,11 +1715,24 @@ Interdependencies:
    - 2arg e and 1arg e are not called by other functions.
    - 3arg e1 is for internal use of 3arg e, and 1arg e1 is for internal use of 1arg e.
 
-1arg e (taken as a whole together with 1arg e1) goes back to the leftmost of the tape and then goes right, erasing all E-squares from left to right until it finds the first blank E-square.
+1arg e (taken as a whole together with 1arg e1)
+   1) go to the leftmost of the tape
+   2) go right, erasing all E-squares from left to right
+   3) until it finds the first blank E-square.
 
-3arg e (taken as a whole with 3arg e1 and f) goes to the leftmost of the tape, then starts going right until finding either the 3arg or two blanks in a row. If 3arg is found, it will be deleted and -> 1arg. If two blanks in a row are found, it advances one more position and -> 2arg.
+3arg e (taken as a whole with 3arg e1 and f)
+   1) go to the leftmost of the tape
+   2) go right until finding either the 3arg or two blanks in a row.
+   3-1) if it finds the 3rd argument, it will be deleted and -> 1arg.
+   3-2) if it finds two blanks in a row, it advances one more position and -> 2arg.
 
-2arg e (taken as a whole with 3arg e) goes to the leftmost of the tape, then starts going right until finding either the 3arg or two blanks in a row. If 3arg is found, it will be deleted and 2arg e will be called again with the same arguments. If two blanks in a row are found, it advances one more position and -> 2arg. While 3arg e deletes only the first 3arg it sees, 2arg e will delete all such symbols from the tape until two blanks are found.
+2arg e (taken as a whole with 3arg e)
+   1) go to the leftmost of the tape
+   2) go right until finding either the 3arg or two blanks in a row
+   3-1) if it finds the 3rd argument, it will be deleted and 2arg e will be called again with the same arguments.
+   3-2) if it finds two blanks in a row, it advances one more position and -> 2arg.
+
+Note: while 3arg e deletes only the first 3arg it sees, 2arg e will delete all such symbols from the tape until two blanks are found.
 
 ## pe (print at the end)
 
@@ -1727,9 +1744,18 @@ Interdependencies:
    - pe is called by pe2 and c1.
    - pe1 is for internal use of pe only.
 
-pe (taken as a whole together with pe1 and f) goes to the leftmost of the tape, then starts going right until finding either @ (this is interesting - it probably means that it will be always going right, since the @ can only be at the left of the tape!) or two blanks in a row. This means that the function will look for two blanks in a row. When finding them, it will advance one more position and start going right in twos. When finding a blank (which could be immediately), it will print the 2arg and -> 1arg.
+pe (taken as a whole together with pe1 and f)
+   1) go to the leftmost of the tape
+   2) go right until finding either @ (this is interesting - it probably means that it will be always going right, since the @ can only be at the left of the tape!) or two blanks in a row. This means that the function will look for two blanks in a row.
+   3) when it finds two blanks in a row, it advances one more position and starts going right in twos.
+   4) when finding a blank (which could be immediately), it will print the 2arg and -> 1arg.
 
-pe2 (taken as a whole together with pe1) goes to the leftmost of the tape, then goes right until finding two blanks in a row. Then it will advance one more position and start going right in twos. When finding a blank (which could be immediately), it will print 2arg. Then it will repeat the whole thing until it finds two blanks again - then it'll advance one more position and print 3arg and -> 1arg.
+pe2 (taken as a whole together with pe1)
+   1) go to the leftmost of the tape
+   2) go right until finding two blanks in a row
+   3) when it finds two blanks in a row, it advances one more position and starts going right in twos.
+   4) when finding a blank (which could be immediately), it will print 2arg.
+   5) then it will repeat the whole thing until it finds two blanks again - then it'll advance one more position and print 3arg and -> 1arg.
 
 ## f' (find left)
 
@@ -1740,7 +1766,13 @@ Interdependencies:
    - f' is called by c, cp and cp1.
    - l is for internal use of f' only.
 
-f' (taken as a whole together with l and f) will go to the leftmost of the tape, then goes right until finding either 3arg or two blanks in a row.  If it finds the 3rd argument, it will move one to the left and -> 1arg. If it finds two blanks in a row, it advances one more position and -> 2arg. So f', if it finds 3arg, will call 1arg after positioning the head just before the place where 3arg was found.
+f' (taken as a whole together with l and f)
+   1) go to the leftmost of the tape
+   2) go right until finding either 3arg or two blanks in a row
+   3-1) if it finds the 3rd argument, it moves one to the left and -> 1arg.
+   3-2) if it finds two blanks in a row, it advances one more position and -> 2arg.
+
+Note: So f', if it finds 3arg, will call 1arg after positioning the head just before the place where 3arg was found.
 
 ## f'' (find right)
 
@@ -1756,13 +1788,16 @@ f'' (taken as a whole together with r and f) will go to the leftmost of the tape
 ## c (copy)
 
 c    (2m+1s) // call f' with `c1 (1arg)`, 2arg and 3arg.
-c1   (1m)    // if seeing 2arg, pe (1arg, 2arg)
+c1   (1m)    // pe (1arg, the scanned symbol)
 
-Note: in c1, sB is mentioned but not passed!
+Note: c1 uses the scanned symbol as the second argument to pe.
 
 Interdependencies:
    - c is called by 3arg ce and 3arg cr.
    - c1 is for internal use of c only.
+
+c (taken as a whole together with f', c1, pe and f) goes to the leftmost of the tape, then starts going right
+pe (taken as a whole together with pe1 and f) goes to the leftmost of the tape, then starts going right until finding either @ (this is interesting - it probably means that it will be always going right, since the @ can only be at the left of the tape!) or two blanks in a row. This means that the function will look for two blanks in a row. When finding them, it will advance one more position and start going right in twos. When finding a blank (which could be immediately), it will print the 2arg and -> 1arg.
 
 ## ce (copy and erase)
 
