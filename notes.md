@@ -1674,8 +1674,8 @@ e1   (1m)
 ## f (find leftmost)
 
 f    (2m+1s) // Go left until schwa is found; when schwa is found, go one more to the left and call f1 with the same arguments.
-f1   (2m+1s) // Go right until 3rd (symbolic) argument OR blank square is found; if 3rd argument found, -> to the 1st argument; if blank square is found, go one to the right and call f2 with the same arguments.
-f2   (2m+1s) // If the square is blank, go one to the right and -> to the 2nd argument; if it contains the 3rd argument, -> to the 1st argument; if it is not blank and it does not contain the 3rd argument, go one to the right and call f1 with the same arguments.
+f1   (2m+1s) // Go right until 3rd (symbolic) argument OR blank square is found; if 3arg is found, -> to the 1st argument; if blank square is found, go one to the right and call f2 with the same arguments.
+f2   (2m+1s) // If the square is blank, go one to the right and -> to the 2nd argument; if it contains the 3arg, -> to the 1st argument; if it is not blank and it does not contain the 3arg, go one to the right and call f1 with the same arguments.
 
 Interdependencies:
    - f1 and f2 are for internal use of f (that is, they're only called by f and no other function).
@@ -1693,12 +1693,12 @@ f can then be described to do this, if we include f1 and f2 as part of it:
       - If square is blank (which means we saw two blanks in a row):
          - Go one to the right.
          - -> 2arg
-      - If the square is neither blank nor contains the 3rd argument, go to (*).
+      - If the square is neither blank nor contains 3arg, go to (*).
 
 In other words: f will
    1) go to the leftmost of the tape
-   2) go right until finding either the 3rd argument or two blanks in a row
-   3-1) if it finds the 3rd argument, -> 1arg.
+   2) go right until finding either 3arg or two blanks in a row
+   3-1) if it finds 3arg, -> 1arg.
    3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
 
 ## e (erase)
@@ -1715,21 +1715,21 @@ Interdependencies:
    - 2arg e and 1arg e are not called by other functions.
    - 3arg e1 is for internal use of 3arg e, and 1arg e1 is for internal use of 1arg e.
 
-1arg e (taken as a whole together with 1arg e1)
+1arg e:
    1) go to the leftmost of the tape
    2) go right, erasing all E-squares from left to right
    3) until it finds the first blank E-square.
 
-3arg e (taken as a whole with 3arg e1 and f)
+3arg e:
    1) go to the leftmost of the tape
    2) go right until finding either the 3arg or two blanks in a row.
-   3-1) if it finds the 3rd argument, delete it and -> 1arg.
+   3-1) if it finds 3arg, delete it and -> 1arg.
    3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
 
-2arg e (taken as a whole with 3arg e)
+2arg e:
    1) go to the leftmost of the tape
    2) go right until finding either the 3arg or two blanks in a row
-   3-1) if it finds the 3rd argument, delete it and 2arg e will be called again with the same arguments.
+   3-1) if it finds 3arg, delete it and 2arg e will be called again with the same arguments.
    3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
 
 Note: while 3arg e deletes only the first 3arg it sees, 2arg e will delete all such symbols from the tape until two blanks are found.
@@ -1744,13 +1744,13 @@ Interdependencies:
    - pe is called by pe2 and c1.
    - pe1 is for internal use of pe only.
 
-pe (taken as a whole together with pe1 and f)
+pe:
    1) go to the leftmost of the tape
    2) go right until finding either @ (this is interesting - it probably means that it will be always going right, since the @ can only be at the left of the tape!) or two blanks in a row. This means that the function will look for two blanks in a row.
    3) when it finds two blanks in a row, it advances one more position and starts going right in twos.
    4) when finding a blank (which could be immediately), it will print the 2arg and -> 1arg.
 
-pe2 (taken as a whole together with pe1)
+pe2:
    1) go to the leftmost of the tape
    2) go right until finding two blanks in a row
    3) when it finds two blanks in a row, advance one more position and go right in twos.
@@ -1759,34 +1759,34 @@ pe2 (taken as a whole together with pe1)
 
 ## f' (find left)
 
-l    (1m) // go one left and -> 1arg
-f'   (2m+1s) // call f with `l (1arg)`, 2arg, 3arg
+l    (1m)    // go one left and -> 1arg
+f'   (2m+1s) // call f with `l (1arg)`, 2arg and 3arg
 
 Interdependencies:
    - f' is called by c, cp and cp1.
    - l is for internal use of f' only.
 
-f' (taken as a whole together with l and f)
+f':
    1) go to the leftmost of the tape
    2) go right until finding either 3arg or two blanks in a row
-   3-1) if it finds the 3rd argument, move one to the left and -> 1arg.
+   3-1) if it finds 3arg, move one to the left and -> 1arg.
    3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
 
 So f', if it finds 3arg, will call 1arg after positioning the head just before the place where 3arg was found.
 
 ## f'' (find right)
 
-r    (1m)
-f''  (2m+1s)
+r    (1m)    // go one right and call 1arg
+f''  (2m+1s) // call f with `r (1arg)`, 2arg and 3arg
 
 Interdependencies:
    - f'' is not called by any functions in this section - but presumably it will be used later.
    - r is for internal use of f'' only.
 
-f'' (taken as a whole together with r and f)
+f'':
    1) go to the leftmost of the tape
    2) go right until finding either 3arg or two blanks in a row
-   3-1) if it finds the 3rd argument, move one to the right and -> 1arg.
+   3-1) if it finds 3arg, move one to the right and -> 1arg.
    3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
 
 So f'', if it finds 3arg, will call 1arg after positioning the head just after the place where 3arg was found.
@@ -1802,10 +1802,10 @@ Interdependencies:
    - c is called by 3arg ce and 3arg cr.
    - c1 is for internal use of c only.
 
-c (taken as a whole together with f', c1 and pe)
+c:
    1) go to the leftmost of the tape
    2) go right until finding either 3arg or two blanks in a row
-   3-1) if it finds the 3rd argument, move one to the left and noting the character X on that square
+   3-1) if it finds 3arg, move one to the left and noting the character X on that square
       3-1-1) go to the leftmost of the tape
       3-1-2) go right until finding two blanks in a row
       3-1-3) when it finds two blanks in a row, advance one more position and start going right in twos.
@@ -1815,15 +1815,30 @@ c (taken as a whole together with f', c1 and pe)
 ## ce (copy and erase)
 
 ce  (2m+1s) // call c with `e (mC, mB, sA)`, 2arg and 3arg
-ce  (1m+1s) // call 3arg ce with `ce (1arg, 2arg)`, 1arg, 2arg
-ce2 (1m+2s)
-ce3 (1m+3s)
+ce  (1m+1s) // call 3arg ce with `ce (1arg, 2arg)`, 1arg and 2arg
+ce2 (1m+2s) // call 2arg ce with `ce (1arg, 3arg)` and 2arg
+ce3 (1m+3s) // call 2arg ce with `ce2 (1arg, 3arg, 4arg) and 2arg
 
 Interdependencies:
    - 3arg ce is called by 2arg ce.
    - 2arg ce is called by ce2 and ce3.
    - ce2 is called by ce3.
    - ce3 is not called by any function here but it will probably be used later.
+
+3arg ce:
+   1) go to the leftmost of the tape
+   2) go right until finding either 3arg or two blanks in a row
+   3-1) if it finds 3arg, move one to the left and noting the character X on that square
+      3-1-1) go to the leftmost of the tape
+      3-1-2) go right until finding two blanks in a row
+      3-1-3) when it finds two blanks in a row, advance one more position and start going right in twos.
+      3-1-4) when finding a blank (which could be immediately), print X and
+      3-1-5) go to the leftmost of the tape
+      3-1-6) go right until finding either the 3arg or two blanks in a row
+      3-1-7-1) if it finds the 3arg, delete it and -> 1arg
+      3-1-7-2) if it finds two blanks in a row, advance one more position and -> 2arg
+
+2arg ce:
 
 ## re (replace)
 
