@@ -1666,8 +1666,8 @@ e    (1m)
 e1   (1m)
 ```
 
-- Same list but describing functions and tracking interdependencies.
 - Notes: If a configuration calls itself, we ignore that for interdependency purposes. A n argument version of a function x will be referred to as "narg x".
+- Same list but describing functions and tracking interdependencies:
 
 ```
 
@@ -1814,7 +1814,7 @@ c:
 
 ## ce (copy and erase)
 
-ce  (2m+1s) // call c with `e (mC, mB, sA)`, 2arg and 3arg
+ce  (2m+1s) // call c with `e (1arg, 2arg, 3arg)`, 2arg and 3arg
 ce  (1m+1s) // call 3arg ce with `ce (1arg, 2arg)`, 1arg and 2arg
 ce2 (1m+2s) // call 2arg ce with `ce (1arg, 3arg)` and 2arg
 ce3 (1m+3s) // call 2arg ce with `ce2 (1arg, 3arg, 4arg) and 2arg
