@@ -158,9 +158,23 @@
             return B.view ([], function (x, s) {
                return [
                   ['h1', 'Web Turing Machine'],
-                  ['h3', 'List of machines'],
-                  dale.do (s.Data.machines, function (v, k) {
-                     return ['h4', k];
+                  ['style', [
+                     ['.action', {cursor: 'pointer', color: 'blue', 'text-decoration': 'underline'}],
+                  ]],
+                  B.view (['State', 'machine'], function (x, name) {
+                     if (! name) return [
+                        ['h3', 'List of machines'],
+                        ['ul', dale.do (B.get ('Data', 'machines'), function (v, k) {
+                           return ['li', B.ev ({class: 'action'}, ['onclick', 'set', ['State', 'machine'], k]), k];
+                        })],
+                     ];
+                     var machine = B.get ('Data', 'machines', name);
+                     return [
+                        ['h3', [name, ['span', ' '], ['span', B.ev ({class: 'action'}, ['onclick', 'rem', 'State', 'machine']), 'Go back']]],
+                        ['table', dale.do (machine, function (config, configname) {
+                           return ['tr', ['td', configname]];
+                        })],
+                     ];
                   }),
                ];
             });
