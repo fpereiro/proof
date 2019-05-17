@@ -171,9 +171,26 @@
                      var machine = B.get ('Data', 'machines', name);
                      return [
                         ['h3', [name, ['span', ' '], ['span', B.ev ({class: 'action'}, ['onclick', 'rem', 'State', 'machine']), 'Go back']]],
-                        ['table', dale.do (machine, function (config, configname) {
-                           return ['tr', ['td', configname]];
-                        })],
+                        ['table', [
+                           ['thead', [
+                              ['tr', [
+                                 ['th', 'Config name'],
+                                 ['th', 'Scanned symbol'],
+                                 ['th', 'Operations'],
+                                 ['th', 'Next config'],
+                              ]],
+                           ]],
+                           dale.do (machine, function (config, configname) {
+                              return dale.do (config, function (sequence, symbol) {
+                                 return ['tr', [
+                                    ['td', configname],
+                                    ['td', symbol],
+                                    ['td', sequence.slice (0, -1).join (' ')],
+                                    ['td', sequence [sequence.length - 1]],
+                                 ]];
+                              });
+                           }),
+                        ]],
                      ];
                   }),
                ];
