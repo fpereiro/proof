@@ -4,6 +4,7 @@
 </head>
 <body>
    <script src="https://cdn.jsdelivr.net/gh/fpereiro/gotob@50d142497e0a169c831de13b61bb839cca036c41/gotoB.min.js"></script>
+   <script src="https://unpkg.com/murmurhash@0.0.2/murmurhash.js"></script>
    <script>
       (function () {
 
@@ -150,6 +151,19 @@
             }
          });
 
+         // *** STYLES ***
+
+         var CSS = {
+            colors: ['red', 'green', 'blue', 'purple', 'black'],
+            pick: function (str) {
+               var h = murmur.v3 (str) % 100, divs = 100 / CSS.colors.length;
+               var color = dale.stopNot (CSS.colors, undefined, function (v, k) {
+                  if (h < (divs * (k + 1))) return v;
+               });
+               return color;
+            },
+         };
+
          // *** VIEWS ***
 
          var Views = {};
@@ -181,9 +195,11 @@
                               ]],
                            ]],
                            dale.do (machine, function (config, configname) {
+                              var c = 0;
                               return dale.do (config, function (sequence, symbol) {
+                                 c++;
                                  return ['tr', [
-                                    ['td', configname],
+                                    ['td', {style: 'color: ' + CSS.pick (configname)}, ['strong', c === 1 ? configname : '']],
                                     ['td', symbol],
                                     ['td', sequence.slice (0, -1).join (' ')],
                                     ['td', sequence [sequence.length - 1]],
