@@ -4,7 +4,6 @@
 </head>
 <body>
    <script src="https://cdn.jsdelivr.net/gh/fpereiro/gotob@50d142497e0a169c831de13b61bb839cca036c41/gotoB.min.js"></script>
-   <script src="https://unpkg.com/murmurhash@0.0.2/murmurhash.js"></script>
    <script>
       (function () {
 
@@ -154,15 +153,26 @@
          // *** STYLES ***
 
          var CSS = {
-            colors: ['red', 'green', 'blue', 'purple', 'black'],
-            pick: function (str) {
-               var h = murmur.v3 (str) % 100, divs = 100 / CSS.colors.length;
-               var color = dale.stopNot (CSS.colors, undefined, function (v, k) {
-                  if (h < (divs * (k + 1))) return v;
-               });
-               return color;
+            colors: ['blue', 'green', 'purple', 'teal'],
+            pick: function (k) {
+               return CSS.colors [k % CSS.colors.length];
             },
          };
+
+         var style = function (a, b) {
+            var output = arguments.length === 2 ? arguments [0] : {};
+            output.style = '';
+            dale.do (arguments [arguments.length - 1], function (v, k) {
+               if (! v && v !== 0) return;
+               var typeV = type (v);
+               if (typeV === 'integer' && (v < 0 || v > 1)) v += 'px';
+               if (typeV === 'float' || v === 1) v = (v * 100) + '%';
+               dale.do (k.split (/,\s*/), function (v2) {
+                  output.style += v2 + ':' + v + ';';
+               });
+            });
+            return output;
+         }
 
          // *** VIEWS ***
 
@@ -183,29 +193,39 @@
                         })],
                      ];
                      var machine = B.get ('Data', 'machines', name);
+                     var configs = dale.keys (machine);
                      return [
-                        ['h3', [name, ['span', ' '], ['span', B.ev ({class: 'action'}, ['onclick', 'rem', 'State', 'machine']), 'Go back']]],
-                        ['table', [
-                           ['thead', [
-                              ['tr', [
-                                 ['th', 'Config name'],
-                                 ['th', 'Scanned symbol'],
-                                 ['th', 'Operations'],
-                                 ['th', 'Next config'],
+                        ['div', style ({width: 0.5, float: 'left'}), [
+                           ['h3', [name, ['span', ' '], ['span', B.ev ({class: 'action'}, ['onclick', 'rem', 'State', 'machine']), 'Go back']]],
+                           ['table', [
+                              ['thead', [
+                                 ['tr', [
+                                    ['th', 'Config name'],
+                                    ['th', 'Scanned symbol'],
+                                    ['th', 'Operations'],
+                                    ['th', 'Next config'],
+                                 ]],
                               ]],
+                              dale.do (machine, function (config, configname) {
+                                 var c = 0;
+                                 return dale.do (config, function (sequence, symbol) {
+                                    c++;
+                                    return ['tr', [
+                                       ['td', style ({color: CSS.pick (configs.indexOf (configname))}), ['strong', c === 1 ? configname : '']],
+                                       ['td', symbol],
+                                       ['td', sequence.slice (0, -1).join (' ')],
+                                       ['td', style ({color: CSS.pick (configs.indexOf (sequence [sequence.length - 1]))}), sequence [sequence.length - 1]],
+                                    ]];
+                                 });
+                              }),
                            ]],
-                           dale.do (machine, function (config, configname) {
-                              var c = 0;
-                              return dale.do (config, function (sequence, symbol) {
-                                 c++;
-                                 return ['tr', [
-                                    ['td', {style: 'color: ' + CSS.pick (configname)}, ['strong', c === 1 ? configname : '']],
-                                    ['td', symbol],
-                                    ['td', sequence.slice (0, -1).join (' ')],
-                                    ['td', sequence [sequence.length - 1]],
-                                 ]];
-                              });
-                           }),
+                        ]],
+                        ['div', style ({width: 0.5, float: 'left'}), [
+                           ['table', dale.do (dale.times (10), function (v) {
+                              return ['tr', dale.do (dale.times (10), function (v2) {
+                                 return ['td', style ({border: 'solid 1px black'})];
+                              })];
+                           })],
                         ]],
                      ];
                   }),
