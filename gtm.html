@@ -181,13 +181,14 @@
          Views.main = function () {
             var routes = [
                ['change', ['State', 'machine'], function (x) {
-                  B.set (['State', 'tape'], []);
-                  B.set (['State', 'config'],   'begin');
-                  B.set (['State', 'position'], 1);
-                  B.set (['State', 'counter'], 0);
+                  State.tape     = [];
+                  State.config   = 'begin';
+                  State.position = 1;
+                  State.counter  = 0;
+                  State.history  = [];
                   B.do ('pick', 'actions');
                }],
-               ['pick', 'actions', function () {
+               ['pick', 'actions', function (x, noupdate) {
                   var machine = Data.machines [State.machine];
                   var cconfig = machine [State.config];
                   var ctape   = teishi.c (State.tape [State.position]);
@@ -195,23 +196,34 @@
                   var match = cconfig [ctape];
                   if (! match) match = cconfig ['else'];
                   if (! match) return alert ('Error: no available action!');
-                  B.set (['State', 'actions'], match.slice (0, -1));
-                  B.set (['State', 'next'], match [match.length - 1]);
-                  B.set (['State', 'counter'], State.counter + 1);
-                  B.do ('change', 'State');
+                  State.actions = match.slice (0, -1);
+                  State.next    = match [match.length - 1];
+                  State.counter = State.counter + 1;
+                  if (! noupdate) B.do ('change', 'State');
                }],
-               ['execute', [], function () {
+               ['execute', [], function (x, noupdate) {
+                  if (! State.history [State.counter]) State.history.push (teishi.c (State.tape));
                   dale.do (State.actions, function (action) {
-                     if (action.match ('P')) return B.do ('set', ['State', 'tape', State.position], action.slice (1));
-                     if (action.match ('L')) return B.do ('set', ['State', 'position'], State.position - 1);
-                     if (action.match ('R')) return B.do ('set', ['State', 'position'], State.position + 1);
-                     if (action === 'E')     return B.do ('set', ['State', 'tape', State.position], undefined);
+                     if (action.match ('P')) return State.tape [State.position] = action.slice (1);
+                     if (action.match ('L')) return State.position = State.position - 1;
+                     if (action.match ('R')) return State.position = State.position + 1;
+                     if (action === 'E')     return State.tape [State.position] = undefined;
                   });
-                  B.do ('set', ['State', 'config'], State.next);
-                  B.do ('pick', 'actions');
+                  State.config = State.next;
+                  B.do ('pick', 'actions', noupdate);
+               }],
+               ['goto', [], function (x, where) {
                }],
             ];
-            return B.view ([], {listen: routes}, function (x, s) {
+            return B.view (['Data'], {listen: routes, ondraw: function () {
+               if (B.get ('State', 'cursorhandler')) return;
+               B.do ('set', ['State', 'cursorhandler'], true);
+               document.body.addEventListener ('keydown', function (e) {
+                  var code = e.keyCode;
+                  if (code === 34 || code === 39) B.do ('execute', []);
+                  if (code === 33 || code === 37) B.do ('goto', Math.max (1, State.position - 1));
+               });
+            }}, function (x, s) {
                return [
                   ['h1', 'Web Turing Machine'],
                   ['style', [
@@ -252,38 +264,41 @@
                               }),
                            ]],
                         ]],
-                        ['div', style ({width: 0.5, float: 'left'}), [
-                           ['h2', 'Tape'],
-                           ['table', [
-                              ['tr', [
-                                 ['th', 'Config'],
-                                 ['th', 'Position'],
-                                 ['th', 'Scanned symbol'],
-                                 ['th', 'Actions to perform'],
-                                 ['th', 'Next config'],
-                                 ['th', 'Times executed'],
+                        B.view (['State'], function () {
+                           return ['div', style ({width: 0.5, float: 'left'}), [
+                              ['h2', 'Tape'],
+                              ['style', ['table.tapeinfo th, table.tapeinfo td', {'text-align': 'left'}]],
+                              ['table', {class: 'tapeinfo'}, [
+                                 ['tr', [
+                                    ['th', style ({width: 140}), 'Config'],
+                                    ['th', 'Position'],
+                                    ['th', 'Scanned symbol'],
+                                    ['th', 'Actions to perform'],
+                                    ['th', style ({width: 140}), 'Next config'],
+                                    ['th', 'Counter'],
+                                 ]],
+                                 ['tr', [
+                                    ['td', B.get ('State', 'config')],
+                                    ['td', B.get ('State', 'position')],
+                                    ['td', (function () {
+                                       var symbol = B.get ('State', 'tape', B.get ('State', 'position'));
+                                       return symbol === undefined ? 'none' : symbol;
+                                    }) ()],
+                                    ['td', (State.actions || []).join (' ')],
+                                    ['td', State.next],
+                                    ['td', B.get ('State', 'counter')],
+                                 ]],
                               ]],
-                              ['tr', [
-                                 ['td', B.get ('State', 'config')],
-                                 ['td', B.get ('State', 'position')],
-                                 ['td', (function () {
-                                    var symbol = B.get ('State', 'tape', B.get ('State', 'position'));
-                                    return symbol === undefined ? 'none' : symbol;
-                                 }) ()],
-                                 ['td', (State.actions || []).join (' ')],
-                                 ['td', State.next],
-                                 ['td', B.get ('State', 'counter')],
-                              ]],
-                           ]],
-                           ['p', B.ev ({class: 'action'}, ['onclick', 'execute', []]), 'Execute!'],
-                           ['style', ['td.selected', {color: 'white', 'background-color': 'black', border: 'solid 1px red !important', 'font-weight': 'bold'}]],
-                           ['table', dale.do (dale.times (20), function (v, k) {
-                              return ['tr', dale.do (dale.times (20), function (v2, k2) {
-                                 var position = k * 20 + k2 + 1;
-                                 return ['td', style (position === B.get ('State', 'position') ? {class: 'selected'} : {}, {border: 'solid 1px black', width: 30, height: 30, 'max-width': 30, 'max-height': 30, 'text-align': 'center', padding: 0}), B.get ('State', 'tape', position)];
-                              })];
-                           })],
-                        ]],
+                              ['p', B.ev ({class: 'action'}, ['onclick', 'execute', []]), 'Execute!'],
+                              ['style', ['td.selected', {color: 'white', 'background-color': 'black', border: 'solid 1px red !important', 'font-weight': 'bold'}]],
+                              ['table', dale.do (dale.times (20), function (v, k) {
+                                 return ['tr', dale.do (dale.times (15), function (v2, k2) {
+                                    var position = k * 20 + k2 + 1;
+                                    return ['td', style (position === B.get ('State', 'position') ? {class: 'selected'} : {}, {border: 'solid 1px black', width: 35, height: 35, 'max-width': 35, 'max-height': 35, 'text-align': 'center', padding: 0}), B.get ('State', 'tape', position)];
+                                 })];
+                              })],
+                           ]];
+                        }),
                      ];
                   }),
                ];
