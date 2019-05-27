@@ -199,10 +199,10 @@
                   State.actions = match.slice (0, -1);
                   State.next    = match [match.length - 1];
                   State.counter = State.counter + 1;
+                  if (! State.history [State.counter]) State.history [State.counter] = {tape: teishi.c (State.tape), config: State.config, position: State.position};
                   if (! noupdate) B.do ('change', 'State');
                }],
                ['execute', [], function (x, noupdate) {
-                  if (! State.history [State.counter]) State.history.push (teishi.c (State.tape));
                   dale.do (State.actions, function (action) {
                      if (action.match ('P')) return State.tape [State.position] = action.slice (1);
                      if (action.match ('L')) return State.position = State.position - 1;
@@ -213,6 +213,16 @@
                   B.do ('pick', 'actions', noupdate);
                }],
                ['goto', [], function (x, where) {
+                  var history = State.history [where] || State.history [State.history.length - 1];
+                  State.tape     = teishi.c (history.tape);
+                  State.position = history.position;
+                  State.config   = history.config;
+                  // pick.actions increments the counter
+                  State.counter  = (State.history [where] ? where : State.history [State.history.length] - 1) - 1;
+
+                  if (State.counter === where) return B.do ('pick', 'actions', true);
+                  while (State.counter < where) B.do ('execute', [], true);
+                  B.do ('change', 'State');
                }],
             ];
             return B.view (['Data'], {listen: routes, ondraw: function () {
@@ -221,7 +231,7 @@
                document.body.addEventListener ('keydown', function (e) {
                   var code = e.keyCode;
                   if (code === 34 || code === 39) B.do ('execute', []);
-                  if (code === 33 || code === 37) B.do ('goto', Math.max (1, State.position - 1));
+                  if (code === 33 || code === 37) B.do ('goto', [], Math.max (1, State.counter - 1));
                });
             }}, function (x, s) {
                return [
