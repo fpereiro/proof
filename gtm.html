@@ -184,7 +184,7 @@
                   State.tape     = [];
                   State.config   = 'begin';
                   State.position = 1;
-                  State.counter  = 0;
+                  State.counter  = 1;
                   State.history  = [];
                   B.do ('pick', 'actions');
                }],
@@ -198,7 +198,6 @@
                   if (! match) return alert ('Error: no available action!');
                   State.actions = match.slice (0, -1);
                   State.next    = match [match.length - 1];
-                  State.counter = State.counter + 1;
                   if (! State.history [State.counter]) State.history [State.counter] = {tape: teishi.c (State.tape), config: State.config, position: State.position};
                   if (! noupdate) B.do ('change', 'State');
                }],
@@ -209,7 +208,8 @@
                      if (action.match ('R')) return State.position = State.position + 1;
                      if (action === 'E')     return State.tape [State.position] = undefined;
                   });
-                  State.config = State.next;
+                  State.config  = State.next;
+                  State.counter = State.counter + 1;
                   B.do ('pick', 'actions', noupdate);
                }],
                ['goto', [], function (x, where) {
@@ -217,12 +217,15 @@
                   State.tape     = teishi.c (history.tape);
                   State.position = history.position;
                   State.config   = history.config;
-                  // pick.actions increments the counter
-                  State.counter  = (State.history [where] ? where : State.history [State.history.length] - 1) - 1;
+                  State.counter  = (State.history [where] ? where : State.history.length - 1);
 
-                  if (State.counter === where) return B.do ('pick', 'actions', true);
+                  B.do ('pick', 'actions', true);
                   while (State.counter < where) B.do ('execute', [], true);
                   B.do ('change', 'State');
+               }],
+               ['gotoprompt', [], function () {
+                  var goto = prompt ('To which step should we go?', State.counter);
+                  B.do ('goto', [], parseInt (goto));
                }],
             ];
             return B.view (['Data'], {listen: routes, ondraw: function () {
@@ -230,7 +233,7 @@
                B.do ('set', ['State', 'cursorhandler'], true);
                document.body.addEventListener ('keydown', function (e) {
                   var code = e.keyCode;
-                  if (code === 34 || code === 39) B.do ('execute', []);
+                  if (code === 34 || code === 39) B.do ('goto', [], State.counter + 1);
                   if (code === 33 || code === 37) B.do ('goto', [], Math.max (1, State.counter - 1));
                });
             }}, function (x, s) {
@@ -299,7 +302,11 @@
                                     ['td', B.get ('State', 'counter')],
                                  ]],
                               ]],
-                              ['p', B.ev ({class: 'action'}, ['onclick', 'execute', []]), 'Execute!'],
+                              ['p', [
+                                 ['span', B.ev ({class: 'action'}, ['onclick', 'execute', []]), 'Execute!'],
+                                 ' ',
+                                 ['span', B.ev ({class: 'action'}, ['onclick', 'gotoprompt', []]), 'Go to'],
+                              ]],
                               ['style', ['td.selected', {color: 'white', 'background-color': 'black', border: 'solid 1px red !important', 'font-weight': 'bold'}]],
                               ['table', dale.do (dale.times (20), function (v, k) {
                                  return ['tr', dale.do (dale.times (15), function (v2, k2) {
