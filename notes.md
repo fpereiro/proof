@@ -401,7 +401,7 @@ p94
 
 p99
 
-- PE: "Let's confront our fears head on by building machines that transcend the trivial. Let's convince ourselves that Turing Machines can indeed addd and multiply (and hence, also substract, divide, calculate powers and perhaps even write poetry). The first example is a small Turing Machine that calculates all te positive integers in sequence. This machine does *not* comply with Turing's conventions because it writes each new number over the previous one. It doesn't skip any squares when printing the results, and it replaces each result with the next highest number."
+- PE: "Let's confront our fears head on by building machines that transcend the trivial. Let's convince ourselves that Turing Machines can indeed addd and multiply (and hence, also substract, divide, calculate powers and perhaps even write poetry). The first example is a small Turing Machine that calculates all the positive integers in sequence. This machine does *not* comply with Turing's conventions because it writes each new number over the previous one. It doesn't skip any squares when printing the results, and it replaces each result with the next highest number."
 
 ```
 mconf     symbol   operations   final mconf

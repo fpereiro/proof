@@ -25,6 +25,72 @@
 
          // *** MACHINES ***
 
+         B.do ('set', ['Data', 'machines', 'Zeroes and Ones'], {
+            begin: {
+               none: ['P0', 'R', 'c'],
+            },
+            c: {
+               none: ['R', 'k'],
+            },
+            k: {
+               none: ['P1', 'R', 'f'],
+            },
+            f: {
+               none: ['R', 'begin'],
+            },
+         });
+
+         B.do ('set', ['Data', 'machines', '1/4'], {
+            begin: {
+               none: ['P0', 'R', 'c'],
+            },
+            c: {
+               none: ['R', 'd'],
+            },
+            d: {
+               none: ['P1', 'R', 'e'],
+            },
+            e: {
+               none: ['R', 'f'],
+            },
+            f: {
+               none: ['P0', 'R', 'e'],
+            },
+         });
+
+         B.do ('set', ['Data', 'machines', '1/4, condensed'], {
+            begin: {
+               none: ['P0', 'begin'],
+               0:    ['R', 'R', 'P1', 'begin'],
+               1:    ['R', 'R', 'P0', 'begin'],
+            },
+         });
+
+         B.do ('set', ['Data', 'machines', '001011011101111011111...'], {
+            begin: {
+               none: ['Pe', 'R', 'Pe', 'R', 'P0', 'R', 'R', 'P0', 'L', 'L', 'o'],
+            },
+            o: {
+               1: ['R', 'Px', 'L', 'L', 'L', 'o'],
+               0: ['q'],
+            },
+            q: {
+               0:    ['R', 'R', 'q'],
+               1:    ['R', 'R', 'q'],
+               none: ['P1', 'L', 'p'],
+            },
+            p: {
+               x:    ['E', 'R', 'q'],
+               e:    ['R', 'f'],
+               none: ['L', 'L', 'p'],
+            },
+            f: {
+               // Note: we can implement "any" by placing "none" and then "else".
+               none: ['P0', 'L', 'L', 'o'],
+               else: ['R', 'R', 'f'],
+            },
+         });
+
          B.do ('set', ['Data', 'machines', 'Square root of 2'], {
             begin: {
                none: ['P@', 'R', 'P1', 'new']
@@ -181,6 +247,7 @@
          Views.main = function () {
             var routes = [
                ['change', ['State', 'machine'], function (x) {
+                  if (! B.get ('State', 'machine')) return;
                   State.tape     = [];
                   State.config   = 'begin';
                   State.position = 1;
@@ -310,7 +377,7 @@
                               ['style', ['td.selected', {color: 'white', 'background-color': 'black', border: 'solid 1px red !important', 'font-weight': 'bold'}]],
                               ['table', dale.do (dale.times (20), function (v, k) {
                                  return ['tr', dale.do (dale.times (15), function (v2, k2) {
-                                    var position = k * 20 + k2 + 1;
+                                    var position = k * 15 + k2 + 1;
                                     return ['td', style (position === B.get ('State', 'position') ? {class: 'selected'} : {}, {border: 'solid 1px black', width: 35, height: 35, 'max-width': 35, 'max-height': 35, 'text-align': 'center', padding: 0}), B.get ('State', 'tape', position)];
                                  })];
                               })],
