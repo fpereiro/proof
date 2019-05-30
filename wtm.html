@@ -338,7 +338,7 @@
                                        ['td', style ({color: CSS.pick (configs.indexOf (configname))}), ['strong', c === 1 ? configname : '']],
                                        ['td', symbol],
                                        ['td', sequence.slice (0, -1).join (' ')],
-                                       ['td', style ({color: CSS.pick (configs.indexOf (sequence [sequence.length - 1]))}), sequence [sequence.length - 1]],
+                                       ['td', style ({color: CSS.pick (configs.indexOf (sequence [sequence.length - 1]))}), ['strong', sequence [sequence.length - 1]]],
                                     ]];
                                  });
                               }),
@@ -371,16 +371,40 @@
                               ]],
                               ['p', [
                                  ['span', B.ev ({class: 'action'}, ['onclick', 'execute', []]), 'Execute!'],
-                                 ' ',
+                                 ' - ',
                                  ['span', B.ev ({class: 'action'}, ['onclick', 'gotoprompt', []]), 'Go to'],
+                                 ' - ',
+                                 ['span', B.ev ({class: 'action'}, ['onclick', 'set', ['State', 'toggle'], ! State.toggle]), 'Toggle tape/sequence'],
                               ]],
                               ['style', ['td.selected', {color: 'white', 'background-color': 'black', border: 'solid 1px red !important', 'font-weight': 'bold'}]],
-                              ['table', dale.do (dale.times (20), function (v, k) {
-                                 return ['tr', dale.do (dale.times (15), function (v2, k2) {
-                                    var position = k * 15 + k2 + 1;
-                                    return ['td', style (position === B.get ('State', 'position') ? {class: 'selected'} : {}, {border: 'solid 1px black', width: 35, height: 35, 'max-width': 35, 'max-height': 35, 'text-align': 'center', padding: 0}), B.get ('State', 'tape', position)];
+                              B.view (['State', 'toggle'], function (x, toggle) {
+                                 if (toggle) return ['table', [
+                                    ['tr', [
+                                       ['th', 'Counter'],
+                                       ['th', 'Config'],
+                                       ['th', 'Position'],
+                                       ['th', 'Tape'],
+                                    ]],
+                                    dale.do (State.history, function (step, k) {
+                                       if (k === 0) return;
+                                       if (State.history [k - 1] && State.history [k - 1].config === step.config) return;
+                                       return ['tr', [
+                                          ['td', k],
+                                          ['td', step.config],
+                                          ['td', step.position],
+                                          ['td', style ({'font-weight': 'bold', 'font-family': 'monospace'}), dale.do (step.tape, function (v2, k2) {
+                                             return ['span', style ({'background-color': k2 === step.position - 1 ? 'black' : undefined, color: k2 === step.position - 1 ? 'white' : CSS.pick (k2)}), v2 === undefined ? ' ' : v2];
+                                          })],
+                                       ]];
+                                    }),
+                                 ]];
+                                 return ['table', dale.do (dale.times (20), function (v, k) {
+                                    return ['tr', dale.do (dale.times (15), function (v2, k2) {
+                                       var position = k * 15 + k2 + 1;
+                                       return ['td', style (position === B.get ('State', 'position') ? {class: 'selected'} : {}, {border: 'solid 1px black', width: 35, height: 35, 'max-width': 35, 'max-height': 35, 'text-align': 'center', padding: 0}), B.get ('State', 'tape', position)];
+                                    })];
                                  })];
-                              })],
+                              }),
                            ]];
                         }),
                      ];
