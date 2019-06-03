@@ -192,10 +192,18 @@
                v:    ['Pu', 'R', 'R', 'unflag-result-digits'],
                else: ['find-digits'],
             },
+            'new-digit-is-zero': {
+               ə:  ['R', 'print-zero-digit'],
+               else: ['L', 'new-digit-is-zero'],
+            },
             'print-zero-digit': {
                0:    ['R', 'E', 'R',       'print-zero-digit'],
                1:    ['R', 'E', 'R',       'print-zero-digit'],
                none: ['P0', 'R', 'R', 'R', 'cleanup'],
+            },
+            'new-digit-is-one': {
+               ə:  ['R', 'print-one-digit'],
+               else: ['L', 'new-digit-is-one'],
             },
             'print-one-digit': {
                0:    ['R', 'E', 'R',       'print-one-digit'],
@@ -219,7 +227,7 @@
                none: ['Pa', 'R', 'R', 'R', 'cleanup'],
             },
             begin: {
-               none: ['Pə', 'R', 'P1', 'goto-sentinel (mark-digits)']
+               none: ['Pə', 'R', 'P1', ['goto-sentinel', 'mark-digits']]
             },
             'mark-digits': {
                0:    ['R', 'Px', 'R',            'mark-digits'],
