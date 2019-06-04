@@ -193,7 +193,7 @@
                else: ['find-digits'],
             },
             'new-digit-is-zero': {
-               ə:  ['R', 'print-zero-digit'],
+               ə:    ['R', 'print-zero-digit'],
                else: ['L', 'new-digit-is-zero'],
             },
             'print-zero-digit': {
@@ -202,7 +202,7 @@
                none: ['P0', 'R', 'R', 'R', 'cleanup'],
             },
             'new-digit-is-one': {
-               ə:  ['R', 'print-one-digit'],
+               ə:    ['R', 'print-one-digit'],
                else: ['L', 'new-digit-is-one'],
             },
             'print-one-digit': {
@@ -236,7 +236,7 @@
             },
             'find-x': {
                x:    ['E',      'first-r'],
-               ə:    [          'find-digits'],
+               ə:    [          ['goto-sentinel', 'find-1st-digit']],
                else: ['L', 'L', 'find-x'],
             },
             'first-r': {
@@ -246,10 +246,6 @@
             'last-r': {
                r:    ['R', 'R',             'last-r'],
                none: ['Pr', 'R', 'R', 'Pr', 'find-x'],
-            },
-            'find-digits': {
-               ə:    ['R', 'R', 'find-1st-digit'],
-               else: ['L', 'L', 'find-digits'],
             },
             'find-1st-digit': {
                x:    ['L',      'found-1st-digit'],
@@ -272,23 +268,19 @@
                none: ['R', 'add-one'],
             },
             'add-zero': {
-               r:    ['Ps',     'add-finished'],
-               u:    ['Pv',     'add-finished'],
+               r:    ['Ps',     ['goto-sentinel', 'erase-old-x']],
+               u:    ['Pv',     ['goto-sentinel', 'erase-old-x']],
                else: ['R', 'R', 'add-zero'],
             },
             'add-one': {
-               r:    ['Pv',           'add-finished'],
+               r:    ['Pv',           ['goto-sentinel', 'erase-old-x']],
                u:    ['Ps', 'R', 'R', 'carry'],
                else: ['R', 'R',       'add-one'],
             },
             carry: {
-               r:    ['Pu',           'add-finished'],
+               r:    ['Pu',           ['goto-sentinel', 'erase-old-x']],
                none: ['Pu',           ['goto-sentinel', ['print-digit', '0']]],
                u:    ['Pr', 'R', 'R', 'carry'],
-            },
-            'add-finished': {
-               ə:    ['R', 'R', 'erase-old-x'],
-               else: ['L', 'L', 'add-finished'],
             },
             'erase-old-x': {
                x:    ['E',  'L', 'L', 'print-new-x'],
@@ -297,8 +289,8 @@
             },
             'print-new-x': {
                ə:    ['R', 'R', 'erase-old-y'],
-               y:    ['Pz',     'find-digits'],
-               none: ['Px',     'find-digits'],
+               y:    ['Pz',     ['goto-sentinel', 'find-1st-digit']],
+               none: ['Px',     ['goto-sentinel', 'find-1st-digit']],
             },
             'erase-old-y': {
                y:    ['E', 'L', 'L', 'print-new-y'],
@@ -320,17 +312,7 @@
             'unflag-result-digits': {
                s:    ['Pr', 'R', 'R', 'unflag-result-digits'],
                v:    ['Pu', 'R', 'R', 'unflag-result-digits'],
-               else: ['find-digits'],
-            },
-            'print-zero-digit': {
-               0:    ['R', 'E', 'R',       'print-zero-digit'],
-               1:    ['R', 'E', 'R',       'print-zero-digit'],
-               none: ['P0', 'R', 'R', 'R', 'cleanup'],
-            },
-            'print-one-digit': {
-               0:    ['R', 'E', 'R',       'print-one-digit'],
-               1:    ['R', 'E', 'R',       'print-one-digit'],
-               none: ['P1', 'R', 'R', 'R', 'cleanup'],
+               else: [['goto-sentinel', 'find-1st-digit']],
             },
             cleanup: {
                none: [               'new'],
@@ -391,6 +373,13 @@
                   if (! noupdate) B.do ('change', 'State');
                }],
                ['execute', [], function (x, noupdate) {
+                  /*
+                  Rules for machines using m-functions
+                  m-functions have a name that is an array, the first element being the m-fun name (which is the same as the m-config name), the remaining ones take arguments. m-functions take arguments, otherwise they'd be merely m-configurations.
+                  m-configs or m-functions that call a m-function have to pass arguments to it. this is contained in an array. the first element must be the name of a m-function (not m-config), the length has to match that of what that m-config takes. an argument can also be an array, which should be also a call of this form (or nestedly), where the first element is always a m-config. further arguments are free.
+                  arguments are substituted on execution.
+
+                  */
                   dale.do (State.actions, function (action) {
                      if (action.match ('P')) return State.tape [State.position] = action.slice (1);
                      if (action.match ('L')) return State.position = State.position - 1;
