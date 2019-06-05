@@ -4,7 +4,7 @@
 </head>
 <body>
    <script src="https://cdn.jsdelivr.net/gh/fpereiro/gotob@50d142497e0a169c831de13b61bb839cca036c41/gotoB.min.js"></script>
-   <script>
+   <script type"text/javascript">
       (function () {
 
          // *** SETUP ***
@@ -217,11 +217,11 @@
          });
 
          B.do ('set', ['Data', 'machines', 'Square root of 2, condensed'], {
-            '["goto-sentinel", "A"]': {
+            '["mfun", "goto-sentinel", "A"]': {
                ə:    ['R', 'A'],
                else: ['L', ['goto-sentinel', 'A']],
             },
-            '["print-digit", "A"]': {
+            '["mfun", "print-digit", "A"]': {
                '0':  ['R', 'E', 'R', ['print-digit', 'A']],
                '1':  ['R', 'E', 'R', ['print-digit', 'A']],
                none: ['Pa', 'R', 'R', 'R', 'cleanup'],
@@ -374,10 +374,16 @@
                }],
                ['execute', [], function (x, noupdate) {
                   /*
+
                   Rules for machines using m-functions
                   m-functions have a name that is an array, the first element being the m-fun name (which is the same as the m-config name), the remaining ones take arguments. m-functions take arguments, otherwise they'd be merely m-configurations.
                   m-configs or m-functions that call a m-function have to pass arguments to it. this is contained in an array. the first element must be the name of a m-function (not m-config), the length has to match that of what that m-config takes. an argument can also be an array, which should be also a call of this form (or nestedly), where the first element is always a m-config. further arguments are free.
                   arguments are substituted on execution.
+
+                  how to expand machine to contain expanded m-functions? name plus arguments. perhaps we should instead distinguish the m-functions further.
+                  should we expand on the fly? if so, should we replace original mconfs that invoke mfuns?
+                  mconf-e01 mconf-e02
+                  nested mfuns?
 
                   */
                   dale.do (State.actions, function (action) {
@@ -386,7 +392,21 @@
                      if (action.match ('R')) return State.position = State.position + 1;
                      if (action === 'E')     return State.tape [State.position] = undefined;
                   });
-                  State.config  = State.next;
+                  if (type (State.next) === 'array') {
+                     var mfunction = State.next [0];
+                     if (type (mfunction) !== 'string') throw new Error ('m-function must be a string!');
+                     mfunction = dale.stopNot (Data.machines [State.machine], undefined, function (config, name) {
+                        var Name = teishi.p (name);
+                        if (! Name) return;
+                        if (Name [0] === mfunction) return [name, config];
+                     });
+                     if (! mfunction) throw new Error ('No matching m-function found!');
+                     dale.do (State.
+
+                     if (State.next
+                  }
+                  else State.config  = State.next;
+
                   State.counter = State.counter + 1;
                   B.do ('pick', 'actions', noupdate);
                }],
