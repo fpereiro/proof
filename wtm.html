@@ -224,7 +224,37 @@
             '["mfun", "print-digit", "A"]': {
                '0':  ['R', 'E', 'R', ['print-digit', 'A']],
                '1':  ['R', 'E', 'R', ['print-digit', 'A']],
-               none: ['Pa', 'R', 'R', 'R', 'cleanup'],
+               none: ['PA', 'R', 'R', 'R', 'cleanup'],
+            },
+            'goto-sentinel (mark-digits)': {
+               e:    ['R', 'mark-digits'],
+               else: ['L', 'goto-sentinel:mark-digits'],
+            },
+            'goto-sentinel (find-1st-digit)': {
+               e:    ['R', 'find-1st-digit'],
+               else: ['L', 'goto-sentinel:find-1st-digit'],
+            },
+            'goto-sentinel (erase-old-x)': {
+               e:    ['R', 'erase-old-x'],
+               else: ['L', 'goto-sentinel:erase-old-x'],
+            },
+            'print-digit (0)': {
+               '0':  ['R', 'E', 'R', 'print-digit (0)'],
+               '1':  ['R', 'E', 'R', 'print-digit (0)'],
+               none: ['P0', 'R', 'R', 'R', 'cleanup'],
+            },
+            'print-digit (1)': {
+               '0':  ['R', 'E', 'R', 'print-digit (0)'],
+               '1':  ['R', 'E', 'R', 'print-digit (0)'],
+               none: ['P1', 'R', 'R', 'R', 'cleanup'],
+            },
+            'goto-sentinel (print-digit (0))': {
+               e:    ['R', 'print-digit (0)'],
+               else: ['L', 'goto-sentinel (print-digit (0))'],
+            },
+            'goto-sentinel (print-digit (1))': {
+               e:    ['R', 'print-digit (1)'],
+               else: ['L', 'goto-sentinel (print-digit (1))'],
             },
             begin: {
                none: ['Pə', 'R', 'P1', ['goto-sentinel', 'mark-digits']]
