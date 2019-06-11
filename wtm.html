@@ -217,26 +217,27 @@
          });
 
          B.do ('set', ['Data', 'machines', 'Square root of 2, condensed'], {
-            '["mfun", "goto-sentinel", "A"]': {
+            'mfun: goto-sentinel (A)': {
                ə:    ['R', 'A'],
-               else: ['L', ['goto-sentinel', 'A']],
+               else: ['L', 'goto-sentinel (A)'],
             },
-            '["mfun", "print-digit", "A"]': {
-               '0':  ['R', 'E', 'R', ['print-digit', 'A']],
-               '1':  ['R', 'E', 'R', ['print-digit', 'A']],
+            'mfun: print-digit (A)': {
+               '0':  ['R', 'E', 'R', 'print-digit (A)'],
+               '1':  ['R', 'E', 'R', 'print-digit (A)'],
                none: ['PA', 'R', 'R', 'R', 'cleanup'],
             },
+            /*
             'goto-sentinel (mark-digits)': {
                e:    ['R', 'mark-digits'],
-               else: ['L', 'goto-sentinel:mark-digits'],
+               else: ['L', 'goto-sentinel (mark-digits)'],
             },
             'goto-sentinel (find-1st-digit)': {
                e:    ['R', 'find-1st-digit'],
-               else: ['L', 'goto-sentinel:find-1st-digit'],
+               else: ['L', 'goto-sentinel (find-1st-digit)'],
             },
             'goto-sentinel (erase-old-x)': {
                e:    ['R', 'erase-old-x'],
-               else: ['L', 'goto-sentinel:erase-old-x'],
+               else: ['L', 'goto-sentinel (erase-old-x)'],
             },
             'print-digit (0)': {
                '0':  ['R', 'E', 'R', 'print-digit (0)'],
@@ -256,8 +257,10 @@
                e:    ['R', 'print-digit (1)'],
                else: ['L', 'goto-sentinel (print-digit (1))'],
             },
+            */
             begin: {
-               none: ['Pə', 'R', 'P1', ['goto-sentinel', 'mark-digits']]
+               // XXX 1
+               none: ['Pə', 'R', 'P1', 'goto-sentinel (mark-digits)']
             },
             'mark-digits': {
                0:    ['R', 'Px', 'R',            'mark-digits'],
@@ -266,7 +269,8 @@
             },
             'find-x': {
                x:    ['E',      'first-r'],
-               ə:    [          ['goto-sentinel', 'find-1st-digit']],
+               // XXX 2
+               ə:    [          'goto-sentinel (find-1st-digit)'],
                else: ['L', 'L', 'find-x'],
             },
             'first-r': {
@@ -298,18 +302,21 @@
                none: ['R', 'add-one'],
             },
             'add-zero': {
-               r:    ['Ps',     ['goto-sentinel', 'erase-old-x']],
-               u:    ['Pv',     ['goto-sentinel', 'erase-old-x']],
+               // XXX 3 & 4
+               r:    ['Ps',     'goto-sentinel (erase-old-x)'],
+               u:    ['Pv',     'goto-sentinel (erase-old-x)'],
                else: ['R', 'R', 'add-zero'],
             },
             'add-one': {
-               r:    ['Pv',           ['goto-sentinel', 'erase-old-x']],
+               // XXX 5
+               r:    ['Pv',           'goto-sentinel (erase-old-x)'],
                u:    ['Ps', 'R', 'R', 'carry'],
                else: ['R', 'R',       'add-one'],
             },
             carry: {
-               r:    ['Pu',           ['goto-sentinel', 'erase-old-x']],
-               none: ['Pu',           ['goto-sentinel', ['print-digit', '0']]],
+               r:    ['Pu',           'goto-sentinel (erase-old-x)'],
+               // XXX 6
+               none: ['Pu',           'goto-sentinel (print-digit (0))'],
                u:    ['Pr', 'R', 'R', 'carry'],
             },
             'erase-old-x': {
@@ -319,15 +326,17 @@
             },
             'print-new-x': {
                ə:    ['R', 'R', 'erase-old-y'],
-               y:    ['Pz',     ['goto-sentinel', 'find-1st-digit']],
-               none: ['Px',     ['goto-sentinel', 'find-1st-digit']],
+               // XXX 7 & 8
+               y:    ['Pz',     'goto-sentinel (find-1st-digit)'],
+               none: ['Px',     'goto-sentinel (find-1st-digit)'],
             },
             'erase-old-y': {
                y:    ['E', 'L', 'L', 'print-new-y'],
                else: ['R', 'R',      'erase-old-y'],
             },
             'print-new-y': {
-               ə:    ['R',       ['goto-sentinel', ['print-digit', '1']]],
+               // XXX 9
+               ə:    ['R',       'goto-sentinel (print-digit (1))'],
                else: ['Py', 'R', 'reset-new-x'],
             },
             'reset-new-x': {
@@ -342,7 +351,8 @@
             'unflag-result-digits': {
                s:    ['Pr', 'R', 'R', 'unflag-result-digits'],
                v:    ['Pu', 'R', 'R', 'unflag-result-digits'],
-               else: [['goto-sentinel', 'find-1st-digit']],
+               // XXX 10
+               else: ['goto-sentinel (find-1st-digit)'],
             },
             cleanup: {
                none: [               'new'],
@@ -404,17 +414,12 @@
                }],
                ['execute', [], function (x, noupdate) {
                   /*
-
-                  Rules for machines using m-functions
-                  m-functions have a name that is an array, the first element being the m-fun name (which is the same as the m-config name), the remaining ones take arguments. m-functions take arguments, otherwise they'd be merely m-configurations.
-                  m-configs or m-functions that call a m-function have to pass arguments to it. this is contained in an array. the first element must be the name of a m-function (not m-config), the length has to match that of what that m-config takes. an argument can also be an array, which should be also a call of this form (or nestedly), where the first element is always a m-config. further arguments are free.
-                  arguments are substituted on execution.
-
-                  how to expand machine to contain expanded m-functions? name plus arguments. perhaps we should instead distinguish the m-functions further.
-                  should we expand on the fly? if so, should we replace original mconfs that invoke mfuns?
-                  mconf-e01 mconf-e02
-                  nested mfuns?
-
+                  - find next m-conf
+                  - doesn't exist? if there's no parenthesis, throw error.
+                  - if there's parenthesis, it's a m-fun execution that hasn't been expanded.
+                     - split by (. get rid of all ) (this assumes only one argument, later has to be changed to proper parsing)
+                     - go from the inner arguments to the outermost. Find the innermost execution and find the matching mfun. Then, replace everywhere the argument. Put the expanded m-fun as a m-config.
+                     - Once you're done expanding them all, resume execution as normal.
                   */
                   dale.do (State.actions, function (action) {
                      if (action.match ('P')) return State.tape [State.position] = action.slice (1);
