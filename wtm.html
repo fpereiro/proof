@@ -226,17 +226,17 @@
                '1':  ['R', 'E', 'R', 'print-digit (A)'],
                none: ['PA', 'R', 'R', 'R', 'cleanup'],
             },
-            /*
+            ///*
             'goto-sentinel (mark-digits)': {
-               e:    ['R', 'mark-digits'],
+               ə:    ['R', 'mark-digits'],
                else: ['L', 'goto-sentinel (mark-digits)'],
             },
             'goto-sentinel (find-1st-digit)': {
-               e:    ['R', 'find-1st-digit'],
+               ə:    ['R', 'find-1st-digit'],
                else: ['L', 'goto-sentinel (find-1st-digit)'],
             },
             'goto-sentinel (erase-old-x)': {
-               e:    ['R', 'erase-old-x'],
+               ə:    ['R', 'erase-old-x'],
                else: ['L', 'goto-sentinel (erase-old-x)'],
             },
             'print-digit (0)': {
@@ -250,16 +250,15 @@
                none: ['P1', 'R', 'R', 'R', 'cleanup'],
             },
             'goto-sentinel (print-digit (0))': {
-               e:    ['R', 'print-digit (0)'],
+               ə:    ['R', 'print-digit (0)'],
                else: ['L', 'goto-sentinel (print-digit (0))'],
             },
             'goto-sentinel (print-digit (1))': {
-               e:    ['R', 'print-digit (1)'],
+               ə:    ['R', 'print-digit (1)'],
                else: ['L', 'goto-sentinel (print-digit (1))'],
             },
-            */
+            //*/
             begin: {
-               // XXX 1
                none: ['Pə', 'R', 'P1', 'goto-sentinel (mark-digits)']
             },
             'mark-digits': {
@@ -269,7 +268,6 @@
             },
             'find-x': {
                x:    ['E',      'first-r'],
-               // XXX 2
                ə:    [          'goto-sentinel (find-1st-digit)'],
                else: ['L', 'L', 'find-x'],
             },
@@ -302,20 +300,17 @@
                none: ['R', 'add-one'],
             },
             'add-zero': {
-               // XXX 3 & 4
                r:    ['Ps',     'goto-sentinel (erase-old-x)'],
                u:    ['Pv',     'goto-sentinel (erase-old-x)'],
                else: ['R', 'R', 'add-zero'],
             },
             'add-one': {
-               // XXX 5
                r:    ['Pv',           'goto-sentinel (erase-old-x)'],
                u:    ['Ps', 'R', 'R', 'carry'],
                else: ['R', 'R',       'add-one'],
             },
             carry: {
                r:    ['Pu',           'goto-sentinel (erase-old-x)'],
-               // XXX 6
                none: ['Pu',           'goto-sentinel (print-digit (0))'],
                u:    ['Pr', 'R', 'R', 'carry'],
             },
@@ -326,7 +321,6 @@
             },
             'print-new-x': {
                ə:    ['R', 'R', 'erase-old-y'],
-               // XXX 7 & 8
                y:    ['Pz',     'goto-sentinel (find-1st-digit)'],
                none: ['Px',     'goto-sentinel (find-1st-digit)'],
             },
@@ -335,7 +329,6 @@
                else: ['R', 'R',      'erase-old-y'],
             },
             'print-new-y': {
-               // XXX 9
                ə:    ['R',       'goto-sentinel (print-digit (1))'],
                else: ['Py', 'R', 'reset-new-x'],
             },
@@ -351,7 +344,6 @@
             'unflag-result-digits': {
                s:    ['Pr', 'R', 'R', 'unflag-result-digits'],
                v:    ['Pu', 'R', 'R', 'unflag-result-digits'],
-               // XXX 10
                else: ['goto-sentinel (find-1st-digit)'],
             },
             cleanup: {
@@ -413,34 +405,27 @@
                   if (! noupdate) B.do ('change', 'State');
                }],
                ['execute', [], function (x, noupdate) {
-                  /*
-                  - find next m-conf
-                  - doesn't exist? if there's no parenthesis, throw error.
-                  - if there's parenthesis, it's a m-fun execution that hasn't been expanded.
-                     - split by (. get rid of all ) (this assumes only one argument, later has to be changed to proper parsing)
-                     - go from the inner arguments to the outermost. Find the innermost execution and find the matching mfun. Then, replace everywhere the argument. Put the expanded m-fun as a m-config.
-                     - Once you're done expanding them all, resume execution as normal.
-                  */
                   dale.do (State.actions, function (action) {
                      if (action.match ('P')) return State.tape [State.position] = action.slice (1);
                      if (action.match ('L')) return State.position = State.position - 1;
                      if (action.match ('R')) return State.position = State.position + 1;
                      if (action === 'E')     return State.tape [State.position] = undefined;
                   });
-                  if (type (State.next) === 'array') {
-                     var mfunction = State.next [0];
-                     if (type (mfunction) !== 'string') throw new Error ('m-function must be a string!');
-                     mfunction = dale.stopNot (Data.machines [State.machine], undefined, function (config, name) {
-                        var Name = teishi.p (name);
-                        if (! Name) return;
-                        if (Name [0] === mfunction) return [name, config];
-                     });
-                     if (! mfunction) throw new Error ('No matching m-function found!');
-                     dale.do (State.
-
-                     if (State.next
+                  var machine = Data.machines [State.machine];
+                  if (! State.next.match (/\(/) || machine [State.next]) State.config = State.next;
+                  else {
+                     // if expanded m-fun exists, jump to that
+                     var parse = function (s) {
+                        // Output is spliced? No, we start with assumption that there's an outer call, which there is.
+                        // separators: "(", ")",
+                        var i = 0, output = [];
+                        // expand innermost first. do replacement by looking at "mfun: "
+                        // a (b) -> [a, b]
+                        // a (b (c)) -> [a, [b, c]]
+                        // a (b, c) -> [a, b, c]
+                     }
+                     //if (! mfunction) throw new Error ('No matching m-function found!');
                   }
-                  else State.config  = State.next;
 
                   State.counter = State.counter + 1;
                   B.do ('pick', 'actions', noupdate);
