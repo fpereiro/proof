@@ -221,23 +221,19 @@
                ə:    ['R', 'A'],
                else: ['L', 'goto-sentinel (A)'],
             },
+            'mfun: goto-sentinel2 (A)': {
+               ə:    ['R', 'R', 'A'],
+               else: ['L', 'L', 'goto-sentinel2 (A)'],
+            },
             'mfun: print-digit (A)': {
                '0':  ['R', 'E', 'R', 'print-digit (A)'],
                '1':  ['R', 'E', 'R', 'print-digit (A)'],
                none: ['PA', 'R', 'R', 'R', 'cleanup'],
             },
-            ///*
+            ///* EXPANSIONS BY HAND
             'goto-sentinel (mark-digits)': {
                ə:    ['R', 'mark-digits'],
                else: ['L', 'goto-sentinel (mark-digits)'],
-            },
-            'goto-sentinel (find-1st-digit)': {
-               ə:    ['R', 'find-1st-digit'],
-               else: ['L', 'goto-sentinel (find-1st-digit)'],
-            },
-            'goto-sentinel (erase-old-x)': {
-               ə:    ['R', 'erase-old-x'],
-               else: ['L', 'goto-sentinel (erase-old-x)'],
             },
             'print-digit (0)': {
                '0':  ['R', 'E', 'R', 'print-digit (0)'],
@@ -245,8 +241,8 @@
                none: ['P0', 'R', 'R', 'R', 'cleanup'],
             },
             'print-digit (1)': {
-               '0':  ['R', 'E', 'R', 'print-digit (0)'],
-               '1':  ['R', 'E', 'R', 'print-digit (0)'],
+               '0':  ['R', 'E', 'R', 'print-digit (1)'],
+               '1':  ['R', 'E', 'R', 'print-digit (1)'],
                none: ['P1', 'R', 'R', 'R', 'cleanup'],
             },
             'goto-sentinel (print-digit (0))': {
@@ -256,6 +252,14 @@
             'goto-sentinel (print-digit (1))': {
                ə:    ['R', 'print-digit (1)'],
                else: ['L', 'goto-sentinel (print-digit (1))'],
+            },
+            'goto-sentinel2 (find-1st-digit)': {
+               ə:    ['R', 'R', 'find-1st-digit'],
+               else: ['L', 'L', 'goto-sentinel2 (find-1st-digit)'],
+            },
+            'goto-sentinel2 (erase-old-x)': {
+               ə:    ['R', 'R', 'erase-old-x'],
+               else: ['L', 'L', 'goto-sentinel2 (erase-old-x)'],
             },
             //*/
             begin: {
@@ -268,7 +272,7 @@
             },
             'find-x': {
                x:    ['E',      'first-r'],
-               ə:    [          'goto-sentinel (find-1st-digit)'],
+               ə:    [          'goto-sentinel2 (find-1st-digit)'],
                else: ['L', 'L', 'find-x'],
             },
             'first-r': {
@@ -300,17 +304,17 @@
                none: ['R', 'add-one'],
             },
             'add-zero': {
-               r:    ['Ps',     'goto-sentinel (erase-old-x)'],
-               u:    ['Pv',     'goto-sentinel (erase-old-x)'],
+               r:    ['Ps',     'goto-sentinel2 (erase-old-x)'],
+               u:    ['Pv',     'goto-sentinel2 (erase-old-x)'],
                else: ['R', 'R', 'add-zero'],
             },
             'add-one': {
-               r:    ['Pv',           'goto-sentinel (erase-old-x)'],
+               r:    ['Pv',           'goto-sentinel2 (erase-old-x)'],
                u:    ['Ps', 'R', 'R', 'carry'],
                else: ['R', 'R',       'add-one'],
             },
             carry: {
-               r:    ['Pu',           'goto-sentinel (erase-old-x)'],
+               r:    ['Pu',           'goto-sentinel2 (erase-old-x)'],
                none: ['Pu',           'goto-sentinel (print-digit (0))'],
                u:    ['Pr', 'R', 'R', 'carry'],
             },
@@ -321,8 +325,8 @@
             },
             'print-new-x': {
                ə:    ['R', 'R', 'erase-old-y'],
-               y:    ['Pz',     'goto-sentinel (find-1st-digit)'],
-               none: ['Px',     'goto-sentinel (find-1st-digit)'],
+               y:    ['Pz',     'goto-sentinel2 (find-1st-digit)'],
+               none: ['Px',     'goto-sentinel2 (find-1st-digit)'],
             },
             'erase-old-y': {
                y:    ['E', 'L', 'L', 'print-new-y'],
@@ -344,10 +348,10 @@
             'unflag-result-digits': {
                s:    ['Pr', 'R', 'R', 'unflag-result-digits'],
                v:    ['Pu', 'R', 'R', 'unflag-result-digits'],
-               else: ['goto-sentinel (find-1st-digit)'],
+               else: ['goto-sentinel2 (find-1st-digit)'],
             },
             cleanup: {
-               none: [               'new'],
+               none: ['goto-sentinel (mark-digits)'],
                else: ['E', 'R', 'R', 'cleanup'],
             }
          });

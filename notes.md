@@ -1095,7 +1095,7 @@ print-new-y      @        R      goto-sentinel (print-digit (1))
 
 - Notice that PE uses `A` as a configuration placeholder, and `a` as a scanned symbol placeholder.
 
-- In the same vein, we can eliminate `find-digits` with `goto-sentinel` by changing `find-x`, `print-new-x`, `print-new-y` and `unflag-result-digits. Likewise with `add-finished`, by removing it from `add-zero`, `add-one` and `carry`.
+- In the same vein, we can eliminate `find-digits` with `goto-sentinel` by changing `find-x`, `print-new-x` and `unflag-result-digits. Likewise with `add-finished`, by removing it from `add-zero`, `add-one` and `carry`. For this, we need a different version of goto-sentinel that goes *twice* to the right (instead of just once) after finding `@`. We will call it `goto-sentinel2`.
 
 - When is it correct to do this replacement? If a configuration only has two branches: 1) `@` to call a single mconf and 2) otherwise go two left and call itself. `find-x` is not like this because it has three branches, so it cannot be replaced in the same manner.
 
@@ -1107,13 +1107,16 @@ mconf        symbol  operations   final mconf
 goto-sentinel (A) @    R          A
                   else L          goto-sentinel (A)
 
+goto-sentinel2 (A) @   R          A
+                  else L          goto-sentinel (A)
+
 begin        none    P@,R,P1      goto-sentinel (mark-digits)
 
 mark-digits  0,1     R,Px,R       mark-digits
              none    R,Pz,R,R,Pr  find-x
 
              x       E            first-r
-find-x       @       N            goto-sentinel (find-1st-digit)
+find-x       @       N            goto-sentinel2 (find-1st-digit)
              else    L,L          find-x
 
 first-r      r       R,R          last-r
@@ -1138,11 +1141,11 @@ find-2nd-digit   y   L            found-2nd-digit
 found-2nd-digit  1   R            add-one
                 none R            add-one
 
-                 r   Ps           goto-sentinel (erase-old-x)
-add-zero         u   Pv           goto-sentinel (erase-old-x)
+                 r   Ps           goto-sentinel2 (erase-old-x)
+add-zero         u   Pv           goto-sentinel2 (erase-old-x)
                 else R,R          add-zero
 
-                 r   Pv           goto-sentinel (erase-old-x)
+                 r   Pv           goto-sentinel2 (erase-old-x)
 add-one          u   Ps,R,R       carry
                 else R,R          add-one
 
@@ -1150,7 +1153,7 @@ add-one          u   Ps,R,R       carry
 print-digit (a)  1    R,E,R       print-digit (a)
                  none Pa,R,R,R    cleanup
 
-                 r   Pu           goto-sentinel (erase-old-x)
+                 r   Pu           goto-sentinel2 (erase-old-x)
 carry           none Pu           goto-sentinel (print-digit (0))
                  u   Pr,R,R       carry
 
@@ -1183,7 +1186,7 @@ cleanup          none N           new
                  else E,R,R       cleanup
 ```
 
-- We have gone from 27 to 22 configurations.
+- We have gone from 27 to 23 configurations.
 
 - PE: "Today's programmers will recognize this concept immediately. Although different programming languages provide this facility in the form of *procedures* or *functions* or *methods*, the most general term is *subroutine*. For decades, subroutines have been the most universal structural element of computer programs."
 
