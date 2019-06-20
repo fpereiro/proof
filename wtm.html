@@ -416,6 +416,7 @@
                      if (action === 'E')     return State.tape [State.position] = undefined;
                   });
                   var machine = Data.machines [State.machine];
+                  // If no reference to m-fun, or expanded m-fun already exists, continue as normal.
                   if (! State.next.match (/\(/) || machine [State.next]) State.config = State.next;
                   else {
                      // if expanded m-fun exists, jump to that
@@ -504,15 +505,16 @@
                               ['h2', 'Tape'],
                               ['style', ['table.tapeinfo th, table.tapeinfo td', {'text-align': 'left'}]],
                               ['table', {class: 'tapeinfo'}, [
-                                 ['tr', [
+                                 ['tr', style ({height: '3em'}), [
+                                    ['th', 'Counter'],
                                     ['th', style ({width: 140}), 'Config'],
                                     ['th', 'Position'],
-                                    ['th', 'Scanned symbol'],
+                                    ['th', 'Scanned'],
                                     ['th', 'Actions to perform'],
                                     ['th', style ({width: 140}), 'Next config'],
-                                    ['th', 'Counter'],
                                  ]],
-                                 ['tr', [
+                                 ['tr', style ({height: '3em'}), [
+                                    ['td', B.get ('State', 'counter')],
                                     ['td', B.get ('State', 'config')],
                                     ['td', B.get ('State', 'position')],
                                     ['td', (function () {
@@ -521,7 +523,6 @@
                                     }) ()],
                                     ['td', (State.actions || []).join (' ')],
                                     ['td', State.next],
-                                    ['td', B.get ('State', 'counter')],
                                  ]],
                               ]],
                               ['p', [

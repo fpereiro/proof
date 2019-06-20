@@ -1870,5 +1870,4 @@ g1   (1m+1s); (1m)
 
 - Note: while 3arg e1 doesn't use its second and third arguments, its three arguments distinguish it from the 1arg version, which is different. That's likely the reason for which Turing defined it as a 3arg function that only uses 1arg.
 
-
 p144
