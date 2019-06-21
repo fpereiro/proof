@@ -230,7 +230,7 @@
                '1':  ['R', 'E', 'R', 'print-digit (A)'],
                none: ['PA', 'R', 'R', 'R', 'cleanup'],
             },
-            ///* EXPANSIONS BY HAND
+            /* EXPANSIONS BY HAND
             'goto-sentinel (mark-digits)': {
                ə:    ['R', 'mark-digits'],
                else: ['L', 'goto-sentinel (mark-digits)'],
@@ -261,7 +261,7 @@
                ə:    ['R', 'R', 'erase-old-x'],
                else: ['L', 'L', 'goto-sentinel2 (erase-old-x)'],
             },
-            //*/
+            */
             begin: {
                none: ['Pə', 'R', 'P1', 'goto-sentinel (mark-digits)']
             },
@@ -419,7 +419,26 @@
                   // If no reference to m-fun, or expanded m-fun already exists, continue as normal.
                   if (! State.next.match (/\(/) || machine [State.next]) State.config = State.next;
                   else {
-                     // if expanded m-fun exists, jump to that
+                     // depth 0, start: go until next comma or ().
+                     // delete trailing whitespace. push onto structure.
+                     // if comma, keep on going.
+                     // if (, increase depth (current is now array, put and update pointer).
+                     // if ), decrease depth (remove one from pointer path)
+                     // parse into [verb,
+                     /*
+                     [f, mC, mB, sA] -> [f1, mC, mB, sA] or [f, mC, mB, sA]
+                     [e, mC, mB, sA] -> [f, [e1, mC, mB, sA], mB, sA]
+                     [cpe, mC, mA, mC, sA, sB] -> [cp, [e, [e, mC, mC, sB], mC, sA], mA, mE, sA, sB]
+                     // we care about local depths, not global. a local depth is the one that has to be expanded first.
+                     // without backtracking: when a depth decreaser ")" comes, then expand.
+                     // mark the token that comes before each ( (or positions). you could say the ( marks the call to its left.
+                     // isolation and then replacement
+                     // we start at the m-fun call (interestingly enough, we don't start on a m-fun call, it has to start with a normal m-conf).
+
+
+
+                     */
+                     return alert (State.next);
                      var parse = function (s) {
                         // Output is spliced? No, we start with assumption that there's an outer call, which there is.
                         // separators: "(", ")",
