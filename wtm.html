@@ -11,6 +11,9 @@
 
          var dale = window.dale, teishi = window.teishi, lith = window.lith, c = window.c, B = window.B;
          var type = teishi.t, clog = console.log;
+         var last = function (a) {
+            return a [a.length - 1];
+         }
 
          B.prod = true;
 
@@ -404,7 +407,7 @@
                   if (! match) match = cconfig ['else'];
                   if (! match) return alert ('Error: no available action!');
                   State.actions = match.slice (0, -1);
-                  State.next    = match [match.length - 1];
+                  State.next    = last (match);
                   if (! State.history [State.counter]) State.history [State.counter] = {tape: teishi.c (State.tape), config: State.config, position: State.position};
                   if (! noupdate) B.do ('change', 'State');
                }],
@@ -419,36 +422,35 @@
                   // If no reference to m-fun, or expanded m-fun already exists, continue as normal.
                   if (! State.next.match (/\(/) || machine [State.next]) State.config = State.next;
                   else {
-                     // depth 0, start: go until next comma or ().
-                     // delete trailing whitespace. push onto structure.
-                     // if comma, keep on going.
-                     // if (, increase depth (current is now array, put and update pointer).
-                     // if ), decrease depth (remove one from pointer path)
-                     // parse into [verb,
+                     var parse = function (string) {
+                        var output = [], index = -1, where = 0, pointer = output, parent = [];
+                        while (++index < State.next.length) {
+                           if ([',', '(', ')'].indexOf (State.next [index]) === -1) continue;
+                           if (State.next [index] === ',') {
+                           }
+                           if (State.next [index] === '(') {
+                              pointer.push ([string.slice (where, index - where)]);
+                              parent.push (pointer);
+                              pointer = last (pointer);
+                           }
+                           if (State.next [index] === ')') {
+                              pointer.push (string.slice (where, index - where));
+                              pointer = parent.pop ();
+                           }
+                           // advance cursor by one
+                           where = index + 1;
+                        }
+                     }
                      /*
                      [f, mC, mB, sA] -> [f1, mC, mB, sA] or [f, mC, mB, sA]
                      [e, mC, mB, sA] -> [f, [e1, mC, mB, sA], mB, sA]
                      [cpe, mC, mA, mC, sA, sB] -> [cp, [e, [e, mC, mC, sB], mC, sA], mA, mE, sA, sB]
-                     // we care about local depths, not global. a local depth is the one that has to be expanded first.
-                     // without backtracking: when a depth decreaser ")" comes, then expand.
-                     // mark the token that comes before each ( (or positions). you could say the ( marks the call to its left.
-                     // isolation and then replacement
-                     // we start at the m-fun call (interestingly enough, we don't start on a m-fun call, it has to start with a normal m-conf).
-
-
-
                      */
-                     return alert (State.next);
-                     var parse = function (s) {
-                        // Output is spliced? No, we start with assumption that there's an outer call, which there is.
-                        // separators: "(", ")",
-                        var i = 0, output = [];
-                        // expand innermost first. do replacement by looking at "mfun: "
-                        // a (b) -> [a, b]
-                        // a (b (c)) -> [a, [b, c]]
-                        // a (b, c) -> [a, b, c]
-                     }
-                     //if (! mfunction) throw new Error ('No matching m-function found!');
+                     // goto-sentinel (mark-digits) ->
+                     // goto-sentinel2 (mark-digits)
+                     // goto-sentinel2 (erase-old-x)
+                     // goto-sentinel (print-digit (0)) -> print-digit (0), goto-sentinel (print-digit (0))
+                     // [goto-sentinel, [print-digit, 0]]
                   }
 
                   State.counter = State.counter + 1;
