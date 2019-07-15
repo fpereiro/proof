@@ -233,38 +233,6 @@
                '1':  ['R', 'E', 'R', 'print-digit (A)'],
                none: ['PA', 'R', 'R', 'R', 'cleanup'],
             },
-            /* EXPANSIONS BY HAND
-            'goto-sentinel (mark-digits)': {
-               ə:    ['R', 'mark-digits'],
-               else: ['L', 'goto-sentinel (mark-digits)'],
-            },
-            'print-digit (0)': {
-               '0':  ['R', 'E', 'R', 'print-digit (0)'],
-               '1':  ['R', 'E', 'R', 'print-digit (0)'],
-               none: ['P0', 'R', 'R', 'R', 'cleanup'],
-            },
-            'print-digit (1)': {
-               '0':  ['R', 'E', 'R', 'print-digit (1)'],
-               '1':  ['R', 'E', 'R', 'print-digit (1)'],
-               none: ['P1', 'R', 'R', 'R', 'cleanup'],
-            },
-            'goto-sentinel (print-digit (0))': {
-               ə:    ['R', 'print-digit (0)'],
-               else: ['L', 'goto-sentinel (print-digit (0))'],
-            },
-            'goto-sentinel (print-digit (1))': {
-               ə:    ['R', 'print-digit (1)'],
-               else: ['L', 'goto-sentinel (print-digit (1))'],
-            },
-            'goto-sentinel2 (find-1st-digit)': {
-               ə:    ['R', 'R', 'find-1st-digit'],
-               else: ['L', 'L', 'goto-sentinel2 (find-1st-digit)'],
-            },
-            'goto-sentinel2 (erase-old-x)': {
-               ə:    ['R', 'R', 'erase-old-x'],
-               else: ['L', 'L', 'goto-sentinel2 (erase-old-x)'],
-            },
-            */
             begin: {
                none: ['Pə', 'R', 'P1', 'goto-sentinel (mark-digits)']
             },
@@ -422,37 +390,52 @@
                   // If no reference to m-fun, or expanded m-fun already exists, continue as normal.
                   if (! State.next.match (/\(/) || machine [State.next]) State.config = State.next;
                   else {
-                     var parse = function (string) {
-                        var output = [], index = -1, where = 0, pointer = output, parent = [];
-                        while (++index < State.next.length) {
-                           if ([',', '(', ')'].indexOf (State.next [index]) === -1) continue;
-                           if (State.next [index] === ',') {
+                     var onedeep = function (s) {
+                        var c = s.indexOf ('(');
+                        var output = [s.slice (0, c - 1)];
+                        var last = c + 1, depth = 0;
+                        while (++c < s.length) {
+                           if (s [c] === ',' && depth === 0) {
+                              output.push (s.slice (last, c));
+                              c += 2;
+                              last = c;
+                              continue;
                            }
-                           if (State.next [index] === '(') {
-                              pointer.push ([string.slice (where, index - where)]);
-                              parent.push (pointer);
-                              pointer = last (pointer);
-                           }
-                           if (State.next [index] === ')') {
-                              pointer.push (string.slice (where, index - where));
-                              pointer = parent.pop ();
-                           }
-                           // advance cursor by one
-                           where = index + 1;
+                           if (s [c] === '(') depth++;
+                           if (s [c] === ')') depth--;
+                           if (depth < 0) output.push (s.slice (last, c));
                         }
+                        return output;
                      }
-                     /*
-                     [f, mC, mB, sA] -> [f1, mC, mB, sA] or [f, mC, mB, sA]
-                     [e, mC, mB, sA] -> [f, [e1, mC, mB, sA], mB, sA]
-                     [cpe, mC, mA, mC, sA, sB] -> [cp, [e, [e, mC, mC, sB], mC, sA], mA, mE, sA, sB]
-                     */
-                     // goto-sentinel (mark-digits) ->
-                     // goto-sentinel2 (mark-digits)
-                     // goto-sentinel2 (erase-old-x)
-                     // goto-sentinel (print-digit (0)) -> print-digit (0), goto-sentinel (print-digit (0))
-                     // [goto-sentinel, [print-digit, 0]]
-                  }
 
+                     var expand = function (call) {
+                        var parsedcall = onedeep (call);
+                        var match = dale.stopNot (machine, undefined, function (v, k) {
+                           if (k.match (/^mfun: /) && onedeep (k.replace ('mfun: ', '')) [0] === parsedcall [0]) return [k, v];
+                        });
+                        if (! match) return alert ('Error: no matching mfun!');
+                        var arglist = onedeep (match [0]).slice (1);
+                        var replist = parsedcall.slice (1);
+                        var newkey  = parsedcall [0] + ' (' + dale.do (arglist, function (v, k) {return replist [k]}).join (', ') + ')';
+                        var newconfig = {};
+                        dale.do (match [1], function (v, k) {
+                           newconfig [arglist.indexOf (k) > -1 ? replist [arglist.indexOf (k)] : k] = dale.do (v, function (v2) {
+                              if (arglist.indexOf (v2) > -1)       return replist [arglist.indexOf (v2)];
+                              if (arglist.indexOf (v2.replace (/^P/, '')) > -1) return 'P' + replist [arglist.indexOf (v2.replace (/^P/, ''))];
+                              if (v2 === match [0].replace ('mfun: ', '')) return newkey;
+                              return v2;
+                           });
+                        });
+                        B.do ('set', ['Data', 'machines', State.machine, newkey], newconfig);
+                     }
+                     var parsed = onedeep (State.next);
+                     dale.do (parsed.slice (1), function (arg) {
+                        if (! arg.match (/\(/) || machine [arg]) return;
+                        expand (arg);
+                     });
+                     expand (State.next);
+                     State.config = State.next;
+                  }
                   State.counter = State.counter + 1;
                   B.do ('pick', 'actions', noupdate);
                }],
