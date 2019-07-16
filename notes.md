@@ -1200,8 +1200,6 @@ p113/114
 
 - Some observations: two types of variables, those representing m-configurations and those representing scanned symbols. Division between code and data. It implies a system with two types.
 
-- Note: to represent Greek letters, I will use sA for alpha, sB for beta, sG for gamma, etc. (the small `s` stands for "symbol"). For capital German letters, I'll use mA for the German letter A, mB for the German letter B, etc. (the small letter `m` stands for "m-conf").
-
 - PE: "For Turing, however, the skeleton tables exist solely to make his larger machines easier to construct (from his perspective) and easier to read and understand (from our perspective).
 
 - TU: "The skeleton tables are to be regarded as nothing but abbreviations: they are not essential. So long as the reader understands how to obtain the complete tables from the skeleton tables, there is no need to give any exact definitions in this connection."
@@ -1214,29 +1212,29 @@ p114/115
 
 
 ```
-f (mC, mB, sA)   @          L   f1 (mC, mB, sA)
-                 not @      L   f  (mC, mB, sA)
+f (𝕮, 𝕭, α)   ə         L   f1 (𝕮, 𝕭, α)
+              not ə     L   f  (𝕮, 𝕭, α)
 
-                 sA         N   mC
-f1 (mC, mB, sA)  not sA     R   f1 (mC, mB, sA)
-                 none       R   f2 (mC, mB, sA)
+              α         N   𝕮
+f1 (𝕮, 𝕭, α)  not α     R   f1 (𝕮, 𝕭, α)
+              none      R   f2 (𝕮, 𝕭, α)
 
-                 sA         N   mC
-f2 (mC, mB, sA)  not sA     R   f1 (mC, mB, sA)
-                 none       R   B
+              α         N   𝕮
+f2 (𝕮, 𝕭, α)  not α     R   f1 (𝕮, 𝕭, α)
+              none      R   B
 ```
 
-- `f` cares only about whether it sees a `@` (the schwa marking the beginning of the tape) or not. If it does, it goes left and calls `f1` with the same arguments it received. Otherwise, it also goes left but instead calls itself with the same arguments it received. Note: interestingly enough, if it sees a `@`, it goes one to the left of it, to the "out of range" section of the tape.
+- `f` cares only about whether it sees a `ə` (the schwa marking the beginning of the tape) or not. If it does, it goes left and calls `f1` with the same arguments it received. Otherwise, it also goes left but instead calls itself with the same arguments it received. Note: interestingly enough, if it sees a `ə`, it goes one to the left of it, to the "out of range" section of the tape.
 
-- `f1` has three cases. If it sees `sA` (alpha), it doesn't do anything and calls `mC`, the first m-conf it received as its argument. If it scans a symbol that is neither `sA` nor a blank, it goes right and calls itself with the same arguments. If it scans a blank, it also goes right but instead calls `f2` with the same arguments it received. Note: if `f1` doesn't receive `@` as `sA`, then, after being gone to the left of the schwa, `f1` will bring the scanned index back to the working area of the tape.
+- `f1` has three cases. If it sees `α` (alpha), it doesn't do anything and calls `𝕮`, the first m-conf it received as its argument. If it scans a symbol that is neither `α` nor a blank, it goes right and calls itself with the same arguments. If it scans a blank, it also goes right but instead calls `f2` with the same arguments it received. Note: if `f1` doesn't receive `ə` as `α`, then, after being gone to the left of the schwa, `f1` will bring the scanned index back to the working area of the tape.
 
-- `f2` also has three cases, the conditions being the same as those from `f1`. If it sees `sA`, it doesn't do anything and calls `mC` (exactly as `f1` did). If it scans a symbol that is neither `sA` nor a blank, it goes right and calls `f1` with the same arguments it received (unlike `f1`, which instead called itself in this case). If it scans a blank, it goes right and calls `mB`.
+- `f2` also has three cases, the conditions being the same as those from `f1`. If it sees `α`, it doesn't do anything and calls `𝕮` (exactly as `f1` did). If it scans a symbol that is neither `α` nor a blank, it goes right and calls `f1` with the same arguments it received (unlike `f1`, which instead called itself in this case). If it scans a blank, it goes right and calls `𝕭`.
 
 - Observation: the branch/condition to be picked by a Turing Machine is determined by the scanned symbol.
 
 - Observation: nested tables happen when received capital argument (m-configuration) is passed as argument to final function (instead of being used directly; this should not happen with characters, since they are replaced in situ).
 
-- PE: "So, `f` stands for `find`. If it finds an `sA`, it goes to m-configuration `mC`, the first argument to `f`, and the head will be sitting on the first (leftmost) `sA`. If it can't find an `sA`, then it goes to m-configuration `mB`."
+- PE: "So, `f` stands for `find`. If it finds an `α`, it goes to m-configuration `𝕮`, the first argument to `f`, and the head will be sitting on the first (leftmost) `α`. If it can't find an `α`, then it goes to m-configuration `𝕭`."
 
 p116
 
@@ -1249,15 +1247,15 @@ m-config    symbol   operations   final m-config
 
 - PE: "The m-configurations `mQ` and `mR` would be defined elsewhere in the machine, and `x` would be a symbol used by the machine.
 
-- TU: "If we were to replace `mC` throughout by `mQ` (say), `mB` by `mR`, and `sA` by `x`, we should have a complete table for the m-configuration `f (mQ, mR, x)`.
+- TU: "If we were to replace `𝕮` throughout by `mQ` (say), `𝕭` by `mR`, and `α` by `x`, we should have a complete table for the m-configuration `f (mQ, mR, x)`.
 
 - PE: "in the context of the complete machine, this skeleton table effectively expands into this table:"
 
 ```
 m-config    symbol   operations   final m-config
 
-f            @          L          f1
-             not @      L          f
+f            ə          L          f1
+             not ə      L          f
 
              x          R          mQ
 f1           not x      R          f1
@@ -1273,13 +1271,13 @@ f2           not x      R          f1
 
 p116/117
 
-- TU: "f is called an "m-configuration function" or "m-function" The only expressions which are admissible for substitution in an m-function are the m-configurations and symbols of the machine. These have to be enumerated more or less explicitly: they may include expressions such as p (mE, x); indeed they must if there are an m-functions used at all."
+- TU: "f is called an "m-configuration function" or "m-function" The only expressions which are admissible for substitution in an m-function are the m-configurations and symbols of the machine. These have to be enumerated more or less explicitly: they may include expressions such as p (𝕰, x); indeed they must if there are an m-functions used at all."
 
 - PE: "If an m-function named p has been defined, and if a machine refers to m-function in its final m-config column, then p must be considered to be an m-configuration of the machine. Turing is a little nervous here because arguments to m-functions can be other m-functions. In other words, m-functions can be *nested*. (...) The problem results from implicitly allowing infinite recursion - that is, a function referring to itself, or referring to a second function which in turn refers to the first. If infinite recursion is allowed, then a machine could end up with an infinite number of m-configurations, and that's in violation of Turing's original definition of a computing machine."
 
 - Solution to prevent infinite recursion: create a graphic of dependencies from one m-configuration to another. The graph should be a direct acyclic graph. The two conditions to avoid are: 1) a depending on b and b depending on a; 2) a depending on b, b depending on c, c depending on a. If these two conditions are avoided, then repeated substitution can take place and the machine can be expanded to its full length without going into an infinite recurse.
 
-- TU: "If we did not insist on this explicit enumeration, but simply stated that the achine had certain m-configurations (enumerated) and all m-configurations obtainable by substitution of m-configurations in certain m-functions, we should usually get an infinity of m-configurations; e.g., we might say that the machine was to have the m-configuration q and all m-configurations obtainable by substituting an m-configuration for `mC` in `p (mC)`. Then it would have q, p (q), p (p (q)), p (p (p (q))), ... as m-configurations.
+- TU: "If we did not insist on this explicit enumeration, but simply stated that the achine had certain m-configurations (enumerated) and all m-configurations obtainable by substitution of m-configurations in certain m-functions, we should usually get an infinity of m-configurations; e.g., we might say that the machine was to have the m-configuration q and all m-configurations obtainable by substituting an m-configuration for `𝕮` in `p (𝕮)`. Then it would have q, p (q), p (p (q)), p (p (p (q))), ... as m-configurations.
 
 - TU: "Our interpretation rule then is this. We are given the names of the m-configurations of the machine, mostly expressed in terms of m-functions. We are also given skeleton tables. All we want is the complete table for the m-configurations of the machine. This is obtained by repeated substitution in the skeleton tables."
 
@@ -1290,33 +1288,33 @@ p118
 - PE: "The columns of these tables are rather smushed together, and there are no column headings. Some tables contain only m-configurations and final m-configurations. Others contain columns for scanned characters and operations that must be differentiated based on their contents. Turing's next example shows an m-function that appears as an argument to another m-function."
 
 ```
-e  (mC, mB, sA)        f (e1 (mC, mB, sA), mB, sA)
-e1 (mC, mB, sA)   E    mC
+e  (𝕮, 𝕭, α)        f (e1 (𝕮, 𝕭, α), 𝕭, α)
+e1 (𝕮, 𝕭, α)   E    𝕮
 
-From e (mC, mB, sA) the first sA is erased and -> mC. If there's no sA -> mB.
+From e (𝕮, 𝕭, α) the first α is erased and -> 𝕮. If there's no α -> 𝕭.
 ```
 
-- PE: "The `e` stands for "erase". This function starts by using f to search for the first (leftmost) occurrence of `sA`, which will leave the head positioned over the character. Notice how the first argument of f is the function e1. What that means is that when f finds the character `sA`, it will then go to `e1`, which simply erases the character and goes to m-configuration `mC`. If f doesn't find the character `sA`, then it goes to `mB`. [e1] could be defined more simply as `e1 (mC)`."
+- PE: "The `e` stands for "erase". This function starts by using f to search for the first (leftmost) occurrence of `α`, which will leave the head positioned over the character. Notice how the first argument of f is the function e1. What that means is that when f finds the character `α`, it will then go to `e1`, which simply erases the character and goes to m-configuration `𝕮`. If f doesn't find the character `α`, then it goes to `𝕭`. [e1] could be defined more simply as `e1 (𝕮)`."
 
 - PE: "Turing defines a second version of the e function with two arguments rather than three:
 
 ```
-e (mB, sA)      e (e (mB, sA), mB, sA)
+e (𝕭, α)      e (e (𝕭, α), 𝕭, α)
 
-From e (mB, sA) all letters sA are erased and -> mB
+From e (𝕭, α) all letters α are erased and -> 𝕭
 ```
 
 p119
 
-- PE: "The definition of two different functions with the same name but distinguished by a different number of arguments is a rather advanced programming technique (called function overloading) that is not allowed in many older programming languages. This two-argument version of e makes use of the three argument vesrion to rease the first sA, but notice that it specifies the two-argument e as the first argument to the three-argument version! When the three-argument e has successfully located and reased the first sA, it then goes to the two argument version, which proceeds to use the three-argument version again to erase the next sA. This continues until all the sA characters have been erased. (...) Nevertheless, the use of the two-argument e as an argument to the three-argument e to implement the two-argument e seems to invoke the dreaded specter of infinite nesting of m-configurations."
+- PE: "The definition of two different functions with the same name but distinguished by a different number of arguments is a rather advanced programming technique (called function overloading) that is not allowed in many older programming languages. This two-argument version of e makes use of the three argument vesrion to rease the first α, but notice that it specifies the two-argument e as the first argument to the three-argument version! When the three-argument e has successfully located and reased the first α, it then goes to the two argument version, which proceeds to use the three-argument version again to erase the next α. This continues until all the α characters have been erased. (...) Nevertheless, the use of the two-argument e as an argument to the three-argument e to implement the two-argument e seems to invoke the dreaded specter of infinite nesting of m-configurations."
 
-- TU: "The last example seems somewhat more difficult to interpret than most. Let us suppose that in the list of m-configurations of some machine, there appears e (mB, x) (= q, say)."
+- TU: "The last example seems somewhat more difficult to interpret than most. Let us suppose that in the list of m-configurations of some machine, there appears e (𝕭, x) (= q, say)."
 
 - TU: "The m-function e can only play a role in a machine only if it appears somewhere in the machine's final m-config column (...). We can now say that e (b, x) is another m-configuration of the machine and - as long as we haven't used q to represent any other m-configuration in the machine - we can also refer to this m-configuration as q. By using e (b, x) in the final m-config column of the machine, we've essentially added another state to the machine, which Turing gives in two different forms:"
 
 ```
           e (b, x)       e (e (b, x), b, x)
-or          q            e (q, b, x)
+or        q              e (q, b, x)
 ```
 
 - PE: "This table implies that the m-configuration e (q, b, x) is also another m-configuration of the machine, as well as e1 (q, b, x), as shown by the following expansion:
@@ -1335,24 +1333,24 @@ e1 (q, b, x)  E    q
 
 - PE: "Just as Turing used q to represent the configuration e (b, x), he can use q' to represent the configuration e1 (q, b, x), and additional configurations to represent e1 and f."
 
-- PE: "to construct his Universal Machine, Turing requires several common types of functions useful in manipulating individual characters and strings of characters. You've already seen find and erase functions. He essentially needs cut, copy, and paste as well, and some standard printing routines. The pe function stands for "print at the end". It prints the symbol represented by sB in the first blank F-square."
+- PE: "to construct his Universal Machine, Turing requires several common types of functions useful in manipulating individual characters and strings of characters. You've already seen find and erase functions. He essentially needs cut, copy, and paste as well, and some standard printing routines. The pe function stands for "print at the end". It prints the symbol represented by β in the first blank F-square."
 
 ```
-pe (mC, sB)                   f (pe1 (mC, sB), mC, @)
+pe (𝕮, β)                   f (pe1 (𝕮, β), 𝕮, ə)
 
-pe1 (mC, sB)    Any  R,R      pe1 (mC, sB)
-                None PsB      mC
+pe1 (𝕮, β)    Any  R,R      pe1 (𝕮, β)
+              None Pβ       𝕮
 ```
 
 p120/121
 
-- PE: "Some implicit assumptions hide inside this function. The f function normally finds the leftmost occurrence of its third argument, but here that argument is a schwa, which is the same symbol f looks for to get to the far left of the sequence. The pe function is therefore assuming there are *two* schwas in a row, just as in Turing's second machine example on page 85. The m-function f first finds the rightmost of the two schwas (the one on an E-square) and then moves the head left to be positioned on the left schwa, which is on a F-square. The pe1 function then moves right along F-squares until it finds a blank. It prints a sB, which for most computing machines will be either a 0 or 1. (...) Turing first defines functions named l (for left) and r (for right) and then uses them in cojunctio with f to create two more functions f' and f'' that move the head let or right after finding the desired character."
+- PE: "Some implicit assumptions hide inside this function. The f function normally finds the leftmost occurrence of its third argument, but here that argument is a schwa, which is the same symbol f looks for to get to the far left of the sequence. The pe function is therefore assuming there are *two* schwas in a row, just as in Turing's second machine example on page 85. The m-function f first finds the rightmost of the two schwas (the one on an E-square) and then moves the head left to be positioned on the left schwa, which is on a F-square. The pe1 function then moves right along F-squares until it finds a blank. It prints a β, which for most computing machines will be either a 0 or 1. (...) Turing first defines functions named l (for left) and r (for right) and then uses them in cojunctio with f to create two more functions f' and f'' that move the head let or right after finding the desired character."
 
 ```
-l (mC)             L     mC                    From f' (mC, mB, sA) it does the same as for f (mC, mB, sA)
-r (mC)             R     mC                    but moves to the left before -> mC
-f'  (mC, mB, sA)         f (l (mC), mB, sA)
-f'' (mC, mB, sA)         f (r (mC), mB, sA)
+l (𝕮)             L     𝕮                    From f' (𝕮, 𝕭, α) it does the same as for f (𝕮, 𝕭, α)
+r (𝕮)             R     𝕮                    but moves to the left before -> 𝕮
+f'  (𝕮, 𝕭, α)           f (l (𝕮), 𝕭, α)
+f'' (𝕮, 𝕭, α)           f (r (𝕮), 𝕭, α)
 ```
 
 - PE: "I would have called them fl and fr rather than f' and f'', but that's me. "
@@ -1360,41 +1358,41 @@ f'' (mC, mB, sA)         f (r (mC), mB, sA)
 - PE: The Universal Machine will require moving characters from one location to another on the tape. The c function performs a "copy"".
 
 ```
-c  (mC, mB, sA)             f' (c1 (mC), mB, sA)    c (mC, mB, sA). The machine writes
-c1 (mC)             sB      pe (mC, sB)             at the end the first symbol sA and -> mC
+c  (𝕮, 𝕭, α)             f' (c1 (𝕮), 𝕭, α)    c (𝕮, 𝕭, α). The machine writes
+c1 (𝕮)             β     pe (𝕮, β)            at the end the first symbol α and -> 𝕮
 ```
 
-- PE: "Notice the function uses f' to find the sA character, so that the head ends up to the left of the marker, which is the figure that the marker marks. The c1 function has an unusual syntax: the scanned character becomes the second argument to pe."
+- PE: "Notice the function uses f' to find the α character, so that the head ends up to the left of the marker, which is the figure that the marker marks. The c1 function has an unusual syntax: the scanned character becomes the second argument to pe."
 
-- TU: "The lsat line stands for the totality of lines obtainable from it by replacing sB by any symbol which may occur on the tape of the machine concerned." Note: then, for every symbol that this configuration will employ, then that m-function needs to be expanded to comprise each of these variants (one for a, one for b, etc.).
+- TU: "The lsat line stands for the totality of lines obtainable from it by replacing β by any symbol which may occur on the tape of the machine concerned." Note: then, for every symbol that this configuration will employ, then that m-function needs to be expanded to comprise each of these variants (one for a, one for b, etc.).
 
 p122
 
 - PE: "The ce function stands for copy and erase. It exists in two-argument and three-argument versions."
 
 ```
-ce (mC, mB, sA)               c (e (mC, mB, sA), mB, sA)       ce (mB, sA). The machine copies down in order at the
-ce (mB, sA)                   ce (ce (mB, sA), mB, sA)         end all symbols marked sAand erases the letters sA; -> mB
+ce (𝕮, 𝕭, α)               c (e (𝕮, 𝕭, α), 𝕭, α)       ce (𝕭, α). The machine copies down in order at the
+ce (𝕭, α)                  ce (ce (𝕭, α), 𝕭, α)        end all symbols marked αand erases the letters α; -> 𝕭
 ```
 
-- Note: in the two-argument version, the first argument (`ce (mB, sA)`) is executed *after* the first (outer) invocation. This is why the function doesn't go into an infinite recourse. It will call itself only after calling the three-argument version. In normal programming, the nested functions are executed first, but here, as Petzold said earlier, we're passing references to functions.
+- Note: in the two-argument version, the first argument (`ce (𝕭, α)`) is executed *after* the first (outer) invocation. This is why the function doesn't go into an infinite recourse. It will call itself only after calling the three-argument version. In normal programming, the nested functions are executed first, but here, as Petzold said earlier, we're passing references to functions.
 
-- PE: "The three-argument ce first uses c to copy the leftmost figure marked with sA and then uses e to erase that marker. The two-argument version of ce uses the three-argument version to copy the first figure and erase the marker, but then goes back to the two-character version. (...) all symbols marked with sA are copied to the end of the tape in the first available F-squares. (Turing's second example on page 87 could have used this function to copy a run of 1s to the end of the tape.)"
+- PE: "The three-argument ce first uses c to copy the leftmost figure marked with α and then uses e to erase that marker. The two-argument version of ce uses the three-argument version to copy the first figure and erase the marker, but then goes back to the two-character version. (...) all symbols marked with α are copied to the end of the tape in the first available F-squares. (Turing's second example on page 87 could have used this function to copy a run of 1s to the end of the tape.)"
 
 - PE: "A more efficint scheme has ce erasing the marker when it's first located and before it copies the character (...) But turing is not interested in mundane issues of efficiency."
 
-- PE: "The re function is "replace". The sA and sB arguments are assumed to be markers. The function finds the leftmost sA and replaces it with sB. (We know that sA and sB are markers because Turing doesn't allow replacing figures already marked on F-squares."
+- PE: "The re function is "replace". The α and β arguments are assumed to be markers. The function finds the leftmost α and replaces it with β. (We know that α and β are markers because Turing doesn't allow replacing figures already marked on F-squares."
 
 ```
-re  (mC, mB, sA, sB)                   f (re1 (mC, mB, sA, sB), mB, sA)    re (mC, mB, sA, sB). The machine replaces
-re1 (mC, mB, sA, sB)     E, PsB        mC                                  the first sA by sB and -> mC -> mB if there's no sA.
+re  (𝕮, 𝕭, α, β)                  f (re1 (𝕮, 𝕭, α, β), 𝕭, α)    re (𝕮, 𝕭, α, β). The machine replaces
+re1 (𝕮, 𝕭, α, β)     E, Pβ        𝕮                             the first α by β and -> 𝕮 -> 𝕭 if there's no α.
 ```
 
-- PE: "The three argument version replaces all sA markers with sB."
+- PE: "The three argument version replaces all α markers with β."
 
 ```
-re (mB, sA, sB)                        re (re (mB, sA, sB), mB, sA, sB)    re (mB, sA, sB). The machine replaces all
-                                                                           letters sA by sB. -> mB
+re (𝕭, α, β)                        re (re (𝕭, α, β), 𝕭, α, β)    re (𝕭, α, β). The machine replaces all
+                                                                  letters α by β. -> 𝕭
 ```
 
 p123
@@ -1402,28 +1400,28 @@ p123
 - PE: "The ce function is "copy and replace".
 
 ```
-cr (mC, mB, sA)         c (re (mC, mB, sA, sA), mB, sA)          cr (mB, sA) differs from ce (mB, sA) only in that the letters sA
-cr (mB, sA)             cr (cr (mB, sA), re (mB, sA, sA), sA)    are not erased. The m-configuration cr (mB, sA) is taken up when
-                                                                 no letters sA are on the tape.
+cr (𝕮, 𝕭, α)         c (re (𝕮, 𝕭, α, α), 𝕭, α)          cr (𝕭, α) differs from ce (𝕭, α) only in that the letters α
+cr (𝕭, α)            cr (cr (𝕭, α), re (𝕭, α, α), α)    are not erased. The m-configuration cr (𝕭, α) is taken up when
+                                                        no letters α are on the tape.
 ```
 
 - PE: "These functions are not used elsewhere in Turing's paper. The Unviersal Machine requires a facility to "search and replace", and Turing next presents half a page of functions that begin with the letters cp ("compare") and cpe ("compare and erase"). The final m-configurations in these functions are so long that Turing's explanations appear under each table instead of at the right."
 
 ```
-cp  (mC, mA, mE, sA, sB)                f' (cp1 (mC, mA, sB), f (mA, mE, sB), sA)
-cp1 (mC, mA, sB)            sG          f' (cp2 (mC, mA, sG), mA, sB)
-cp2 (mC, mA, sG)            sG          mC
-                            not sG      mA
+cp  (𝕮, 𝕬, 𝕰, α, β)                f' (cp1 (𝕮, 𝕬, β), f (𝕬, 𝕰, β), α)
+cp1 (𝕮, 𝕬, β)            γ         f' (cp2 (𝕮, 𝕬, γ), 𝕬, β)
+cp2 (𝕮, 𝕬, γ)            γ         𝕮
+                         not γ     𝕬
 
-The first symbol marked sA and the first marked sB are compared. If there is neither sA nor sB, -> mE. If there are both and the symbols are alike, -> mC. Otherwise -> mA.
+The first symbol marked α and the first marked β are compared. If there is neither α nor β, -> 𝕰. If there are both and the symbols are alike, -> 𝕮. Otherwise -> 𝕬.
 
-cpe (mC, mA, mC, sA, sB)       cp (e (e (mC, mC, sB), mC, sA), mA, mE, sA, sB)
+cpe (𝕮, 𝕬, 𝕮, α, β)       cp (e (e (𝕮, 𝕮, β), 𝕮, α), 𝕬, 𝕰, α, β)
 
-cpe (mC, mA, mC, sA, sB) differs from cp (mC, mA, mE, sA, sB) in that in the case when there is similarity the first sA and sB are erased.
+cpe (𝕮, 𝕬, 𝕮, α, β) differs from cp (𝕮, 𝕬, 𝕰, α, β) in that in the case when there is similarity the first α and β are erased.
 
-cpe (mA, mE, sA, sB)           cpe (cpe (mA, mE, sA, sB), mA, mE, sA, sB)
+cpe (𝕬, 𝕰, α, β)           cpe (cpe (𝕬, 𝕰, α, β), 𝕬, 𝕰, α, β)
 
-cpe (mA, mC, sA, sB). The sequence of symbols marked sA is compared with the sequence marked sB. -> mC if they are similar. Otherwise -> mA. Some of the symbols sA and sB are erased.
+cpe (𝕬, 𝕮, α, β). The sequence of symbols marked α is compared with the sequence marked β. -> 𝕮 if they are similar. Otherwise -> 𝕬. Some of the symbols α and β are erased.
 ```
 
 - Note: Turing always lists the m-configuration arguments before the symbolic arguments.
@@ -1432,45 +1430,45 @@ p124
 
 - PE: "Turing has now exhausted his supply of mnemonic function names, for he names the next one simply q, which unfortunately is the same letter he will shortly use to represent m-configurations in general. (...) I believe that Turing meant for thsi function to be named g rathern than g. Just as the f function finds the first (that is, leftmost) occurrence of a particular symbol, this function finds the last (rightmost) occurrence of a symbol (...) I'll refer to it as g."
 
-- PE: "The single-argument version of g moves to the right until it finds to blanks in a row. That is assumed to be the rightmost end of the tape. The two-argument version of g first uses the one-argument g and then moves left looking for the character sA."
+- PE: "The single-argument version of g moves to the right until it finds to blanks in a row. That is assumed to be the rightmost end of the tape. The two-argument version of g first uses the one-argument g and then moves left looking for the character α."
 
 ```
-g  (mC)      any          R       g  (mC)          g (mC, sA). The machine finds the last symbol of form sA -> mC.
-             none         R       g1 (mC)
+g  (𝕮)      any          R       g  (𝕮)          g (𝕮, α). The machine finds the last symbol of form α -> 𝕮.
+            none         R       g1 (𝕮)
 
-g1 (mC)      any          R       g (mC)
-             none                 mC
+g1 (𝕮)      any          R       g (𝕮)
+            none                 𝕮
 
-g  (mC, sA)                       g (g1 (mC, sA))
+g  (𝕮, α)                        g (g1 (𝕮, α))
 
-g1 (mC, sA)  sA                   mC
-             not sA       L       g1 (mC, sA)
+g1 (𝕮, α)   α                    𝕮
+            not α        L       g1 (𝕮, α)
 ```
 
 - PE: "Turing finishes this sectino with a few miscellaneous functions with familiar names. (...) The pe2 function prints two characters in the last two F-squares."
 
 ```
-pe2 (mC, sA, sB)       pe (pe (mC, sB), sA)      pe2 (mC, sA, sB). The machine prints sA sB at the end.
+pe2 (𝕮, α, β)       pe (pe (𝕮, β), α)      pe2 (𝕮, α, β). The machine prints α β at the end.
 ```
 
-- PE: "Similarly, the ce function copied characters marked with sA to the end. The ce2 function copies symbols marked with sA and sB, while c3 copies characters marked sA, sB and sG."
+- PE: "Similarly, the ce function copied characters marked with α to the end. The ce2 function copies symbols marked with α and β, while c3 copies characters marked α, β and γ."
 
 p125
 
 ```
-ce2 (mB, sA, sB)                   ce (ce (mB, sB), sA)         ce3 (mB, sA, sB, sG). The machine copies down at the end first
-ce3 (mB, sA, sB, sG)               ce (ce2 (mB, sB, sG), sA)    the symbols marked sA, then those marked sB and finally those
-                                                                marked sG; it erases the symbols sA, sB, sG.
+ce2 (𝕭, α, β)                  ce (ce (𝕭, β), α)        ce3 (𝕭, α, β, γ). The machine copies down at the end first
+ce3 (𝕭, α, β, γ)               ce (ce2 (𝕭, β, γ), α)    the symbols marked α, then those marked β and finally those
+                                                        marked γ; it erases the symbols α, β, γ.
 ```
 
-- PE: "These copies are performed sequentially: First, all the symbols marked with sA are copied, then the symbols marked with sB ,and so on. Later on, Turing uses a function called ce5 with six arguments that he's never described, but the operation of it should be obvious. Finally, a single-argument e function erases all markers.
+- PE: "These copies are performed sequentially: First, all the symbols marked with α are copied, then the symbols marked with β ,and so on. Later on, Turing uses a function called ce5 with six arguments that he's never described, but the operation of it should be obvious. Finally, a single-argument e function erases all markers.
 
 ```
-e  (mC)     @             R            e1 (mC)      From e (mC) the marks are erased from all marked symbols. -> mC.
-            not @         L            e  (mC)
+e  (𝕮)     ə             R           e1 (𝕮)      From e (𝕮) the marks are erased from all marked symbols. -> 𝕮.
+           not ə         L           e  (𝕮)
 
-e1 (mC)     any           R,E,R        e1 (mC)
-            none                       mC
+e1 (𝕮)     any           R,E,R       e1 (𝕮)
+           none                      𝕮
 ```
 
 - PE: "Turing as now presented many of the algorithms that his Universal Computing machine will require, but he hasn't yet described how he will transform an arbitrary computing machine into crunchable data. That's next."
@@ -1478,162 +1476,162 @@ e1 (mC)     any           R,E,R        e1 (mC)
 - List of all m-functions presented by Turing in this chapter:
 
 ```
-f (mC, mB, sA)           @         L        f1 (mC, mB, sA)
-                         not @     L        f  (mC, mB, sA)
+f (𝕮, 𝕭, α)           ə        L        f1 (𝕮, 𝕭, α)
+                      not ə    L        f  (𝕮, 𝕭, α)
 
-                         sA        N        mC
-f1 (mC, mB, sA)          not sA    R        f1 (mC, mB, sA)
-                         none      R        f2 (mC, mB, sA)
+                      α        N        𝕮
+f1 (𝕮, 𝕭, α)          not α    R        f1 (𝕮, 𝕭, α)
+                      none     R        f2 (𝕮, 𝕭, α)
 
-                         sA        N        mC
-f2 (mC, mB, sA)          not sA    R        f1 (mC, mB, sA)
-                         none      R        B
+                      α        N        𝕮
+f2 (𝕮, 𝕭, α)          not α    R        f1 (𝕮, 𝕭, α)
+                      none     R        B
 
-// From e (mC, mB, sA) the first sA is erased and -> mC. If there's no sA -> mB.
-e  (mC, mB, sA)                             f (e1 (mC, mB, sA), mB, sA)
-e1 (mC, mB, sA)                    E        mC
+// From e (𝕮, 𝕭, α) the first α is erased and -> 𝕮. If there's no α -> 𝕭.
+e  (𝕮, 𝕭, α)                            f (e1 (𝕮, 𝕭, α), 𝕭, α)
+e1 (𝕮, 𝕭, α)                   E        𝕮
 
-// From e (mB, sA) all letters sA are erased and -> mB
-e (mB, sA)                                  e (e (mB, sA), mB, sA)
+// From e (𝕭, α) all letters α are erased and -> 𝕭
+e (𝕭, α)                                e (e (𝕭, α), 𝕭, α)
 
-pe (mC, sB)                                 f (pe1 (mC, sB), mC, @)
+pe (𝕮, β)                               f (pe1 (𝕮, β), 𝕮, ə)
 
-pe1 (mC, sB)             any       R,R      pe1 (mC, sB)
-                         none      PsB      mC
+pe1 (𝕮, β)            any     R,R       pe1 (𝕮, β)
+                      none    Pβ        𝕮
 
-// From f' (mC, mB, sA) it does the same as for f (mC, mB, sA) but moves to the left before -> mC
-l (mC)                             L        mC
-r (mC)                             R        mC
-f'  (mC, mB, sA)                            f (l (mC), mB, sA)
-f'' (mC, mB, sA)                            f (r (mC), mB, sA)
+// From f' (𝕮, 𝕭, α) it does the same as for f (𝕮, 𝕭, α) but moves to the left before -> 𝕮
+l (𝕮)                         L         𝕮
+r (𝕮)                         R         𝕮
+f'  (𝕮, 𝕭, α)                           f (l (𝕮), 𝕭, α)
+f'' (𝕮, 𝕭, α)                           f (r (𝕮), 𝕭, α)
 
-// c (mC, mB, sA). The machine writes at the end the first symbol sA and -> mC
-c  (mC, mB, sA)                             f' (c1 (mC), mB, sA)
-c1 (mC)                  sB                 pe (mC, sB)
+// c (𝕮, 𝕭, α). The machine writes at the end the first symbol α and -> 𝕮
+c  (𝕮, 𝕭, α)                            f' (c1 (𝕮), 𝕭, α)
+c1 (𝕮)                β                 pe (𝕮, β)
 
-// ce (mB, sA). The machine copies down in order at the end all symbols marked sA and erases the letters sA; -> mB
-ce (mC, mB, sA)                             c (e (mC, mB, sA), mB, sA)
-ce (mB, sA)                                 ce (ce (mB, sA), mB, sA)
+// ce (𝕭, α). The machine copies down in order at the end all symbols marked α and erases the letters α; -> 𝕭
+ce (𝕮, 𝕭, α)                            c (e (𝕮, 𝕭, α), 𝕭, α)
+ce (𝕭, α)                               ce (ce (𝕭, α), 𝕭, α)
 
-//re (mC, mB, sA, sB). The machine replaces the first sA by sB and -> mC -> mB if there's no sA.
-re  (mC, mB, sA, sB)                        f (re1 (mC, mB, sA, sB), mB, sA)
-re1 (mC, mB, sA, sB)               E, PsB   mC
+//re (𝕮, 𝕭, α, β). The machine replaces the first α by β and -> 𝕮 -> 𝕭 if there's no α.
+re  (𝕮, 𝕭, α, β)                        f (re1 (𝕮, 𝕭, α, β), 𝕭, α)
+re1 (𝕮, 𝕭, α, β)              E, Pβ     𝕮
 
-// re (mB, sA, sB). The machine replaces all letters sA by sB. -> mB
-re (mB, sA, sB)                             re (re (mB, sA, sB), mB, sA, sB)
+// re (𝕭, α, β). The machine replaces all letters α by β. -> 𝕭
+re (𝕭, α, β)                            re (re (𝕭, α, β), 𝕭, α, β)
 
-// cr (mB, sA) differs from ce (mB, sA) only in that the letters sA are not erased. The m-configuration cr (mB, sA) is taken up when no letters sA are on the tape.
-cr (mC, mB, sA)                             c (re (mC, mB, sA, sA), mB, sA)
-cr (mB, sA)                                 cr (cr (mB, sA), re (mB, sA, sA), sA)
+// cr (𝕭, α) differs from ce (𝕭, α) only in that the letters α are not erased. The m-configuration cr (𝕭, α) is taken up when no letters α are on the tape.
+cr (𝕮, 𝕭, α)                            c (re (𝕮, 𝕭, α, α), 𝕭, α)
+cr (𝕭, α)                               cr (cr (𝕭, α), re (𝕭, α, α), α)
 
-// The first symbol marked sA and the first marked sB are compared. If there is neither sA nor sB, -> mE. If there are both and the symbols are alike, -> mC. Otherwise -> mA.
-cp  (mC, mA, mE, sA, sB)                    f' (cp1 (mC, mA, sB), f (mA, mE, sB), sA)
-cp1 (mC, mA, sB)         sG                 f' (cp2 (mC, mA, sG), mA, sB)
-cp2 (mC, mA, sG)         sG                 mC
-                         not sG             mA
+// The first symbol marked α and the first marked β are compared. If there is neither α nor β, -> 𝕰. If there are both and the symbols are alike, -> 𝕮. Otherwise -> 𝕬.
+cp  (𝕮, 𝕬, 𝕰, α, β)                     f' (cp1 (𝕮, 𝕬, β), f (𝕬, 𝕰, β), α)
+cp1 (𝕮, 𝕬, β)         γ                 f' (cp2 (𝕮, 𝕬, γ), 𝕬, β)
+cp2 (𝕮, 𝕬, γ)         γ                 𝕮
+                      not γ             𝕬
 
-// cpe (mC, mA, mC, sA, sB) differs from cp (mC, mA, mE, sA, sB) in that in the case when there is similarity the first sA and sB are erased.
-cpe (mC, mA, mC, sA, sB)                    cp (e (e (mC, mC, sB), mC, sA), mA, mE, sA, sB)
+// cpe (𝕮, 𝕬, 𝕮, α, β) differs from cp (𝕮, 𝕬, 𝕰, α, β) in that in the case when there is similarity the first α and β are erased.
+cpe (𝕮, 𝕬, 𝕮, α, β)                    cp (e (e (𝕮, 𝕮, β), 𝕮, α), 𝕬, 𝕰, α, β)
 
-// cpe (mA, mC, sA, sB). The sequence of symbols marked sA is compared with the sequence marked sB. -> mC if they are similar. Otherwise -> mA. Some of the symbols sA and sB are erased.
-cpe (mA, mE, sA, sB)                        cpe (cpe (mA, mE, sA, sB), mA, mE, sA, sB)
+// cpe (𝕬, 𝕮, α, β). The sequence of symbols marked α is compared with the sequence marked β. -> 𝕮 if they are similar. Otherwise -> 𝕬. Some of the symbols α and β are erased.
+cpe (𝕬, 𝕰, α, β)                       cpe (cpe (𝕬, 𝕰, α, β), 𝕬, 𝕰, α, β)
 
-// g (mC, sA). The machine finds the last symbol of form sA -> mC.
-g  (mC)                  any       R        g  (mC)
-                         none      R        g1 (mC)
+// g (𝕮, α). The machine finds the last symbol of form α -> 𝕮.
+g  (𝕮)                  any       R        g  (𝕮)
+                        none      R        g1 (𝕮)
 
-g1 (mC)                  any       R        g (mC)
-                         none               mC
+g1 (𝕮)                  any       R        g (𝕮)
+                        none               𝕮
 
-g  (mC, sA)                                 g (g1 (mC, sA))
+g  (𝕮, α)                                  g (g1 (𝕮, α))
 
-g1 (mC, sA)              sA                 mC
-                         not sA    L        g1 (mC, sA)
+g1 (𝕮, α)              α                   𝕮
+                       not α      L        g1 (𝕮, α)
 
-// pe2 (mC, sA, sB). The machine prints sA sB at the end.
-pe2 (mC, sA, sB)                            pe (pe (mC, mB), sA)
+// pe2 (𝕮, α, β). The machine prints α β at the end.
+pe2 (𝕮, α, β)                              pe (pe (𝕮, 𝕭), α)
 
-// ce3 (mB, sA, sB, sG). The machine copies down at the end first the symbols marked sA, then those marked sB and finally those marked sG; it erases the symbols sA, sB, sG.
-ce2 (mB, sA, sB)                            ce (ce (mB, sB), sA)
-ce3 (mB, sA, sB, sG)                        ce (ce2 (mB, sB, sG), sA)
+// ce3 (𝕭, α, β, γ). The machine copies down at the end first the symbols marked α, then those marked β and finally those marked γ; it erases the symbols α, β, γ.
+ce2 (𝕭, α, β)                              ce (ce (𝕭, β), α)
+ce3 (𝕭, α, β, γ)                           ce (ce2 (𝕭, β, γ), α)
 
-// From e (mC) the marks are erased from all marked symbols. -> mC.
-e  (mC)                  @         R        e1 (mC)
-                         not @     L        e  (mC)
+// From e (𝕮) the marks are erased from all marked symbols. -> 𝕮.
+e  (𝕮)                  ə         R        e1 (𝕮)
+                        not ə     L        e  (𝕮)
 
-e1 (mC)                  any       R,E,R    e1 (mC)
-                         none               mC
+e1 (𝕮)                  any       R,E,R    e1 (𝕮)
+                        none               𝕮
 ```
 
 And now without comments:
 
 ```
-f (mC, mB, sA)           @         L        f1 (mC, mB, sA)
-                         not @     L        f  (mC, mB, sA)
+f (𝕮, 𝕭, α)           ə        L        f1 (𝕮, 𝕭, α)
+                      not ə    L        f  (𝕮, 𝕭, α)
 
-                         sA        N        mC
-f1 (mC, mB, sA)          not sA    R        f1 (mC, mB, sA)
-                         none      R        f2 (mC, mB, sA)
+                      α        N        𝕮
+f1 (𝕮, 𝕭, α)          not α    R        f1 (𝕮, 𝕭, α)
+                      none     R        f2 (𝕮, 𝕭, α)
 
-                         sA        N        mC
-f2 (mC, mB, sA)          not sA    R        f1 (mC, mB, sA)
-                         none      R        mB
+                      α        N        𝕮
+f2 (𝕮, 𝕭, α)          not α    R        f1 (𝕮, 𝕭, α)
+                      none     R        𝕭
 
-e  (mC, mB, sA)                             f (e1 (mC, mB, sA), mB, sA)
-e1 (mC, mB, sA)                    E        mC
+e  (𝕮, 𝕭, α)                            f (e1 (𝕮, 𝕭, α), 𝕭, α)
+e1 (𝕮, 𝕭, α)                   E        𝕮
 
-e (mB, sA)                                  e (e (mB, sA), mB, sA)
+e (𝕭, α)                                e (e (𝕭, α), 𝕭, α)
 
-pe (mC, sB)                                 f (pe1 (mC, sB), mC, @)
+pe (𝕮, β)                               f (pe1 (𝕮, β), 𝕮, ə)
 
-pe1 (mC, sB)             any       R,R      pe1 (mC, sB)
-                         none      PsB      mC
+pe1 (𝕮, β)            any      R,R      pe1 (𝕮, β)
+                      none     Pβ       𝕮
 
-l (mC)                             L        mC
-r (mC)                             R        mC
-f'  (mC, mB, sA)                            f (l (mC), mB, sA)
-f'' (mC, mB, sA)                            f (r (mC), mB, sA)
+l (𝕮)                          L        𝕮
+r (𝕮)                          R        𝕮
+f'  (𝕮, 𝕭, α)                           f (l (𝕮), 𝕭, α)
+f'' (𝕮, 𝕭, α)                           f (r (𝕮), 𝕭, α)
 
-c  (mC, mB, sA)                             f' (c1 (mC), mB, sA)
-c1 (mC)                  sB                 pe (mC, sB)
+c  (𝕮, 𝕭, α)                            f' (c1 (𝕮), 𝕭, α)
+c1 (𝕮)                β                 pe (𝕮, β)
 
-ce (mC, mB, sA)                             c (e (mC, mB, sA), mB, sA)
-ce (mB, sA)                                 ce (ce (mB, sA), mB, sA)
-re  (mC, mB, sA, sB)                        f (re1 (mC, mB, sA, sB), mB, sA)
-re1 (mC, mB, sA, sB)               E, PsB   mC
-re (mB, sA, sB)                             re (re (mB, sA, sB), mB, sA, sB)
-cr (mC, mB, sA)                             c (re (mC, mB, sA, sA), mB, sA)
-cr (mB, sA)                                 cr (cr (mB, sA), re (mB, sA, sA), sA)
+ce (𝕮, 𝕭, α)                            c (e (𝕮, 𝕭, α), 𝕭, α)
+ce (𝕭, α)                               ce (ce (𝕭, α), 𝕭, α)
+re  (𝕮, 𝕭, α, β)                        f (re1 (𝕮, 𝕭, α, β), 𝕭, α)
+re1 (𝕮, 𝕭, α, β)               E, Pβ    𝕮
+re (𝕭, α, β)                            re (re (𝕭, α, β), 𝕭, α, β)
+cr (𝕮, 𝕭, α)                            c (re (𝕮, 𝕭, α, α), 𝕭, α)
+cr (𝕭, α)                               cr (cr (𝕭, α), re (𝕭, α, α), α)
 
-cp  (mC, mA, mE, sA, sB)                    f' (cp1 (mC, mA, sB), f (mA, mE, sB), sA)
-cp1 (mC, mA, sB)         sG                 f' (cp2 (mC, mA, sG), mA, sB)
+cp  (𝕮, 𝕬, 𝕰, α, β)                     f' (cp1 (𝕮, 𝕬, β), f (𝕬, 𝕰, β), α)
+cp1 (𝕮, 𝕬, β)         γ                 f' (cp2 (𝕮, 𝕬, γ), 𝕬, β)
 
-cp2 (mC, mA, sG)         sG                 mC
-                         not sG             mA
+cp2 (𝕮, 𝕬, γ)         γ                 𝕮
+                      not γ             𝕬
 
-cpe (mC, mA, mC, sA, sB)                    cp (e (e (mC, mC, sB), mC, sA), mA, mE, sA, sB)
-cpe (mA, mE, sA, sB)                        cpe (cpe (mA, mE, sA, sB), mA, mE, sA, sB)
+cpe (𝕮, 𝕬, 𝕮, α, β)                     cp (e (e (𝕮, 𝕮, β), 𝕮, α), 𝕬, 𝕰, α, β)
+cpe (𝕬, 𝕰, α, β)                        cpe (cpe (𝕬, 𝕰, α, β), 𝕬, 𝕰, α, β)
 
-g  (mC)                  any       R        g  (mC)
-                         none      R        g1 (mC)
+g  (𝕮)                any      R        g  (𝕮)
+                      none     R        g1 (𝕮)
 
-g1 (mC)                  any       R        g (mC)
-                         none               mC
+g1 (𝕮)                any      R        g (𝕮)
+                      none              𝕮
 
-g  (mC, sA)                                 g (g1 (mC, sA))
+g  (𝕮, α)                               g (g1 (𝕮, α))
 
-g1 (mC, sA)              sA                 mC
-                         not sA    L        g1 (mC, sA)
+g1 (𝕮, α)             α                 𝕮
+                      not α    L        g1 (𝕮, α)
 
-pe2 (mC, sA, sB)                            pe (pe (mC, sB), sA)
-ce2 (mB, sA, sB)                            ce (ce (mB, sB), sA)
-ce3 (mB, sA, sB, sG)                        ce (ce2 (mB, sB, sG), sA)
+pe2 (𝕮, α, β)                           pe (pe (𝕮, β), α)
+ce2 (𝕭, α, β)                           ce (ce (𝕭, β), α)
+ce3 (𝕭, α, β, γ)                        ce (ce2 (𝕭, β, γ), α)
 
-e  (mC)                  @         R        e1 (mC)
-                         not @     L        e  (mC)
+e  (𝕮)                ə        R        e1 (𝕮)
+                      not ə    L        e  (𝕮)
 
-e1 (mC)                  any       R,E,R    e1 (mC)
-                         none               mC
+e1 (𝕮)                any      R,E,R    e1 (𝕮)
+                      none              𝕮
 ```
 
 Compact list of all the functions, counting their variants (by arguments received, both *m*-functions and *s*ymbols). 28 functions in total, 35 if we count as separate functions those that take a different number of arguments.
@@ -1739,7 +1737,7 @@ Note: while 3arg e deletes only the first 3arg it sees, 2arg e will delete all s
 
 ## pe (print at the end)
 
-pe   (1m+1s) // Call f with `pe1 (1arg, 2arg)`, 1arg and @.
+pe   (1m+1s) // Call f with `pe1 (1arg, 2arg)`, 1arg and ə.
 pe1  (1m+1s) // While not finding a blank, go right in twos. When finding a blank, print the 2arg and -> 1arg.
 pe2  (1m+2s) // Call pe with `pe (1arg, 2arg)` and 2arg.
 
@@ -1749,7 +1747,7 @@ Interdependencies:
 
 pe:
    1) go to the leftmost of the tape
-   2) go right until finding either @ (this is interesting - it probably means that it will be always going right, since the @ can only be at the left of the tape!) or two blanks in a row. This means that the function will look for two blanks in a row.
+   2) go right until finding either ə (this is interesting - it probably means that it will be always going right, since the ə can only be at the left of the tape!) or two blanks in a row. This means that the function will look for two blanks in a row.
    3) when it finds two blanks in a row, it advances one more position and starts going right in twos.
    4) when finding a blank (which could be immediately), it will print the 2arg and -> 1arg.
 
