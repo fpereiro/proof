@@ -1277,7 +1277,7 @@ p116/117
 
 - Solution to prevent infinite recursion: create a graphic of dependencies from one m-configuration to another. The graph should be a direct acyclic graph. The two conditions to avoid are: 1) a depending on b and b depending on a; 2) a depending on b, b depending on c, c depending on a. If these two conditions are avoided, then repeated substitution can take place and the machine can be expanded to its full length without going into an infinite recurse.
 
-- TU: "If we did not insist on this explicit enumeration, but simply stated that the achine had certain m-configurations (enumerated) and all m-configurations obtainable by substitution of m-configurations in certain m-functions, we should usually get an infinity of m-configurations; e.g., we might say that the machine was to have the m-configuration q and all m-configurations obtainable by substituting an m-configuration for `𝕮` in `p (𝕮)`. Then it would have q, p (q), p (p (q)), p (p (p (q))), ... as m-configurations.
+- TU: "If we did not insist on this explicit enumeration, but simply stated that the machine had certain m-configurations (enumerated) and all m-configurations obtainable by substitution of m-configurations in certain m-functions, we should usually get an infinity of m-configurations; e.g., we might say that the machine was to have the m-configuration q and all m-configurations obtainable by substituting an m-configuration for `𝕮` in `p (𝕮)`. Then it would have q, p (q), p (p (q)), p (p (p (q))), ... as m-configurations.
 
 - TU: "Our interpretation rule then is this. We are given the names of the m-configurations of the machine, mostly expressed in terms of m-functions. We are also given skeleton tables. All we want is the complete table for the m-configurations of the machine. This is obtained by repeated substitution in the skeleton tables."
 
@@ -1344,7 +1344,7 @@ pe1 (𝕮, β)    Any  R,R      pe1 (𝕮, β)
 
 p120/121
 
-- PE: "Some implicit assumptions hide inside this function. The f function normally finds the leftmost occurrence of its third argument, but here that argument is a schwa, which is the same symbol f looks for to get to the far left of the sequence. The pe function is therefore assuming there are *two* schwas in a row, just as in Turing's second machine example on page 85. The m-function f first finds the rightmost of the two schwas (the one on an E-square) and then moves the head left to be positioned on the left schwa, which is on a F-square. The pe1 function then moves right along F-squares until it finds a blank. It prints a β, which for most computing machines will be either a 0 or 1. (...) Turing first defines functions named l (for left) and r (for right) and then uses them in cojunctio with f to create two more functions f' and f'' that move the head let or right after finding the desired character."
+- PE: "Some implicit assumptions hide inside this function. The f function normally finds the leftmost occurrence of its third argument, but here that argument is a schwa, which is the same symbol f looks for to get to the far left of the sequence. The pe function is therefore assuming there are *two* schwas in a row, just as in Turing's second machine example on page 85. The m-function f first finds the rightmost of the two schwas (the one on an E-square) and then moves the head left to be positioned on the left schwa, which is on a F-square. The pe1 function then moves right along F-squares until it finds a blank. It prints a β, which for most computing machines will be either a 0 or 1. (...) Turing first defines functions named l (for left) and r (for right) and then uses them in conjunction with f to create two more functions f' and f'' that move the head left or right after finding the desired character."
 
 ```
 l (𝕮)             L     𝕮                    From f' (𝕮, 𝕭, α) it does the same as for f (𝕮, 𝕭, α)
@@ -1445,7 +1445,7 @@ g1 (𝕮, α)   α                    𝕮
             not α        L       g1 (𝕮, α)
 ```
 
-- PE: "Turing finishes this sectino with a few miscellaneous functions with familiar names. (...) The pe2 function prints two characters in the last two F-squares."
+- PE: "Turing finishes this section with a few miscellaneous functions with familiar names. (...) The pe2 function prints two characters in the last two F-squares."
 
 ```
 pe2 (𝕮, α, β)       pe (pe (𝕮, β), α)      pe2 (𝕮, α, β). The machine prints α β at the end.
@@ -1668,10 +1668,10 @@ e1   (1m)
 ```
 
 - Notes: If a configuration calls itself, we ignore that for interdependency purposes. A n argument version of a function x will be referred to as "narg x".
+- Important reminder: the first square of the tape (and all odd numbered squares, 3th, 5th, and so forth) are F squares, that is, output. The markings are on the E squares next to each of the E squares. Most of the machines that Turing presents have two schwas, so the first F square and E square both contain schwas.
 - Same list but describing functions and tracking interdependencies:
 
 ```
-
 ## f (find leftmost)
 
 f    (2m+1s) // Go left until schwa is found; when schwa is found, go one more to the left and call f1 with the same arguments.
@@ -1686,7 +1686,7 @@ f can then be described to do this, if we include f1 and f2 as part of it:
 - Go left until schwa is found.
 - When schwa is found:
    - Go one more to the left.
-   - Go right until 3rd (symbolic argument) OR blank square is found (*).
+   - * Go right until 3rd (symbolic argument) OR blank square is found:
    - If 3rd symbolic is found, -> 1arg.
    - If blank square is found:
       - Go one to the right.
@@ -1694,13 +1694,17 @@ f can then be described to do this, if we include f1 and f2 as part of it:
       - If square is blank (which means we saw two blanks in a row):
          - Go one to the right.
          - -> 2arg
-      - If the square is neither blank nor contains 3arg, go to (*).
+      - If the square is neither blank nor contains 3arg, go to *.
 
-In other words: f will
+Summarizing further, f does the following:
    1) go to the leftmost of the tape
    2) go right until finding either 3arg or two blanks in a row
    3-1) if it finds 3arg, -> 1arg.
    3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
+
+Now, if there's two blanks in a row, that means we're at the right end of the tape. So if we saw two blanks, and we go one further, if the first blank was an E square, we'll be standing on an E square afterwards; and if the first blank was an F square, we'll be standing on an E square afterwards.
+
+Definitive summary: f goes to the leftmost of the tape, then goes right until finding 3arg (in which case -> 1arg) or finding two blanks (in which case it position the head on the third consecutive blank and -> 2arg).
 
 ## e (erase)
 
