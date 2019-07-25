@@ -1704,7 +1704,9 @@ Summarizing further, f does the following:
 
 Now, if there's two blanks in a row, that means we're at the right end of the tape. So if we saw two blanks, and we go one further, if the first blank was an E square, we'll be standing on an E square afterwards; and if the first blank was an F square, we'll be standing on an E square afterwards.
 
-Definitive summary: f goes to the leftmost of the tape, then goes right until finding 3arg (in which case -> 1arg) or finding two blanks (in which case it position the head on the third consecutive blank and -> 2arg).
+Definitive summary: f goes to the leftmost of the tape, then goes right until either
+   - finding 3arg (in which case -> 1arg)
+   - finding two blanks (in which case it position the head on the third consecutive blank and -> 2arg).
 
 ## e (erase)
 
@@ -1717,13 +1719,8 @@ e1 (1m) // until you find a blank, go one to the right, delete the square and go
 
 Interdependencies:
    - 3arg e is called by 2arg e, 3arg ce and 5arg cpe.
-   - 2arg e and 1arg e are not called by other functions.
+   - 2arg e and 1arg e are not called by other functions (presumably they have been defined to be used later in the proof).
    - 3arg e1 is for internal use of 3arg e, and 1arg e1 is for internal use of 1arg e.
-
-1arg e:
-   1) go to the leftmost of the tape
-   2) go right, erasing all E-squares from left to right
-   3) until it finds the first blank E-square.
 
 3arg e:
    1) go to the leftmost of the tape
@@ -1734,8 +1731,15 @@ Interdependencies:
 2arg e:
    1) go to the leftmost of the tape
    2) go right until finding either the 3arg or two blanks in a row
-   3-1) if it finds 3arg, delete it and 2arg e will be called again with the same arguments.
+   3-1) if it finds 3arg, delete it and call again 2arg e with the same arguments.
    3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
+
+1arg e:
+   1) go left until you find the rightmost schwa.
+   2) go one to the right and erase that square, go another square to the right.
+   3) repeat 2) until finding the first blank E-square, then -> 1arg.
+
+TODO: if we use two schwas, and because F squares go first (it's `FEFE...`, not `EFEF`...), the second schwa is on an E square. This means that this function would actually erase F squares! This is plainly an inconsistency and probably an error on my part. Will review later when the function is used.
 
 Note: while 3arg e deletes only the first 3arg it sees, 2arg e will delete all such symbols from the tape until two blanks are found.
 
