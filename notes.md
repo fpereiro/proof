@@ -1747,7 +1747,7 @@ In other words, 1arg e will clear all E squares from left to right, and it will 
 
 pe   (1m+1s) // Call f with `pe1 (1arg, 2arg)`, 1arg and ə.
 pe1  (1m+1s) // While not finding a blank, go right in twos. When finding a blank, print the 2arg and -> 1arg.
-pe2  (1m+2s) // Call pe with `pe (1arg, 2arg)` and 2arg.
+pe2  (1m+2s) // Call pe with `pe (1arg, 3arg)` and 2arg.
 
 Interdependencies:
    - pe is called by pe2 and c1.
@@ -1761,9 +1761,10 @@ pe:
 pe2:
    1) go to the leftmost of the tape
    2) go right until finding two blanks in a row
-   3) when it finds two blanks in a row, advance one more position and go right in twos.
-   4) when finding a blank (which could be immediately), print 2arg.
-   5) repeat the whole thing until finding two blanks again - then advance one more position and print 3arg and -> 1arg.
+   3) when it finds two blanks in a row, advance one more position and print 2arg.
+   4) go to the leftmost of the tape again
+   5) go right until finding two blanks in a row
+   6) advance one more position and print 3arg, then -> 1arg.
 
 ## f' (find left)
 
