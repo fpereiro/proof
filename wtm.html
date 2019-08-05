@@ -546,7 +546,12 @@
                            newconfig [arglist.indexOf (k) > -1 ? replist [arglist.indexOf (k)] : k] = dale.do (v, function (v2) {
                               if (arglist.indexOf (v2) > -1)       return replist [arglist.indexOf (v2)];
                               if (arglist.indexOf (v2.replace (/^P/, '')) > -1) return 'P' + replist [arglist.indexOf (v2.replace (/^P/, ''))];
-                              if (v2 === match [0].replace ('mfun: ', '')) return newkey;
+                              if (v2.match (/\(/)) {
+                                 if (v2 === match [0].replace ('mfun: ', '')) return newkey;
+                                 dale.do (arglist, function (arg, k3) {
+                                    v2 = v2.replace (new RegExp (arg, 'g'), replist [k3]);
+                                 });
+                              }
                               return v2;
                            });
                         });
