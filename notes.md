@@ -1743,6 +1743,8 @@ While 3arg e deletes only the first 3arg it sees, 2arg e will delete all such sy
 
 In other words, 1arg e will clear all E squares from left to right, and it will stop when it finds the first blank E square.
 
+- Note: while 3arg e1 doesn't use its second and third arguments, its three arguments distinguish it from the 1arg version, which is different. That's likely the reason for which Turing defined it as a 3arg function that only uses 1arg.
+
 ## pe (print at the end)
 
 pe   (1m+1s) // Call f with `pe1 (1arg, 2arg)`, 1arg and ə.
@@ -1781,7 +1783,7 @@ f':
    3-1) if it finds 3arg, move one to the left and -> 1arg.
    3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
 
-So f', if it finds 3arg, will call 1arg after positioning the head just before the place where 3arg was found.
+So f', if it finds 3arg, will call 1arg after positioning the head in the square left of that where the leftmost/first instance of 3arg is.
 
 ## f'' (find right)
 
@@ -1798,7 +1800,7 @@ f'':
    3-1) if it finds 3arg, move one to the right and -> 1arg.
    3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
 
-So f'', if it finds 3arg, will call 1arg after positioning the head just after the place where 3arg was found.
+So f', if it finds 3arg, will call 1arg after positioning the head in the square right of that where the leftmost/first instance of 3arg is.
 
 ## c (copy)
 
@@ -1874,6 +1876,16 @@ g    (1m+1s); (1m)
 g1   (1m+1s); (1m)
 ```
 
-- Note: while 3arg e1 doesn't use its second and third arguments, its three arguments distinguish it from the 1arg version, which is different. That's likely the reason for which Turing defined it as a 3arg function that only uses 1arg.
+## Summary of all functions
 
-p144
+- 3arg f: 1) go to the leftmost, 2) go right until either 3-1) found 3arg, then -> 1arg, 3-2) found two blanks, then one to the right and -> 2arg.
+- 3arg e: 1) find 3arg, 2-1) found 3arg, delete it and -> 1arg, 2-2) found two blanks, then one to the right and -> 2arg.
+- 2arg e: 1) delete all 3args between the leftmost and the first two consecutive blanks, 2) find the two consecutive blanks, go one more to the right and -> 2arg.
+- 1arg e: clear all E squares from left to right until finding the first blank E square.
+- 2arg pe: find the first two blanks in a row, go one to the right, print 2arg and -> 1arg.
+- 3arg pe2: find the first two blanks in a row, go one to the right, print 2arg, go leftmost, find the first two blanks in a row, go one further, print 3arg, then -> 1arg.
+
+p131
+
+- PE: "Turing is about to take the paper in a more unusual direction by using numbers to encode other forms of information. The next section of Turing's paper demonstrates how numbers can represent not photographs or songs, but the machines themselves. Yes, everything is a number. Even Turing Machines are numbers."
+
