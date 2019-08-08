@@ -1634,6 +1634,8 @@ e1 (𝕮)                any      R,E,R    e1 (𝕮)
                       none              𝕮
 ```
 
+- Note: it is interesting that the `N` (for no operation) is only written when we're looking at a m-configuration that has more than one branch. If the machine has no branches (as in the case of, for example, 3arg e), then the no operation is implicit.
+
 Compact list of all the functions, counting their variants (by arguments received, both *m*-functions and *s*ymbols). 28 functions in total, 35 if we count as separate functions those that take a different number of arguments.
 
 ```
@@ -1668,14 +1670,14 @@ e1   (1m)
 ```
 
 - Notes: If a configuration calls itself, we ignore that for interdependency purposes. A n argument version of a function x will be referred to as "narg x".
-- Important reminder: the first square of the tape (and all odd numbered squares, 3th, 5th, and so forth) are F squares, that is, output. The markings are on the E squares next to each of the E squares. Most of the machines that Turing presents have two schwas, so the first F square and E square both contain schwas.
+- Important reminder: the first square of the tape (and all odd numbered squares, 3th, 5th, and so forth) are F squares, that is, output. The markings are on the E squares to the right of each of the F squares. Most of the machines that Turing presents have two schwas, so the first F square and E square both contain schwas.
 - Same list but describing functions and tracking interdependencies:
 
 ```
 ## f (find leftmost)
 
-f    (2m+1s) // Go left until schwa is found; when schwa is found, go one more to the left and call f1 with the same arguments.
-f1   (2m+1s) // Go right until 3rd (symbolic) argument OR blank square is found; if 3arg is found, -> to the 1st argument; if blank square is found, go one to the right and call f2 with the same arguments.
+f    (2m+1s) // Go left until rightmost schwa is found; when schwa is found, go one more to the left (to the leftmost schwa) and call f1 with the same arguments.
+f1   (2m+1s) // Go right one at a time from the leftmost schwa until 3rd (symbolic) argument OR blank square is found; if 3arg is found, -> to the 1st argument; if blank square is found, go one to the right and call f2 with the same arguments.
 f2   (2m+1s) // If the square is blank, go one to the right and -> to the 2nd argument; if it contains the 3arg, -> to the 1st argument; if it is not blank and it does not contain the 3arg, go one to the right and call f1 with the same arguments.
 
 Interdependencies:
@@ -1878,9 +1880,9 @@ g1   (1m+1s); (1m)
 
 ## Summary of all functions
 
-- 3arg f: 1) go to the leftmost, 2) go right until either 3-1) found 3arg, then -> 1arg, 3-2) found two blanks, then one to the right and -> 2arg.
-- 3arg e: 1) find 3arg, 2-1) found 3arg, delete it and -> 1arg, 2-2) found two blanks, then one to the right and -> 2arg.
-- 2arg e: 1) delete all 3args between the leftmost and the first two consecutive blanks, 2) find the two consecutive blanks, go one more to the right and -> 2arg.
+- 3arg f: 1) if there's a 3arg in the tape, find the leftmost 3arg and -> 1arg; 2) otherwise, go to the leftmost third consecutive blank and -> 2arg.
+- 3arg e: 1) if there's a 3arg in the tape, find the leftmost 3arg, delete it and -> 1arg; 2) otherwise, go to the leftmost third consecutive blank and -> 2arg.
+- 2arg e: 1) delete all 3args between the leftmost and the first two consecutive blanks; 2) go to the leftmost third consecutive blank and -> 2arg.
 - 1arg e: clear all E squares from left to right until finding the first blank E square.
 - 2arg pe: find the first two blanks in a row, go one to the right, print 2arg and -> 1arg.
 - 3arg pe2: find the first two blanks in a row, go one to the right, print 2arg, go leftmost, find the first two blanks in a row, go one further, print 3arg, then -> 1arg.
