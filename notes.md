@@ -1221,7 +1221,7 @@ f1 (𝕮, 𝕭, α)  not α     R   f1 (𝕮, 𝕭, α)
 
               α         N   𝕮
 f2 (𝕮, 𝕭, α)  not α     R   f1 (𝕮, 𝕭, α)
-              none      R   B
+              none      R   𝕭
 ```
 
 - `f` cares only about whether it sees a `ə` (the schwa marking the beginning of the tape) or not. If it does, it goes left and calls `f1` with the same arguments it received. Otherwise, it also goes left but instead calls itself with the same arguments it received. Note: interestingly enough, if it sees a `ə`, it goes one to the left of it, to the "out of range" section of the tape.
@@ -1485,7 +1485,7 @@ f1 (𝕮, 𝕭, α)          not α    R        f1 (𝕮, 𝕭, α)
 
                       α        N        𝕮
 f2 (𝕮, 𝕭, α)          not α    R        f1 (𝕮, 𝕭, α)
-                      none     R        B
+                      none     R        𝕭
 
 // From e (𝕮, 𝕭, α) the first α is erased and -> 𝕮. If there's no α -> 𝕭.
 e  (𝕮, 𝕭, α)                            f (e1 (𝕮, 𝕭, α), 𝕭, α)
@@ -1885,6 +1885,8 @@ g1   (1m+1s); (1m)
 - 2arg e: 1) delete all 3args between the leftmost and the first two consecutive blanks; 2) go to the leftmost third consecutive blank and -> 2arg.
 - 1arg e: clear all E squares from left to right until finding the first blank E square.
 - 2arg pe: find the first two blanks in a row, go one to the right, print 2arg and -> 1arg.
+   - go to left schwa
+   - go to 1arg
 - 3arg pe2: find the first two blanks in a row, go one to the right, print 2arg, go leftmost, find the first two blanks in a row, go one further, print 3arg, then -> 1arg.
 
 p131

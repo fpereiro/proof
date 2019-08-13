@@ -329,8 +329,16 @@
 
          B.do ('set', ['Data', 'machines', 'Universal Turing Machine'], {
             begin: {
-               //else: ['Pə', 'Pə', 'R', 'R', 'pe2 (begin, a, b)'],
-               else: [],
+               //else: ['Pə', 'R', 'Pə', 'R', 'e (dummy1, dummy2, x)'],
+               else: ['Pə', 'R', 'Pə', 'R', 'R', 'Px', 'R', 'e (dummy1, dummy2, x)'],
+               //else: ['Pə', 'R', 'Pə', 'R', 'Pu', 'e (dummy1, dummy2, x)'],
+               //else: [],
+            },
+            dummy1: {
+               else: ['dummy1'],
+            },
+            dummy2: {
+               else: ['dummy2'],
             },
             'mfun: f (𝕮, 𝕭, α)': {
                ə:    ['L', 'f1 (𝕮, 𝕭, α)'],
@@ -343,8 +351,8 @@
             },
             'mfun: f2 (𝕮, 𝕭, α)': {
                α:    ['𝕮'],
-               none: ['R', 'f1 (𝕮, 𝕭, α)'],
-               else: ['R', '𝕭'],
+               none: ['R', '𝕭'],
+               else: ['R', 'f1 (𝕮, 𝕭, α)'],
             },
             'mfun: e (𝕮, 𝕭, α)': {
                else: ['f (e1 (𝕮, 𝕭, α), 𝕭, α)'],
