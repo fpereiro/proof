@@ -329,10 +329,35 @@
 
          B.do ('set', ['Data', 'machines', 'Universal Turing Machine'], {
             begin: {
-               //else: ['Pə', 'R', 'Pə', 'R', 'e (dummy1, dummy2, x)'],
-               else: ['Pə', 'R', 'Pə', 'R', 'R', 'Px', 'R', 'e (dummy1, dummy2, x)'],
-               //else: ['Pə', 'R', 'Pə', 'R', 'Pu', 'e (dummy1, dummy2, x)'],
-               //else: [],
+               else: ['Pə', 'R', 'Pə', 'R', 'doit'],
+            },
+            doit: {
+               // f test 1
+               else: ['Pa', 'R', 'Pa', 'R', 'f (dummy1, dummy2, a)'],
+               // f test 2
+               else: ['Pa', 'R', 'Pa', 'R', 'f (dummy1, dummy2, b)'],
+               // 3arg e test 1
+               else: ['Pa', 'R', 'Pa', 'R', 'e (dummy1, dummy2, a)'],
+               // 3arg e test 2
+               else: ['Pa', 'R', 'Pa', 'R', 'e (dummy1, dummy2, b)'],
+               // 2arg e test 1
+               else: ['Px', 'R', 'Pa', 'R', 'Pa', 'R', 'e (dummy1, a)'],
+               // 2arg e test 2
+               else: ['Px', 'R', 'Pa', 'R', 'Pa', 'R', 'e (dummy1, a)'],
+               // 2arg e test 3
+               else: ['Px', 'R', 'Pa', 'R', 'Pa', 'R', 'e (dummy1, b)'],
+               // 1arg e test 1
+               else: ['Px', 'R', 'Pa', 'R', 'Pa', 'R', 'e (dummy1)'],
+               // 1arg e test 2
+               else: ['e (dummy1)'],
+               // 1arg e test 3
+               else: ['Px', 'R', 'e (dummy1)'],
+               // 1arg e test 4
+               else: ['Px', 'R', 'Px', 'R', 'e (dummy1)'],
+               // pe test 1
+               else: ['Px', 'R', 'Px', 'R', 'pe (dummy1, a)'],
+               // pe test 2
+               else: ['Px', 'R', 'Px', 'R', 'Px', 'R', 'pe (dummy1, a)'],
             },
             dummy1: {
                else: ['dummy1'],
@@ -543,7 +568,8 @@
                      var expand = function (call) {
                         var parsedcall = onedeep (call);
                         var match = dale.stopNot (machine, undefined, function (v, k) {
-                           if (k.match (/^mfun: /) && onedeep (k.replace ('mfun: ', '')) [0] === parsedcall [0]) return [k, v];
+                           var parsed = onedeep (k.replace ('mfun: ', ''));
+                           if (k.match (/^mfun: /) && parsed.length === parsedcall.length && parsed [0] === parsedcall [0]) return [k, v];
                         });
                         if (! match) return alert ('Error: no matching mfun!');
                         var arglist = onedeep (match [0]).slice (1);
