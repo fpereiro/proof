@@ -243,10 +243,10 @@ f        none    P0, L, L                                o
 - Multiple symbols seen can map to a single set of operations.
 - Set of operations can be empty! but the m-conf is changed. If in this case it changed to the same m-conf, you can prove that you have a circle machie if it gets to that configuration!
 - The machine starts at `b`, writes `ee0 0`, sets the cursor over the first 0 and calls `o`.
-- `o` only is called on F squares that are not blank (thus, only containing 0 and 1). Its purpose is to mark the 1s with x (on the E square immediately to their right). It marks the 1s from right to left (sees the 1, puts the x to its side, then goes two squares left from the marked 1). While it sees 1s, it calls itself. When it finds a 0, it calls `q` instead.
-- `q` goes right over F squares. While there's 0s or 1s, it keeps on going right by calling itself. When it finds a blank, it prints a 1 and goes to the E square to its left, calling `p`.
-- `p` goes left over E squares, calling itself and going left while it finds empty squares. When it finds a schwa, it goes to the next F square and calls `f`. If, instead, it finds an `x`, it deletes it, goes to the next F square and calls `q`.
-- `f` goes forward over F squares, since this configuration is only called by `p` after seeing a schwa and moving one to the right. If it sees a 0 or 1, then it keeps on going to the right and calls itself. When it finds a blank F square, it prints a 0, goes two back (to the previous F square) and calls `o`. It is confusing that Turing said "any" instead of 0, 1 for this configuration, since this configuration doesn't see any other symbols since it's always on F squares.
+- `o` only is called on F-squares that are not blank (thus, only containing 0 and 1). Its purpose is to mark the 1s with x (on the E-square immediately to their right). It marks the 1s from right to left (sees the 1, puts the x to its side, then goes two squares left from the marked 1). While it sees 1s, it calls itself. When it finds a 0, it calls `q` instead.
+- `q` goes right over F-squares. While there's 0s or 1s, it keeps on going right by calling itself. When it finds a blank, it prints a 1 and goes to the E-square to its left, calling `p`.
+- `p` goes left over E-squares, calling itself and going left while it finds empty squares. When it finds a schwa, it goes to the next F-square and calls `f`. If, instead, it finds an `x`, it deletes it, goes to the next F-square and calls `q`.
+- `f` goes forward over F-squares, since this configuration is only called by `p` after seeing a schwa and moving one to the right. If it sees a 0 or 1, then it keeps on going to the right and calls itself. When it finds a blank F-square, it prints a 0, goes two back (to the previous F-square) and calls `o`. It is confusing that Turing said "any" instead of 0, 1 for this configuration, since this configuration doesn't see any other symbols since it's always on F-squares.
 
 Calls between configs:
 
@@ -326,7 +326,7 @@ So there's this pattern starting always with `o` and ending with `f`. The intere
 The roles begin to become clear:
 
 - The first mconf in the repeating pattern, `o`, marks the 1s with `x`. Does it mark *all* the 1s already printed? No! It only marks those 1s it finds going left, until it finds a 0. When it finds a 0, `o` considers it as a sentinel, stops going left and calls `q`.
-- The last mconf in the repeating pattern, `f`, prints the 0 after a sequence of 1s, at the very end of the sequence. It goes forward until it finds the first blank F square, prints 0 and calls `o` again.
+- The last mconf in the repeating pattern, `f`, prints the 0 after a sequence of 1s, at the very end of the sequence. It goes forward until it finds the first blank F-square, prints 0 and calls `o` again.
 - The first mconf of the "inner loop" of the repeating pattern, `q`, goes right on F-squares until it finds a blank one, then prints a 1 and calls `p`.
 - The last mconf of the "inner loop" of the repeating pattern, `p`, is the key to the machine. If it is on a blank square, it goes left on E-squares. It is the one mconf that decides whether to call `q` again or instead go forward to `f`. `q` calls `p` again when it sees an `x` - but only after erasing the seen `x` first. If it doesn't find in x, it will go back to the beginning (the second schwa) and only then call `f` to finish the loop.
 
@@ -1430,7 +1430,7 @@ p124
 
 - PE: "Turing has now exhausted his supply of mnemonic function names, for he names the next one simply q, which unfortunately is the same letter he will shortly use to represent m-configurations in general. (...) I believe that Turing meant for thsi function to be named g rathern than g. Just as the f function finds the first (that is, leftmost) occurrence of a particular symbol, this function finds the last (rightmost) occurrence of a symbol (...) I'll refer to it as g."
 
-- PE: "The single-argument version of g moves to the right until it finds to blanks in a row. That is assumed to be the rightmost end of the tape. The two-argument version of g first uses the one-argument g and then moves left looking for the character α."
+- PE: "The single-argument version of g moves to the right until it finds two blanks in a row. That is assumed to be the rightmost end of the tape. The two-argument version of g first uses the one-argument g and then moves left looking for the character α."
 
 ```
 g  (𝕮)      any          R       g  (𝕮)          g (𝕮, α). The machine finds the last symbol of form α -> 𝕮.
@@ -1670,7 +1670,7 @@ e1   (1m)
 ```
 
 - Notes: If a configuration calls itself, we ignore that for interdependency purposes. A n argument version of a function x will be referred to as "narg x".
-- Important reminder: the first square of the tape (and all odd numbered squares, 3th, 5th, and so forth) are F squares, that is, output. The markings are on the E squares to the right of each of the F squares. Most of the machines that Turing presents have two schwas, so the first F square and E square both contain schwas.
+- Important reminder: the first square of the tape (and all odd numbered squares, 3th, 5th, and so forth) are F-squares, that is, output. The markings are on the E-squares to the right of each of the F-squares. Most of the machines that Turing presents have two schwas, so the first F-square and E-square both contain schwas.
 - Same list but describing functions and tracking interdependencies:
 
 ```
@@ -1694,18 +1694,18 @@ f can be described to do the following, if we include f1 and f2 as part of it:
    - If blank square is found:
       - Go one to the right.
       - If it contains 3arg, -> 1arg.
-      - If square is blank (which means we saw two blanks in a row):
+      - If square is blank (which means we saw two consecutive blanks):
          - Go one to the right.
          - -> 2arg
       - If the square is neither blank nor contains 3arg, go to *.
 
 Summarizing further, f does the following:
-   1) go to the leftmost of the tape
-   2) go right until finding either 3arg or two blanks in a row
+   1) go to the leftmost of the tape.
+   2) go right until finding either 3arg or two consecutive blanks.
    3-1) if it finds 3arg, -> 1arg.
-   3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
+   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
 
-Now, if there's two blanks in a row, that means we're at the right end of the tape (this assumes that we never write squares more than two apart). So if we saw two blanks, and we go one further, if the first blank was an E square, we'll be standing on an E square afterwards; and if the first blank was an F square, we'll be standing on an F square afterwards.
+Now, if there's two consecutive blanks, that means we're at the right end of the tape (this assumes that we never write squares more than two apart). So if we saw two blanks, and we go one further, if the first blank was an E-square, we'll be standing on an E-square afterwards; and if the first blank was an F-square, we'll be standing on an F-square afterwards.
 
 Definitive summary: f goes to the leftmost of the tape, then goes right until either
    - finding 3arg (in which case -> 1arg)
@@ -1726,16 +1726,16 @@ Interdependencies:
    - 3arg e1 is for internal use of 3arg e, and 1arg e1 is for internal use of 1arg e.
 
 3arg e:
-   1) go to the leftmost of the tape
-   2) go right until finding either the 3arg or two blanks in a row.
+   1) go to the leftmost of the tape.
+   2) go right until finding either the 3arg or two consecutive blanks.
    3-1) if it finds 3arg, delete it and -> 1arg.
-   3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
+   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 2arg e:
-   1) go to the leftmost of the tape
-   2) go right until finding either the 3arg or two blanks in a row
+   1) go to the leftmost of the tape.
+   2) go right until finding either the 3arg or two consecutive blanks.
    3-1) if it finds 3arg, delete it and call again 2arg e with the same arguments.
-   3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
+   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 While 3arg e deletes only the first 3arg it sees, 2arg e will delete all such symbols from the tape until two blanks are found.
 
@@ -1744,7 +1744,7 @@ While 3arg e deletes only the first 3arg it sees, 2arg e will delete all such sy
    2) go one to the right and erase that square, go another square to the right.
    3) repeat 2) until finding the first blank F-square, then -> 1arg.
 
-In other words, 1arg e will clear the E squares between the schwas and the first blank F-square. Important assumption: 1arg e will erase E squares if it is called to the right of the schwas or while being on the second schwa. If it is called when the head is on the first schwa, it will erase F squares instead and then position itself on the first blank E square!
+In other words, 1arg e will clear the E-squares between the schwas and the first blank F-square. Important assumption: 1arg e will erase E-squares if it is called to the right of the schwas or while being on the second schwa. If it is called when the head is on the first schwa, it will erase F-squares instead and then position itself on the first blank E-square!
 
 - Note: while 3arg e1 doesn't use its second and third arguments, its three arguments distinguish it from the 1arg version, which is different. That's likely the reason for which Turing defined it as a 3arg function that only uses 1arg.
 
@@ -1759,56 +1759,51 @@ Interdependencies:
    - pe1 is for internal use of pe only.
 
 pe:
-   1) go to the leftmost of the tape
-   2) go right until finding either ə (this is interesting - it probably means that it will be always going right, since the ə can only be at the left of the tape!) or two blanks in a row. This means that the function will look for two blanks in a row.
-   3) when it finds two blanks in a row, it advances to the third consecutive blank, prints 2arg and -> 1arg.
+   1) go to the leftmost schwa, which is on an F-square.
+   2) go right in twos until finding the first blank F-square.
+   3) print 2arg and -> 1arg.
 
 pe2:
-   1) go to the leftmost of the tape
-   2) go right until finding two blanks in a row
-   3) when it finds two blanks in a row, advance one more position and print 2arg.
-   4) go to the leftmost of the tape again
-   5) go right until finding two blanks in a row
-   6) advance one more position and print 3arg, then -> 1arg.
+   1) go to the leftmost schwa, which is on an F-square.
+   2) go right in twos until finding the first blank F-square.
+   3) print 2arg.
+   4) go again to the leftmost schwa.
+   5) go right in twos until finding the first blank F-square.
+   6) print 3arg, then -> 1arg.
 
-## f' (find left)
+## f' & f'' (find leftmost)
 
-l    (1m)    // go one left and -> 1arg
-f'   (2m+1s) // call f with `l (1arg)`, 2arg and 3arg
+l    (1m)
+f'   (2m+1s)
+r    (1m)
+f''  (2m+1s)
 
 Interdependencies:
    - f' is called by c, cp and cp1.
    - l is for internal use of f' only.
-
-f':
-   1) go to the leftmost of the tape
-   2) go right until finding either 3arg or two blanks in a row
-   3-1) if it finds 3arg, move one to the left and -> 1arg.
-   3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
-
-So f', if it finds 3arg, will call 1arg after positioning the head in the square left of that where the leftmost/first instance of 3arg is.
-
-## f'' (find right)
-
-r    (1m)    // go one right and call 1arg
-f''  (2m+1s) // call f with `r (1arg)`, 2arg and 3arg
-
-Interdependencies:
    - f'' is not called by any functions in this section - but presumably it will be used later.
    - r is for internal use of f'' only.
 
-f'':
-   1) go to the leftmost of the tape
-   2) go right until finding either 3arg or two blanks in a row
-   3-1) if it finds 3arg, move one to the right and -> 1arg.
-   3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
+f':
+   1) go to the leftmost of the tape.
+   2) go right until finding either 3arg or two consecutive blanks.
+   3-1) if it finds 3arg, move one to the left and -> 1arg.
+   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
 
-So f', if it finds 3arg, will call 1arg after positioning the head in the square right of that where the leftmost/first instance of 3arg is.
+So f', if it finds 3arg, will call 1arg after positioning the head in the square left of that where the leftmost/first instance of 3arg is and -> 1arg; otherwise, go to the square after the two blanks and -> 2arg.
+
+f'':
+   1) go to the leftmost of the tape.
+   2) go right until finding either 3arg or two consecutive blanks.
+   3-1) if it finds 3arg, move one to the right and -> 1arg.
+   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
+
+So f'', if it finds 3arg, will call 1arg after positioning the head in the square right of that where the leftmost/first instance of 3arg is and -> 1arg; otherwise, go to the square after the two blanks and -> 2arg.
 
 ## c (copy)
 
-c    (2m+1s) // call f' with `c1 (1arg)`, 2arg and 3arg.
-c1   (1m)    // call pe (1arg, the scanned symbol)
+c    (2m+1s)
+c1   (1m)
 
 Note: c1 uses the scanned symbol as the second argument to pe.
 
@@ -1817,14 +1812,14 @@ Interdependencies:
    - c1 is for internal use of c only.
 
 c:
-   1) go to the leftmost of the tape
-   2) go right until finding either 3arg or two blanks in a row
-   3-1) if it finds 3arg, move one to the left and noting the character X on that square
-      3-1-1) go to the leftmost of the tape
-      3-1-2) go right until finding two blanks in a row
-      3-1-3) when it finds two blanks in a row, advance one more position and start going right in twos.
+   1) go to the leftmost of the tape.
+   2) go right until finding either 3arg or two consecutive blanks.
+   3-1) if it finds 3arg, move one to the left and noting the character X on that square,
+      3-1-1) go to the leftmost of the tape.
+      3-1-2) go right until finding two consecutive blanks.
+      3-1-3) when it finds two consecutive blanks, advance one more position and start going right in twos.
       3-1-4) when finding a blank (which could be immediately), print X and -> 1arg.
-   3-2) if it finds two blanks in a row, advance one more position and -> 2arg.
+   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 ## ce (copy and erase)
 
@@ -1841,16 +1836,16 @@ Interdependencies:
 
 3arg ce:
    1) go to the leftmost of the tape
-   2) go right until finding either 3arg or two blanks in a row
+   2) go right until finding either 3arg or two consecutive blanks
    3-1) if it finds 3arg, move one to the left and noting the character X on that square
       3-1-1) go to the leftmost of the tape
-      3-1-2) go right until finding two blanks in a row
-      3-1-3) when it finds two blanks in a row, advance one more position and start going right in twos.
+      3-1-2) go right until finding two consecutive blanks
+      3-1-3) when it finds two consecutive blanks, advance one more position and start going right in twos.
       3-1-4) when finding a blank (which could be immediately), print X and
       3-1-5) go to the leftmost of the tape
-      3-1-6) go right until finding either the 3arg or two blanks in a row
+      3-1-6) go right until finding either the 3arg or two consecutive blanks
       3-1-7-1) if it finds the 3arg, delete it and -> 1arg
-      3-1-7-2) if it finds two blanks in a row, advance one more position and -> 2arg
+      3-1-7-2) if it finds two consecutive blanks, advance one more position and -> 2arg
 
 2arg ce:
 
@@ -1881,27 +1876,24 @@ g1   (1m+1s); (1m)
 
 We can group these functions into families:
 
-1. find leftmost
+1. find
 2. erase
 3. print at the end
-4. copy
-5. copy and replace
-6. copy and erase
-7. other finding functions
+4. find leftmost/rightmost
+5. copy
+6. copy and replace
+7. copy and erase
 
 ## Summary of all functions
 
 - 3arg f: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find the leftmost 3arg and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
 - 3arg e: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find the leftmost 3arg, delete it and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
 - 2arg e: 1) delete all the 2args between the schwas and the first two consecutive blanks, then go to the square after the two consecutive blanks and -> 1arg.
-- 1arg e: delete all E squares between the schwas and the first empty F square, then stay on the first empty F square -> 1arg.
-
-- 2arg pe: find the first two blanks in a row, go one to the right, print 2arg and -> 1arg.
-   - go to left schwa
-   - go to 1arg
-- 3arg pe2: find the first two blanks in a row, go one to the right, print 2arg, go leftmost, find the first two blanks in a row, go one further, print 3arg, then -> 1arg.
-
-pe only prints on F squares? perhaps it's not two blanks, but actually always on the F square?
+- 1arg e: delete all E-squares between the schwas and the first empty F-square, then stay on the first empty F-square -> 1arg.
+- 2arg pe: find the first blank F-square, print 2arg and -> 1arg.
+- 3arg pe2: find the first blank F-square, print 2arg, find the F-square to the right of the one just printed, print 3arg, then -> 1arg.
+- 3arg f': 1) if there's a 3arg between the schwas and the first two consecutive blanks, move one to the left and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
+- 3arg f'': 1) if there's a 3arg between the schwas and the first two consecutive blanks, move one to the right and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
 
 p131
 
