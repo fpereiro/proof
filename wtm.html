@@ -333,7 +333,7 @@
             },
             doit: {
                // c
-               else: ['Px', 'R', 'Px', 'R', 'Px', 'R', 'pe (dummy1, a)'],
+               else: ['P0', 'R', 'Pa', 'R', 'P1', 'R', 'Pb', 'R', 'P1', 'c (dummy1, dummy2, b)'],
             },
             dummy1: {
                else: ['dummy1'],
@@ -387,7 +387,8 @@
                else: ['f\' (c1 (𝕮), 𝕭, α)'],
             },
             'mfun: c1 (𝕮)': {
-               β: ['pe (𝕮, β)'],
+               READSYMB: ['pe (𝕮, READSYMB)'],
+               //else: ['pe (𝕮, β)'],
             },
             'mfun: ce (𝕮, 𝕭, α)': {
                else: ['c (e (𝕮, 𝕭, α), 𝕭, α)'],
@@ -506,6 +507,12 @@
                   if (ctape === undefined) ctape = 'none';
                   var match = cconfig [ctape];
                   if (! match) match = cconfig ['else'];
+                  if (! match) {
+                     match = cconfig ['READSYMB'];
+                     if (match) match = dale.do (match, function (v) {
+                        return v.replace ('READSYMB', State.tape [State.position]);
+                     });
+                  }
                   if (! match) return alert ('Error: no available action!');
                   State.actions = match.slice (0, -1);
                   State.next    = last (match);
@@ -553,8 +560,9 @@
                         var newkey  = parsedcall [0] + ' (' + dale.do (arglist, function (v, k) {return replist [k]}).join (', ') + ')';
                         var newconfig = {};
                         dale.do (match [1], function (v, k) {
-                           newconfig [arglist.indexOf (k) > -1 ? replist [arglist.indexOf (k)] : k] = dale.do (v, function (v2) {
-                              if (arglist.indexOf (v2) > -1)       return replist [arglist.indexOf (v2)];
+                           k = arglist.indexOf (k) > -1 ? replist [arglist.indexOf (k)] : k;
+                           newconfig [k] = dale.do (v, function (v2) {
+                              if (arglist.indexOf (v2) > -1)                    return replist [arglist.indexOf (v2)];
                               if (arglist.indexOf (v2.replace (/^P/, '')) > -1) return 'P' + replist [arglist.indexOf (v2.replace (/^P/, ''))];
                               if (v2.match (/\(/)) {
                                  if (v2 === match [0].replace ('mfun: ', '')) return newkey;

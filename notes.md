@@ -1364,7 +1364,7 @@ c1 (𝕮)             β     pe (𝕮, β)            at the end the first symbo
 
 - PE: "Notice the function uses f' to find the α character, so that the head ends up to the left of the marker, which is the figure that the marker marks. The c1 function has an unusual syntax: the scanned character becomes the second argument to pe."
 
-- TU: "The lsat line stands for the totality of lines obtainable from it by replacing β by any symbol which may occur on the tape of the machine concerned." Note: then, for every symbol that this configuration will employ, then that m-function needs to be expanded to comprise each of these variants (one for a, one for b, etc.).
+- TU: "The last line stands for the totality of lines obtainable from it by replacing β by any symbol which may occur on the tape of the machine concerned." Note: then, for every symbol that this configuration will employ, then that m-function needs to be expanded to comprise each of these variants (one for a, one for b, etc.).
 
 p122
 
@@ -1815,11 +1815,14 @@ c:
    1) go to the leftmost of the tape.
    2) go right until finding either 3arg or two consecutive blanks.
    3-1) if it finds 3arg, move one to the left and noting the character X on that square,
-      3-1-1) go to the leftmost of the tape.
-      3-1-2) go right until finding two consecutive blanks.
-      3-1-3) when it finds two consecutive blanks, advance one more position and start going right in twos.
-      3-1-4) when finding a blank (which could be immediately), print X and -> 1arg.
+      3-1-1) go to the leftmost schwa, which is on an F-square.
+      3-1-2) go right in twos until finding the first blank F-square.
+      3-1-3) print the character X and -> 1arg.
    3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
+
+So c, if it finds 3arg, will take the character printed on the left of where 3arg was found and print it on the leftmost free F-square; otherwise, go to the square after the two blanks and -> 2arg.
+
+Note: since c will write what it finds to the *left* of its 3arg on an F-square, it is almost certain that 3arg will be a symbol that can be found on E-squares. In other words, c is a function called with markers (E-squares) as its symbolic argument.
 
 ## ce (copy and erase)
 
@@ -1835,17 +1838,14 @@ Interdependencies:
    - ce3 is not called by any function here but it will probably be used later.
 
 3arg ce:
-   1) go to the leftmost of the tape
-   2) go right until finding either 3arg or two consecutive blanks
-   3-1) if it finds 3arg, move one to the left and noting the character X on that square
-      3-1-1) go to the leftmost of the tape
-      3-1-2) go right until finding two consecutive blanks
-      3-1-3) when it finds two consecutive blanks, advance one more position and start going right in twos.
-      3-1-4) when finding a blank (which could be immediately), print X and
-      3-1-5) go to the leftmost of the tape
-      3-1-6) go right until finding either the 3arg or two consecutive blanks
-      3-1-7-1) if it finds the 3arg, delete it and -> 1arg
-      3-1-7-2) if it finds two consecutive blanks, advance one more position and -> 2arg
+   1) go to the leftmost of the tape.
+   2) go right until finding either 3arg or two consecutive blanks.
+   3-1) if it finds 3arg, move one to the left and noting the character X on that square,
+      3-1-1) go to the leftmost schwa, which is on an F-square.
+      3-1-2) go right in twos until finding the first blank F-square.
+      3-1-3) print the character X.
+      3-1-4) find the leftmost occurrence of 3arg (the same one that was found on 3-1) and delete it, then -> 1arg.
+   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 2arg ce:
 
@@ -1881,8 +1881,9 @@ We can group these functions into families:
 3. print at the end
 4. find leftmost/rightmost
 5. copy
-6. copy and replace
-7. copy and erase
+6. replace
+7. copy and replace
+8. copy and erase
 
 ## Summary of all functions
 
@@ -1892,8 +1893,9 @@ We can group these functions into families:
 - 1arg e: delete all E-squares between the schwas and the first empty F-square, then stay on the first empty F-square -> 1arg.
 - 2arg pe: find the first blank F-square, print 2arg and -> 1arg.
 - 3arg pe2: find the first blank F-square, print 2arg, find the F-square to the right of the one just printed, print 3arg, then -> 1arg.
-- 3arg f': 1) if there's a 3arg between the schwas and the first two consecutive blanks, move one to the left and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
-- 3arg f'': 1) if there's a 3arg between the schwas and the first two consecutive blanks, move one to the right and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
+- 3arg f': 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, move one to the left and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
+- 3arg f'': 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, move one to the right and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
+- 3arg c: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, take the character printed to its left and print it on the leftmost free F-square; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
 
 p131
 
