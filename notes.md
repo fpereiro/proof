@@ -1428,7 +1428,7 @@ cpe (𝕬, 𝕮, α, β). The sequence of symbols marked α is compared with the
 
 p124
 
-- PE: "Turing has now exhausted his supply of mnemonic function names, for he names the next one simply q, which unfortunately is the same letter he will shortly use to represent m-configurations in general. (...) I believe that Turing meant for thsi function to be named g rathern than g. Just as the f function finds the first (that is, leftmost) occurrence of a particular symbol, this function finds the last (rightmost) occurrence of a symbol (...) I'll refer to it as g."
+- PE: "Turing has now exhausted his supply of mnemonic function names, for he names the next one simply q, which unfortunately is the same letter he will shortly use to represent m-configurations in general. (...) I believe that Turing meant for this function to be named g rathern than g. Just as the f function finds the first (that is, leftmost) occurrence of a particular symbol, this function finds the last (rightmost) occurrence of a symbol (...) I'll refer to it as g."
 
 - PE: "The single-argument version of g moves to the right until it finds two blanks in a row. That is assumed to be the rightmost end of the tape. The two-argument version of g first uses the one-argument g and then moves left looking for the character α."
 
@@ -1671,18 +1671,34 @@ e1   (1m)
 
 - Notes: If a configuration calls itself, we ignore that for interdependency purposes. A n argument version of a function x will be referred to as "narg x".
 - Important reminder: the first square of the tape (and all odd numbered squares, 3th, 5th, and so forth) are F-squares, that is, output. The markings are on the E-squares to the right of each of the F-squares. Most of the machines that Turing presents have two schwas, so the first F-square and E-square both contain schwas.
-- Same list but describing functions and tracking interdependencies:
+- Same list but grouping functions by families, describing them in detail and tracking interdependencies:
 
 ```
-## f (find leftmost)
+## f (find)
 
 f    (2m+1s)
 f1   (2m+1s)
 f2   (2m+1s)
+l    (1m)
+f'   (2m+1s)
+r    (1m)
+f''  (2m+1s)
+g    (1m+1s)
+g    (1m)
+g1   (1m+1s)
+g1   (1m)
 
 Interdependencies:
    - f1 and f2 are for internal use of f (that is, they're only called by f and no other function).
    - f is called by 3arg e, pe, f', f'', 3arg re and cp.
+   - f' is called by c, cp and cp1.
+   - l is for internal use of f' only.
+   - f'' is not called by any functions in this section - but presumably it will be used later.
+   - r is for internal use of f'' only.
+   - 2arg g1 is for internal use of 2arg g only.
+   - 1arg g1 is for internal use of 1arg g only.
+   - 1arg g is called by 2arg g.
+   - 2arg g is not called by any functions in this section - but presumably it will be used later.
 
 f can be described to do the following, if we include f1 and f2 as part of it:
 - Important assumption: f is always called when the head is either on the schwas or to their right. If it is to the left of the schwas, f will keep on going left indefinitely (assuming that no characters are written to the left of the schwas).
@@ -1705,18 +1721,37 @@ Summarizing further, f does the following:
    3-1) if it finds 3arg, -> 1arg.
    3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
 
-Now, if there's two consecutive blanks, that means we're at the right end of the tape (this assumes that we never write squares more than two apart). So if we saw two blanks, and we go one further, if the first blank was an E-square, we'll be standing on an E-square afterwards; and if the first blank was an F-square, we'll be standing on an F-square afterwards.
+Now, if there's two consecutive blanks, that means we're at the right end of the tape (this assumes that we never write squares more than two apart). So if we saw two consecutive blanks, and we go one further, if the first blank was an E-square, we'll be standing on an E-square afterwards; and if the first blank was an F-square, we'll be standing on an F-square afterwards.
 
 Definitive summary: f goes to the leftmost of the tape, then goes right until either
    - finding 3arg (in which case -> 1arg)
-   - finding two blanks (in which case it position the head after the second blank and -> 2arg).
+   - finding two consecutive blanks (in which case it position the head after the second blank and -> 2arg).
+
+f':
+   1) go to the leftmost of the tape.
+   2) go right until finding either 3arg or two consecutive blanks.
+   3-1) if it finds 3arg, move one to the left and -> 1arg.
+   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
+
+So f', if it finds 3arg, will call 1arg after positioning the head in the square left of that where the leftmost/first instance of 3arg is and -> 1arg; otherwise, go to the square after the two consecutive blanks and -> 2arg.
+
+f'':
+   1) go to the leftmost of the tape.
+   2) go right until finding either 3arg or two consecutive blanks.
+   3-1) if it finds 3arg, move one to the right and -> 1arg.
+   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
+
+So f'', if it finds 3arg, will call 1arg after positioning the head in the square right of that where the leftmost/first instance of 3arg is and -> 1arg; otherwise, go to the square after the two consecutive blanks and -> 2arg.
+
+1arg g: go right until finding two consecutive blanks; when the second blank is found, -> 1arg.
+
+2arg g: go right until finding two consecutive blanks; when the second blank is found, start going left until finding 2arg; when 2arg is found, -> 1arg.
 
 ## e (erase)
 
 e  (2m+1s)
 e  (1m+1s)
 e1 (2m+1s)
-
 e  (1m)
 e1 (1m)
 
@@ -1737,7 +1772,7 @@ Interdependencies:
    3-1) if it finds 3arg, delete it and call again 2arg e with the same arguments.
    3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
 
-While 3arg e deletes only the first 3arg it sees, 2arg e will delete all such symbols from the tape until two blanks are found.
+While 3arg e deletes only the first 3arg it sees, 2arg e will delete all such symbols from the tape until two consecutive blanks are found.
 
 1arg e:
    1) go left until you find a schwa, then go one to the right.
@@ -1771,35 +1806,6 @@ pe2:
    5) go right in twos until finding the first blank F-square.
    6) print 3arg, then -> 1arg.
 
-## f' & f'' (find leftmost)
-
-l    (1m)
-f'   (2m+1s)
-r    (1m)
-f''  (2m+1s)
-
-Interdependencies:
-   - f' is called by c, cp and cp1.
-   - l is for internal use of f' only.
-   - f'' is not called by any functions in this section - but presumably it will be used later.
-   - r is for internal use of f'' only.
-
-f':
-   1) go to the leftmost of the tape.
-   2) go right until finding either 3arg or two consecutive blanks.
-   3-1) if it finds 3arg, move one to the left and -> 1arg.
-   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
-
-So f', if it finds 3arg, will call 1arg after positioning the head in the square left of that where the leftmost/first instance of 3arg is and -> 1arg; otherwise, go to the square after the two blanks and -> 2arg.
-
-f'':
-   1) go to the leftmost of the tape.
-   2) go right until finding either 3arg or two consecutive blanks.
-   3-1) if it finds 3arg, move one to the right and -> 1arg.
-   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
-
-So f'', if it finds 3arg, will call 1arg after positioning the head in the square right of that where the leftmost/first instance of 3arg is and -> 1arg; otherwise, go to the square after the two blanks and -> 2arg.
-
 ## c (copy)
 
 c    (2m+1s)
@@ -1820,16 +1826,16 @@ c:
       3-1-3) print the character X and -> 1arg.
    3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
 
-So c, if it finds 3arg, will take the character printed on the left of where 3arg was found and print it on the leftmost free F-square; otherwise, go to the square after the two blanks and -> 2arg.
+So c, if it finds 3arg, will take the character printed on the left of where 3arg was found and print it on the leftmost free F-square; otherwise, go to the square after the two consecutive blanks and -> 2arg.
 
 Note: since c will write what it finds to the *left* of its 3arg on an F-square, it is almost certain that 3arg will be a symbol that can be found on E-squares. In other words, c is a function called with markers (E-squares) as its symbolic argument.
 
 ## ce (copy and erase)
 
-ce  (2m+1s) // call c with `e (1arg, 2arg, 3arg)`, 2arg and 3arg
-ce  (1m+1s) // call 3arg ce with `ce (1arg, 2arg)`, 1arg and 2arg
-ce2 (1m+2s) // call 2arg ce with `ce (1arg, 3arg)` and 2arg
-ce3 (1m+3s) // call 2arg ce with `ce2 (1arg, 3arg, 4arg) and 2arg
+ce  (2m+1s)
+ce  (1m+1s)
+ce2 (1m+2s)
+ce3 (1m+3s)
 
 Interdependencies:
    - 3arg ce is called by 2arg ce.
@@ -1844,19 +1850,60 @@ Interdependencies:
       3-1-1) go to the leftmost schwa, which is on an F-square.
       3-1-2) go right in twos until finding the first blank F-square.
       3-1-3) print the character X.
+      3-1-4) go to the leftmost of the tape.
+      3-1-5) go right until finding again 3arg.
+      3-1-6) delete it and -> 1arg.
+   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
+
+So, 3arg ce, if it finds 3arg, will take the character printed to its left and print it on the leftmost free F-square; go back to where 3arg was found, delete it and -> 1arg; otherwise, go to the square after the two consecutive blanks and -> 2arg.
+
+2arg ce:
+ce (𝕮, 𝕭, α)                            c (e (𝕮, 𝕭, α), 𝕭, α)
+ce (𝕭, α)                               ce (ce (𝕭, α), 𝕭, α)
+ce2 (𝕭, α, β)                           ce (ce (𝕭, β), α)
+ce3 (𝕭, α, β, γ)                        ce (ce2 (𝕭, β, γ), α)
+
+   1) go to the leftmost of the tape.
+   2) go right until finding either 3arg or two consecutive blanks.
+   3-1) if it finds 3arg, move one to the left and noting the character X on that square,
+      3-1-1) go to the leftmost schwa, which is on an F-square.
+      3-1-2) go right in twos until finding the first blank F-square.
+      3-1-3) print the character X.
       3-1-4) find the leftmost occurrence of 3arg (the same one that was found on 3-1) and delete it, then -> 1arg.
    3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 2arg ce:
+   1) go to the leftmost of the tape.
+   2) go right until finding either 2arg or two consecutive blanks.
+   3-1) if it finds 2arg, move one to the left and noting the character X on that square,
+      3-1-1) go to the leftmost schwa, which is on an F-square.
+      3-1-2) go right in twos until finding the first blank F-square.
+      3-1-3) print the character X.
+      3-1-4) find the leftmost occurrence of 2arg (the same one that was found on 3-1) and delete it.
+      3-1-5) repeat from 1) until you find two consecutive blanks, then go to 3-2).
+   3-2) if it finds two consecutive blanks, advance one more position and -> 1arg.
+
+Note: in the same way as 2arg e, 2arg ce calls 3arg ce until all copy & erase operations are performed, then -> 1arg.
+
+ce2:
+   1) execute 2arg ce with 2arg as its 2arg.
+   2) execute 2arg ce with 3arg as its 2arg.
+
+ce3:
+   1) execute 2arg ce with 2arg as its 2arg.
+   2) execute 2arg ce with 3arg as its 2arg.
+   3) execute 2arg ce with 4arg as its 2arg.
 
 ## re (replace)
 
-re   (2m+1s); (2m+2s)
+re   (2m+1s)
+re   (2m+2s)
 re1  (2m+2s)
 
 ## cr (copy and replace)
 
-cr   (2m+1s); (1m+1s)
+cr   (2m+1s)
+cr   (1m+1s)
 
 ## cp (compare)
 
@@ -1866,36 +1913,32 @@ cp2  (2m+1s)
 
 ## cpe (compare and erase)
 
-cpe  (3m+2s); (2m+2s)
-
-## g (find rightmost)
-
-g    (1m+1s); (1m)
-g1   (1m+1s); (1m)
+cpe  (3m+2s)
+cpe  (2m+2s)
 ```
 
-We can group these functions into families:
+## Summary of all functions by family
 
 1. find
+   - 3arg f: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find the leftmost 3arg and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
+   - 3arg f': 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, move one to the left and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
+   - 3arg f'': 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, move one to the right and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
+   - 1arg g: go right until finding two consecutive blanks; when the second blank is found, -> 1arg.
+   - 2arg g: go right until finding two consecutive blanks; when the second blank is found, start going left until finding 2arg; when 2arg is found, -> 1arg.
 2. erase
+   - 3arg e: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find the leftmost 3arg, delete it and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
+   - 2arg e: 1) delete all the 2args between the schwas and the first two consecutive blanks, then go to the square after the two consecutive blanks and -> 1arg.
+   - 1arg e: delete all E-squares between the schwas and the first empty F-square, then stay on the first empty F-square -> 1arg.
 3. print at the end
-4. find leftmost/rightmost
-5. copy
+   - 2arg pe: find the first blank F-square, print 2arg and -> 1arg.
+   - 3arg pe2: find the first blank F-square, print 2arg, find the F-square to the right of the one just printed, print 3arg, then -> 1arg.
+4. copy
+   - 3arg c: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, take the character printed to its left and print it on the leftmost free F-square; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
+5. copy and erase
 6. replace
 7. copy and replace
-8. copy and erase
-
-## Summary of all functions
-
-- 3arg f: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find the leftmost 3arg and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
-- 3arg e: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find the leftmost 3arg, delete it and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
-- 2arg e: 1) delete all the 2args between the schwas and the first two consecutive blanks, then go to the square after the two consecutive blanks and -> 1arg.
-- 1arg e: delete all E-squares between the schwas and the first empty F-square, then stay on the first empty F-square -> 1arg.
-- 2arg pe: find the first blank F-square, print 2arg and -> 1arg.
-- 3arg pe2: find the first blank F-square, print 2arg, find the F-square to the right of the one just printed, print 3arg, then -> 1arg.
-- 3arg f': 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, move one to the left and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
-- 3arg f'': 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, move one to the right and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
-- 3arg c: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, take the character printed to its left and print it on the leftmost free F-square; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
+8. compare
+9. compare and erase
 
 p131
 
