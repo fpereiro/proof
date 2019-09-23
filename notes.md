@@ -1858,41 +1858,49 @@ Interdependencies:
 So, 3arg ce, if it finds 3arg, will take the character printed to its left and print it on the leftmost free F-square; go back to where 3arg was found, delete it and -> 1arg; otherwise, go to the square after the two consecutive blanks and -> 2arg.
 
 2arg ce:
-ce (𝕮, 𝕭, α)                            c (e (𝕮, 𝕭, α), 𝕭, α)
-ce (𝕭, α)                               ce (ce (𝕭, α), 𝕭, α)
-ce2 (𝕭, α, β)                           ce (ce (𝕭, β), α)
-ce3 (𝕭, α, β, γ)                        ce (ce2 (𝕭, β, γ), α)
-
-   1) go to the leftmost of the tape.
-   2) go right until finding either 3arg or two consecutive blanks.
-   3-1) if it finds 3arg, move one to the left and noting the character X on that square,
-      3-1-1) go to the leftmost schwa, which is on an F-square.
-      3-1-2) go right in twos until finding the first blank F-square.
-      3-1-3) print the character X.
-      3-1-4) find the leftmost occurrence of 3arg (the same one that was found on 3-1) and delete it, then -> 1arg.
-   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
-
-2arg ce:
    1) go to the leftmost of the tape.
    2) go right until finding either 2arg or two consecutive blanks.
    3-1) if it finds 2arg, move one to the left and noting the character X on that square,
       3-1-1) go to the leftmost schwa, which is on an F-square.
       3-1-2) go right in twos until finding the first blank F-square.
       3-1-3) print the character X.
-      3-1-4) find the leftmost occurrence of 2arg (the same one that was found on 3-1) and delete it.
-      3-1-5) repeat from 1) until you find two consecutive blanks, then go to 3-2).
+      3-1-4) go to the leftmost of the tape.
+      3-1-5) go right until finding again 2arg.
+      3-1-6) delete it.
+      3-1-7) go back to 1) and repeat.
    3-2) if it finds two consecutive blanks, advance one more position and -> 1arg.
 
-Note: in the same way as 2arg e, 2arg ce calls 3arg ce until all copy & erase operations are performed, then -> 1arg.
+So 2arg ce, for each of the 2args that are between the schwas and the first two consecutive blanks, will take each of the characters printed to their left and print them on the leftmost free F-square; after that, go to the square after the two leftmost consecutive blanks and -> 1arg.
 
-ce2:
-   1) execute 2arg ce with 2arg as its 2arg.
-   2) execute 2arg ce with 3arg as its 2arg.
+Note: in the same way as 2arg e, 2arg ce calls 3arg ce until all copy & erase operations are performed, then -> 1arg. This also contemplates the case where there are no operations to be performed (in which case, -> 1arg happens directly after finding the consecutive blanks).
 
-ce3:
-   1) execute 2arg ce with 2arg as its 2arg.
-   2) execute 2arg ce with 3arg as its 2arg.
-   3) execute 2arg ce with 4arg as its 2arg.
+3arg ce2:
+   1) go to the leftmost of the tape.
+   2) go right until finding either 2arg or two consecutive blanks.
+   3-1) if it finds 2arg, move one to the left and noting the character X on that square,
+      3-1-1) go to the leftmost schwa, which is on an F-square.
+      3-1-2) go right in twos until finding the first blank F-square.
+      3-1-3) print the character X.
+      3-1-4) go to the leftmost of the tape.
+      3-1-5) go right until finding again 2arg.
+      3-1-6) delete it.
+      3-1-7) go back to 1) and repeat.
+   3-2) when there are no more 2args between the schwas and the two leftmost consecutive blanks:
+      3-2-1) go to the leftmost of the tape.
+      3-2-2) go right until finding either 3arg or two consecutive blanks.
+      3-2-3) if it finds 3arg, move one to the left and noting the character X on that square,
+         3-2-3-1) go to the leftmost schwa, which is on an F-square.
+         3-2-3-2) go right in twos until finding the first blank F-square.
+         3-2-3-3) print the character X.
+         3-2-3-4) go to the leftmost of the tape.
+         3-2-3-5) go right until finding again 3arg.
+         3-2-3-6) delete it.
+         3-2-3-7) go back to 1) and repeat.
+      3-2-4) when there are no more 3args between the schwas and the two leftmost consecutive blanks, advance one more position and -> 1arg.
+
+So 3arg ce2, for each of the 2args that are between the schwas and the first two consecutive blanks, will take each of the characters printed to their left and print them on the leftmost free F-square; then do the same process for each of the 3args that are between the schwas and the first two consecutive blanks; after that, go to the square after the two leftmost consecutive blanks and -> 1arg.
+
+4arg ce3, for each of the 2args that are between the schwas and the first two consecutive blanks, will take each of the characters printed to their left and print them on the leftmost free F-square; then do the same process for each of the 3args that are between the schwas and the first two consecutive blanks; then do the same process for each of the 4args that are between the schwas and the first two consecutive blanks; after that, go to the square after the two leftmost consecutive blanks and -> 1arg.
 
 ## re (replace)
 
@@ -1935,6 +1943,10 @@ cpe  (2m+2s)
 4. copy
    - 3arg c: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, take the character printed to its left and print it on the leftmost free F-square; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
 5. copy and erase
+So, 3arg ce, if it finds 3arg, will take the character printed to its left and print it on the leftmost free F-square; go back to where 3arg was found, delete it and -> 1arg; otherwise, go to the square after the two consecutive blanks and -> 2arg.
+So 2arg ce, for each of the 2args that are between the schwas and the first two consecutive blanks, will take each of the characters printed to their left and print them on the leftmost free F-square; after that, go to the square after the two leftmost consecutive blanks and -> 1arg.
+So 3arg ce2, for each of the 2args that are between the schwas and the first two consecutive blanks, will take each of the characters printed to their left and print them on the leftmost free F-square; then do the same process for each of the 3args that are between the schwas and the first two consecutive blanks; after that, go to the square after the two leftmost consecutive blanks and -> 1arg.
+4arg ce3, for each of the 2args that are between the schwas and the first two consecutive blanks, will take each of the characters printed to their left and print them on the leftmost free F-square; then do the same process for each of the 3args that are between the schwas and the first two consecutive blanks; then do the same process for each of the 4args that are between the schwas and the first two consecutive blanks; after that, go to the square after the two leftmost consecutive blanks and -> 1arg.
 6. replace
 7. copy and replace
 8. compare
