@@ -1671,7 +1671,6 @@ e1   (1m)
 - Notes: If a configuration calls itself, we ignore that for interdependency purposes. A n argument version of a function x will be referred to as "narg x".
 - Important reminder: the first square of the tape (and all odd numbered squares, 3th, 5th, and so forth) are F-squares, that is, output. The markings are on the E-squares to the right of each of the F-squares. Most of the machines that Turing presents have two schwas, so the first F-square and E-square both contain schwas.
 - Same list but grouping functions by families, describing them in detail and tracking interdependencies:
-```
 
 ## f (find)
 
