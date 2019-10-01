@@ -1405,7 +1405,7 @@ cr (𝕭, α)            cr (cr (𝕭, α), re (𝕭, α, α), α)    are not er
                                                         no letters α are on the tape.
 ```
 
-- PE: "These functions are not used elsewhere in Turing's paper. The Unviersal Machine requires a facility to "search and replace", and Turing next presents half a page of functions that begin with the letters cp ("compare") and cpe ("compare and erase"). The final m-configurations in these functions are so long that Turing's explanations appear under each table instead of at the right."
+- PE: "These functions are not used elsewhere in Turing's paper. The Universal Machine requires a facility to "search and replace", and Turing next presents half a page of functions that begin with the letters cp ("compare") and cpe ("compare and erase"). The final m-configurations in these functions are so long that Turing's explanations appear under each table instead of at the right."
 
 ```
 cp  (𝕮, 𝕬, 𝕰, α, β)                f' (cp1 (𝕮, 𝕬, β), f (𝕬, 𝕰, β), α)
@@ -1700,50 +1700,43 @@ Interdependencies:
 
 f can be described to do the following, if we include f1 and f2 as part of it:
 - Important assumption: f is always called when the head is either on the schwas or to their right. If it is to the left of the schwas, f will keep on going left indefinitely (assuming that no characters are written to the left of the schwas).
-- Go left until a schwa is found.
-- When a schwa is found:
-   - Go one more to the left.
-   - * Go right until 3arg (symbolic argument) OR a blank square is found:
-   - If 3arg is found, -> 1arg.
-   - If blank square is found:
-      - Go one to the right.
-      - If it contains 3arg, -> 1arg.
-      - If square is blank (which means we saw two consecutive blanks):
-         - Go one to the right.
-         - -> 2arg
-      - If the square is neither blank nor contains 3arg, go to *.
+- Go left until the leftmost schwa is found.
+- * Go right until 3arg (symbolic argument) OR a blank square is found.
+- If 3arg is found, -> 1arg.
+- If blank square is found:
+   - Go one to the right.
+   - If it contains 3arg, -> 1arg.
+   - If square is blank (which means we saw two consecutive blanks), go one to the right and -> 2arg.
+   - If the square is neither blank nor contains 3arg, go to *.
 
 Summarizing further, f does the following:
-   1) go to the leftmost of the tape.
-   2) go right until finding either 3arg or two consecutive blanks.
-   3-1) if it finds 3arg, -> 1arg.
-   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
+   - go to the leftmost schwa.
+   - go right until finding either 3arg or two consecutive blanks.
+   - if it finds 3arg, -> 1arg.
+   - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 Now, if there's two consecutive blanks, that means we're at the right end of the tape (this assumes that we never write squares more than two apart). So if we saw two consecutive blanks, and we go one further, if the first blank was an E-square, we'll be standing on an E-square afterwards; and if the first blank was an F-square, we'll be standing on an F-square afterwards.
 
-Definitive summary: f goes to the leftmost of the tape, then goes right until either
-   - finding 3arg (in which case -> 1arg)
-   - finding two consecutive blanks (in which case it position the head after the second blank and -> 2arg).
-
 f':
-   1) go to the leftmost of the tape.
-   2) go right until finding either 3arg or two consecutive blanks.
-   3-1) if it finds 3arg, move one to the left and -> 1arg.
-   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
-
-So f', if it finds 3arg, will call 1arg after positioning the head in the square left of that where the leftmost/first instance of 3arg is and -> 1arg; otherwise, go to the square after the two consecutive blanks and -> 2arg.
+   - go to the leftmost schwa.
+   - go right until finding either 3arg or two consecutive blanks.
+   - if it finds 3arg, move one to the left and -> 1arg.
+   - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 f'':
-   1) go to the leftmost of the tape.
-   2) go right until finding either 3arg or two consecutive blanks.
-   3-1) if it finds 3arg, move one to the right and -> 1arg.
-   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
+   - go to the leftmost schwa.
+   - go right until finding either 3arg or two consecutive blanks.
+   - if it finds 3arg, move one to the right and -> 1arg.
+   - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
-So f'', if it finds 3arg, will call 1arg after positioning the head in the square right of that where the leftmost/first instance of 3arg is and -> 1arg; otherwise, go to the square after the two consecutive blanks and -> 2arg.
+1arg g:
+   - go right until finding two consecutive blanks.
+   - when the second blank is found, -> 1arg.
 
-1arg g: go right until finding two consecutive blanks; when the second blank is found, -> 1arg.
-
-2arg g: go right until finding two consecutive blanks; when the second blank is found, start going left until finding 2arg; when 2arg is found, -> 1arg.
+2arg g:
+   - go right until finding two consecutive blanks.
+   - when the second blank is found, start going left until finding 2arg.
+   - when 2arg is found, -> 1arg.
 
 ## e (erase)
 
@@ -1759,23 +1752,28 @@ Interdependencies:
    - 3arg e1 is for internal use of 3arg e, and 1arg e1 is for internal use of 1arg e.
 
 3arg e:
-   1) go to the leftmost of the tape.
-   2) go right until finding either the 3arg or two consecutive blanks.
-   3-1) if it finds 3arg, delete it and -> 1arg.
-   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
+   - go to the leftmost schwa.
+   - go right until finding either the 3arg or two consecutive blanks.
+   - if it finds 3arg, delete it and -> 1arg.
+   - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 2arg e:
-   1) go to the leftmost of the tape.
-   2) go right until finding either the 3arg or two consecutive blanks.
-   3-1) if it finds 3arg, delete it and call again 2arg e with the same arguments.
-   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
+   - go to the leftmost schwa.
+   - go right until finding either the 3arg or two consecutive blanks.
+   - if it finds 3arg:
+      - delete it.
+      - go to the first step and repeat the whole process.
+   - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 While 3arg e deletes only the first 3arg it sees, 2arg e will delete all such symbols from the tape until two consecutive blanks are found.
 
 1arg e:
-   1) go left until you find a schwa, then go one to the right.
-   2) go one to the right and erase that square, go another square to the right.
-   3) repeat 2) until finding the first blank F-square, then -> 1arg.
+   - go left until finding the rightmost schwa.
+   - go two squares to the right (*).
+   - if that square is blank, -> 1arg.
+   - if it's not blank:
+      - delete it.
+      - go back to the step marked with a *.
 
 In other words, 1arg e will clear the E-squares between the schwas and the first blank F-square. Important assumption: 1arg e will erase E-squares if it is called to the right of the schwas or while being on the second schwa. If it is called when the head is on the first schwa, it will erase F-squares instead and then position itself on the first blank E-square!
 
@@ -1792,17 +1790,17 @@ Interdependencies:
    - pe1 is for internal use of pe only.
 
 pe:
-   1) go to the leftmost schwa, which is on an F-square.
-   2) go right in twos until finding the first blank F-square.
-   3) print 2arg and -> 1arg.
+   - go to the leftmost schwa.
+   - go right in twos until finding the first blank F-square.
+   - print 2arg and -> 1arg.
 
 pe2:
-   1) go to the leftmost schwa, which is on an F-square.
-   2) go right in twos until finding the first blank F-square.
-   3) print 2arg.
-   4) go again to the leftmost schwa.
-   5) go right in twos until finding the first blank F-square.
-   6) print 3arg, then -> 1arg.
+   - go to the leftmost schwa.
+   - go right in twos until finding the first blank F-square.
+   - print 2arg.
+   - go to the leftmost schwa.
+   - go right in twos until finding the first blank F-square.
+   - print 3arg, then -> 1arg.
 
 ## c (copy)
 
@@ -1816,15 +1814,15 @@ Interdependencies:
    - c1 is for internal use of c only.
 
 c:
-   1) go to the leftmost of the tape.
-   2) go right until finding either 3arg or two consecutive blanks.
-   3-1) if it finds 3arg, move one to the left and noting the character X on that square,
-      3-1-1) go to the leftmost schwa, which is on an F-square.
-      3-1-2) go right in twos until finding the first blank F-square.
-      3-1-3) print the character X and -> 1arg.
-   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
-
-So c, if it finds 3arg, will take the character printed on the left of where 3arg was found and print it on the leftmost free F-square; otherwise, go to the square after the two consecutive blanks and -> 2arg.
+   - go to the leftmost schwa.
+   - go right until finding either 3arg or two consecutive blanks.
+   - if it finds 3arg:
+      - move one to the left.
+      - note the character X on that square.
+      - go to the leftmost schwa.
+      - go right in twos until finding the first blank F-square.
+      - print the character X and -> 1arg.
+   - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 Note: since c will write what it finds to the *left* of its 3arg on an F-square, it is almost certain that 3arg will be a symbol that can be found on E-squares. In other words, c is a function called with markers (E-squares) as its symbolic argument.
 
@@ -1842,63 +1840,63 @@ Interdependencies:
    - ce3 is not called by other functions in this section.
 
 3arg ce:
-   1) go to the leftmost of the tape.
-   2) go right until finding either 3arg or two consecutive blanks.
-   3-1) if it finds 3arg, move one to the left and noting the character X on that square,
-      3-1-1) go to the leftmost schwa, which is on an F-square.
-      3-1-2) go right in twos until finding the first blank F-square.
-      3-1-3) print the character X.
-      3-1-4) go to the leftmost of the tape.
-      3-1-5) go right until finding again 3arg.
-      3-1-6) delete it and -> 1arg.
-   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
-
-So, 3arg ce, if it finds 3arg, will take the character printed to its left and print it on the leftmost free F-square; go back to where 3arg was found, delete it and -> 1arg; otherwise, go to the square after the two consecutive blanks and -> 2arg.
+   - go to the leftmost schwa.
+   - go right until finding either 3arg or two consecutive blanks.
+   - if it finds 3arg:
+      - move one to the left.
+      - note the character X on that square.
+      - go to the leftmost schwa.
+      - go right in twos until finding the first blank F-square.
+      - print the character X.
+      - go to the leftmost schwa.
+      - go right until finding again the leftmost 3arg.
+      - delete it and -> 1arg.
+   - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 2arg ce:
-   1) go to the leftmost of the tape.
-   2) go right until finding either 2arg or two consecutive blanks.
-   3-1) if it finds 2arg, move one to the left and noting the character X on that square,
-      3-1-1) go to the leftmost schwa, which is on an F-square.
-      3-1-2) go right in twos until finding the first blank F-square.
-      3-1-3) print the character X.
-      3-1-4) go to the leftmost of the tape.
-      3-1-5) go right until finding again 2arg.
-      3-1-6) delete it.
-      3-1-7) go back to 1) and repeat.
-   3-2) if it finds two consecutive blanks, advance one more position and -> 1arg.
-
-So 2arg ce, for each of the 2args that are between the schwas and the first two consecutive blanks, will take each of the characters printed to their left and print them on the leftmost free F-square; after that, go to the square after the two leftmost consecutive blanks and -> 1arg.
+   - go to the leftmost schwa.
+   - go right until finding either 2arg or two consecutive blanks.
+   - if it finds 2arg:
+      - move one to the left.
+      - note the character X on that square.
+      - go to the leftmost schwa.
+      - go right in twos until finding the first blank F-square.
+      - print the character X.
+      - go to the leftmost schwa.
+      - go right until finding again the leftmost 2arg.
+      - delete it.
+      - go back to the beginning of the function.
+   - if it finds two consecutive blanks, advance one more position and -> 1arg.
 
 Note: in the same way as 2arg e, 2arg ce calls 3arg ce until all copy & erase operations are performed, then -> 1arg. This also contemplates the case where there are no operations to be performed (in which case, -> 1arg happens directly after finding the consecutive blanks).
 
 ce2:
-   1) go to the leftmost of the tape.
-   2) go right until finding either 2arg or two consecutive blanks.
-   3-1) if it finds 2arg, move one to the left and noting the character X on that square,
-      3-1-1) go to the leftmost schwa, which is on an F-square.
-      3-1-2) go right in twos until finding the first blank F-square.
-      3-1-3) print the character X.
-      3-1-4) go to the leftmost of the tape.
-      3-1-5) go right until finding again 2arg.
-      3-1-6) delete it.
-      3-1-7) go back to 1) and repeat.
-   3-2) when there are no more 2args between the schwas and the two leftmost consecutive blanks:
-      3-2-1) go to the leftmost of the tape.
-      3-2-2) go right until finding either 3arg or two consecutive blanks.
-      3-2-3) if it finds 3arg, move one to the left and noting the character X on that square,
-         3-2-3-1) go to the leftmost schwa, which is on an F-square.
-         3-2-3-2) go right in twos until finding the first blank F-square.
-         3-2-3-3) print the character X.
-         3-2-3-4) go to the leftmost of the tape.
-         3-2-3-5) go right until finding again 3arg.
-         3-2-3-6) delete it.
-         3-2-3-7) go back to 1) and repeat.
-      3-2-4) when there are no more 3args between the schwas and the two leftmost consecutive blanks, advance one more position and -> 1arg.
-
-So ce2, for each of the 2args that are between the schwas and the first two consecutive blanks, will take each of the characters printed to their left and print them on the leftmost free F-square; then do the same process for each of the 3args that are between the schwas and the first two consecutive blanks; after that, go to the square after the two leftmost consecutive blanks and -> 1arg.
-
-ce3, for each of the 2args that are between the schwas and the first two consecutive blanks, will take each of the characters printed to their left and print them on the leftmost free F-square; then do the same process for each of the 3args that are between the schwas and the first two consecutive blanks; then do the same process for each of the 4args that are between the schwas and the first two consecutive blanks; after that, go to the square after the two leftmost consecutive blanks and -> 1arg.
+   - go to the leftmost schwa.
+   - go right until finding either 2arg or two consecutive blanks.
+   - if it finds 2arg:
+      - move one to the left.
+      - note the character X on that square.
+      - go to the leftmost schwa.
+      - go right in twos until finding the first blank F-square.
+      - print the character X.
+      - go to the leftmost schwa.
+      - go right until finding again the leftmost 2arg.
+      - delete it.
+      - go back to the beginning of the function.
+   - if it finds two leftmost consecutive blanks:
+      - go to the leftmost schwa (*).
+      - go right until finding either 3arg or two consecutive blanks.
+      - if it finds 3arg:
+         - move one to the left.
+         - note the character X on that square.
+         - go to the leftmost schwa.
+         - go right in twos until finding the first blank F-square.
+         - print the character X.
+         - go to the leftmost schwa.
+         - go right until finding again the leftmost 3arg.
+         - delete it.
+         - go back to the step marked with a *.
+      - if it finds two consecutive blanks, advance one more position and -> 1arg.
 
 ## re (replace)
 
@@ -1912,17 +1910,19 @@ Interdependencies:
    - re1 is for internal use of 4arg re only.
 
 4arg re:
-   1) go to the leftmost of the tape.
-   2) go right until finding either 3arg or two consecutive blanks.
-   3-1) if it finds 3arg, erase it, print 4arg in place, then -> 1arg.
-   3-2) if it finds two consecutive blanks, advance one more position and -> 2arg.
+   - go to the leftmost schwa.
+   - go right until finding either 3arg or two consecutive blanks.
+   - if it finds 3arg, erase it, print 4arg in place, then -> 1arg.
+   - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 3arg re:
-   1) go to the leftmost of the tape.
-   2) go right until finding either 2arg or two consecutive blanks.
-   3-1) if it finds 2arg, erase it, print 3arg in place. Then:
-   3-2) repeat this for all 2args between the schwas and the first two consecutive blanks.
-   3-3) when it finds two consecutive blanks, advance one more position and -> 1arg.
+   - go to the leftmost schwa.
+   - go right until finding either 2arg or two consecutive blanks.
+   - if it finds 2arg:
+      - erase it.
+      - print 3arg.
+      - go back to the beginning of the function.
+   - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 ## cr (copy and replace)
 
@@ -1932,6 +1932,37 @@ cr   (1m+1s)
 Interdependencies:
    - 3arg cr is called by 2arg cr.
    - 2arg cr is not called by other functions in this section.
+
+3arg cr:
+   - go to the leftmost schwa.
+   - go right until finding either 3arg or two consecutive blanks.
+   - if it finds 3arg:
+      - move one to the left.
+      - note the character X on that square.
+      - go to the leftmost schwa.
+      - go right in twos until finding the first blank F-square.
+      - print the character X.
+      - go to the leftmost schwa.
+      - go right until finding 3arg again.
+      - erase it, print 3arg there again, then -> 1arg.
+   - if it finds two consecutive blanks, advance one more position and -> 2arg.
+
+2arg cr:
+   - go to the leftmost schwa.
+   - go right until finding either 2arg or two consecutive blanks.
+   - if it finds 2arg:
+      - move one to the left.
+      - note the character X on that square.
+      - go to the leftmost schwa.
+      - go right in twos until finding the first blank F-square.
+      - print the character X.
+      - go to the leftmost schwa.
+      - go right until finding 2arg again.
+      - erase it, print 2arg there again.
+      - go back to the beginning of the function.
+   - if it finds two consecutive blanks, advance one more position and -> 2arg.
+
+Note: why the call to 3arg re? It cannot really replace anything. Is it expressed as a way to do the else of f?
 
 cr (𝕮, 𝕭, α)                            c (re (𝕮, 𝕭, α, α), 𝕭, α)
 cr (𝕭, α)                               cr (cr (𝕭, α), re (𝕭, α, α), α)
@@ -1946,12 +1977,23 @@ Interdependencies:
    - cp is called by 5arg cpe.
    - cp1 and cp2 are for internal use of cp.
 
-cp  (𝕮, 𝕬, 𝕰, α, β)                     f' (cp1 (𝕮, 𝕬, β), f (𝕬, 𝕰, β), α)
-cp1 (𝕮, 𝕬, β)         γ                 f' (cp2 (𝕮, 𝕬, γ), 𝕬, β)
-cp2 (𝕮, 𝕬, γ)         γ                 𝕮
-                      not γ             𝕬
-
-So f', if it finds 3arg, will call 1arg after positioning the head in the square left of that where the leftmost/first instance of 3arg is and -> 1arg; otherwise, go to the square after the two consecutive blanks and -> 2arg.
+cp:
+   - go to the leftmost schwa.
+   - go right until finding either 4arg or two consecutive blanks.
+   - if it finds 4arg:
+      - move one to the left and taking note of the character X printed on that square:
+      - go to the leftmost schwa.
+      - go right until finding either 5arg or two consecutive blanks.
+      - if it finds 5arg:
+         - move one to the left and taking note of the character Y printed on that square:
+         - if X and Y are the same, -> 1arg.
+         - if X and Y are not the same, -> 2arg.
+      - if it finds two consecutive blanks, -> 2arg.
+   - if it finds two consecutive blanks:
+      - go to the leftmost schwa.
+      - go right until finding either 5arg or two consecutive blanks.
+      - if it finds 5arg, -> 2arg.
+      - if it finds two consecutive blanks, -> 3arg.
 
 ## cpe (compare and erase)
 
