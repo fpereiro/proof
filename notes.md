@@ -1775,7 +1775,7 @@ While 3arg e deletes only the first 3arg it sees, 2arg e will delete all such sy
       - delete it.
       - go back to the step marked with a *.
 
-In other words, 1arg e will clear the E-squares between the schwas and the first blank F-square. Important assumption: 1arg e will erase E-squares if it is called to the right of the schwas or while being on the second schwa. If it is called when the head is on the first schwa, it will erase F-squares instead and then position itself on the first blank E-square!
+Important assumption: 1arg e will erase E-squares if it is called to the right of the schwas or while being on the second schwa. If it is called when the head is on the first schwa, it will erase F-squares instead and then position itself on the first blank E-square!
 
 - Note: while 3arg e1 doesn't use its second and third arguments, its three arguments distinguish it from the 1arg version, which is different. That's likely the reason for which Turing defined it as a 3arg function that only uses 1arg.
 
@@ -1962,10 +1962,7 @@ Interdependencies:
       - go back to the beginning of the function.
    - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
-Note: why the call to 3arg re? It cannot really replace anything. Is it expressed as a way to do the else of f?
-
-cr (𝕮, 𝕭, α)                            c (re (𝕮, 𝕭, α, α), 𝕭, α)
-cr (𝕭, α)                               cr (cr (𝕭, α), re (𝕭, α, α), α)
+- Note: 2arg cr, if it finds 2arg, will be trapped in an infinite loop where it keeps adding character X to the leftmost free F-square, because 2arg is deleted and reprinted, so it's always there. This is peculiar. Now, Turing states "The m-configuration cr (𝕭, α) is taken up when no letters α are on the tape." It is possible then that 2arg cr is only meant to be called when we know that 2arg is absent from the tape, and in that case we're just interested on finding two consecutive blanks, advancing one more position and -> 2arg. But why not just use f instead? Interestingly enough, Petzold states: "These functions are not used elsewhere in Turing's paper.", which probably means that this function is erroneously defined.
 
 ## cp (compare)
 
@@ -2026,7 +2023,7 @@ cpe (𝕬, 𝕰, α, β)                        cpe (cpe (𝕬, 𝕰, α, β), �
    - pe2: find the first blank F-square, print 2arg, find the F-square to the right of the one just printed, print 3arg, then -> 1arg.
 
 4. **copy** (1 function, 1 helper function)
-   - c: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, take the character printed to its left and print it on the leftmost free F-square; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
+   - c: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, take the character printed to its left and print it on the leftmost free F-square, then -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
 
 5. **copy and erase** (4 functions)
    - 3arg ce: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, take the character printed to its left and print it on the leftmost free F-square, go back to where 3arg was found, delete it and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
@@ -2039,11 +2036,11 @@ cpe (𝕬, 𝕰, α, β)                        cpe (cpe (𝕬, 𝕰, α, β), �
    - 3arg re: 1) for each of the 2args between the schwas and the first two consecutive blanks, find it, delete it and print 3arg in place; 2) go to the square after the two consecutive blanks and -> 2arg.
 
 7. **copy and replace** (2 functions)
-   - 3arg cr:
-   - 2arg cr:
+   - 3arg cr: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, take the character printed to its left and print it on the leftmost free F-square, go back to where 3arg was found and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
+   - 2arg cr: 1) if there's a 2arg between the schwas and the first two consecutive blanks, find it, take the character printed to its left and print it on the leftmost free F-square, go back to where 3arg was found and start over; 2) otherwise, go to the square after the two consecutive blanks and -> 1arg.
 
 8. **compare** (1 function, 2 helper functions)
-   - cp:
+   - cp: 1) if there's a 4arg between the schwas and the first two consecutive blanks, find it, note the character X printed to its left; 1-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it, note the character Y printed to its left; f X and Y are the same, -> 1arg; if X and Y are not the same, -> 2arg; 1-2) if there's no 5arg between the schwas and the first two consecutive blanks, -> 2arg; 2) if there's no 4arg between the schwas and the first two consecutive blanks; 2-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it and -> 2arg; 2-2) if there's no 5arg, -> 3arg.
 
 9. **compare and erase** (2 functions)
    - 5arg cpe:
