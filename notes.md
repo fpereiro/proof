@@ -1962,7 +1962,7 @@ Interdependencies:
       - go back to the beginning of the function.
    - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
-- Note: 2arg cr, if it finds 2arg, will be trapped in an infinite loop where it keeps adding character X to the leftmost free F-square, because 2arg is deleted and reprinted, so it's always there. This is peculiar. Now, Turing states "The m-configuration cr (𝕭, α) is taken up when no letters α are on the tape." It is possible then that 2arg cr is only meant to be called when we know that 2arg is absent from the tape, and in that case we're just interested on finding two consecutive blanks, advancing one more position and -> 2arg. But why not just use f instead? Interestingly enough, Petzold states: "These functions are not used elsewhere in Turing's paper.", which probably means that this function is erroneously defined.
+- Note: 2arg cr, if it finds 2arg, will be trapped in an infinite loop where it keeps adding character X to the leftmost free F-square, because 2arg is deleted and reprinted, so it's always there. This is peculiar. Now, Turing states "The m-configuration cr (𝕭, α) is taken up when no letters α are on the tape." It is possible then that 2arg cr is only meant to be called when we know that 2arg is absent from the tape, and in that case we're just interested on finding two consecutive blanks, advancing one more position and -> 2arg. But why not just use f instead? Interestingly enough, Petzold states: "These functions are not used elsewhere in Turing's paper.", which probably means that this function is erroneously defined, and since the error doesn't create further errors down the chain, it can be safely ignored.
 
 ## cp (compare)
 
@@ -1985,12 +1985,12 @@ cp:
          - move one to the left and taking note of the character Y printed on that square:
          - if X and Y are the same, -> 1arg.
          - if X and Y are not the same, -> 2arg.
-      - if it finds two consecutive blanks, -> 2arg.
+      - if it finds two consecutive blanks, advance one more position and -> 2arg.
    - if it finds two consecutive blanks:
       - go to the leftmost schwa.
       - go right until finding either 5arg or two consecutive blanks.
       - if it finds 5arg, -> 2arg.
-      - if it finds two consecutive blanks, -> 3arg.
+      - if it finds two consecutive blanks, advance one more position and -> 3arg.
 
 ## cpe (compare and erase)
 
@@ -2040,7 +2040,7 @@ cpe (𝕬, 𝕰, α, β)                        cpe (cpe (𝕬, 𝕰, α, β), �
    - 2arg cr: 1) if there's a 2arg between the schwas and the first two consecutive blanks, find it, take the character printed to its left and print it on the leftmost free F-square, go back to where 3arg was found and start over; 2) otherwise, go to the square after the two consecutive blanks and -> 1arg.
 
 8. **compare** (1 function, 2 helper functions)
-   - cp: 1) if there's a 4arg between the schwas and the first two consecutive blanks, find it, note the character X printed to its left; 1-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it, note the character Y printed to its left; f X and Y are the same, -> 1arg; if X and Y are not the same, -> 2arg; 1-2) if there's no 5arg between the schwas and the first two consecutive blanks, -> 2arg; 2) if there's no 4arg between the schwas and the first two consecutive blanks; 2-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it and -> 2arg; 2-2) if there's no 5arg, -> 3arg.
+   - cp: 1) if there's a 4arg between the schwas and the first two consecutive blanks, find it, note the character X printed to its left; 1-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it, note the character Y printed to its left; f X and Y are the same, -> 1arg; if X and Y are not the same, -> 2arg; 1-2) if there's no 5arg between the schwas and the first two consecutive blanks, go to the square after the two consecutive blanks and -> 2arg; 2) if there's no 4arg between the schwas and the first two consecutive blanks; 2-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it and -> 2arg; 2-2) if there's no 5arg, go to the square after the two consecutive blanks and -> 3arg.
 
 9. **compare and erase** (2 functions)
    - 5arg cpe:
