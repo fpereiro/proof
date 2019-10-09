@@ -329,34 +329,8 @@
 
          B.do ('set', ['Data', 'machines', 'Universal Turing Machine'], {
             begin: {
-               else: ['Pə', 'R', 'Pə', 'R', 'test 5arg cp - found b but not a'],
+               else: ['Pə', 'R', 'Pə', 'R', 'dummy1'],
             },
-            'test 3arg cr': {
-               else: ['P0', 'R', 'Pa', 'R', 'P1', 'R', 'Pb', 'R', 'P1', 'R', 'Pc', 'cr (dummy1, dummy2, b)'],
-            },
-            'test 3arg cr - not found': {
-               else: ['P0', 'R', 'Pa', 'R', 'P1', 'R', 'Pb', 'R', 'P1', 'R', 'Pc', 'cr (dummy1, dummy2, d)'],
-            },
-            'test 2arg cr - infinite loop': {
-               else: ['P0', 'R', 'Pa', 'R', 'P1', 'R', 'Pb', 'R', 'P1', 'R', 'Pc', 'cr (dummy1, b)'],
-            },
-            'test 5arg cp - found both a-b': {
-               else: ['P0', 'R', 'Pa', 'R', 'P1', 'R', 'Pb', 'R', 'P1', 'R', 'Pc', 'cp (dummy1, dummy2, dummy3, a, b)'],
-            },
-            'test 5arg cp - found both a-b with two bs': {
-               else: ['P0', 'R', 'Pa', 'R', 'P1', 'R', 'Pb', 'R', 'P1', 'R', 'Pb', 'cp (dummy1, dummy2, dummy3, a, b)'],
-            },
-            'test 5arg cp - found a but not b': {
-               else: ['P0', 'R', 'Pa', 'R', 'P1', 'R', 'Pc', 'R', 'P1', 'R', 'Pc', 'cp (dummy1, dummy2, dummy3, a, b)'],
-            },
-            'test 5arg cp - found b but not a': {
-               else: ['P0', 'R', 'Pc', 'R', 'P1', 'R', 'Pa', 'R', 'P1', 'R', 'Pc', 'cp (dummy1, dummy2, dummy3, a, b)'],
-            },
-            'test 5arg cp - find neither': {
-               else: ['P0', 'R', 'Pc', 'R', 'P1', 'R', 'Pc', 'R', 'P1', 'R', 'Pc', 'cp (dummy1, dummy2, dummy3, a, b)'],
-            },
-            // this test is not working, should be dummy3?
-            // invert b and a
             dummy1: {
                else: ['dummy1'],
             },
