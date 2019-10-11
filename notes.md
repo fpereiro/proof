@@ -2093,3 +2093,41 @@ Interdependencies:
 p131
 
 - PE: "Turing is about to take the paper in a more unusual direction by using numbers to encode other forms of information. The next section of Turing's paper demonstrates how numbers can represent not photographs or songs, but the machines themselves. Yes, everything is a number. Even Turing Machines are numbers."
+
+- TU: "5. Enumeration of computable sequences. A computable sequence γ is determined by a description of a machine which computes γ. Thus the sequence 001011011101111... is determined by the table on p. 234, and, in fact, any computable sequence is capable of being described in terms of such a table. It will be useful to put these tables into a kind of standard form."
+
+- PE: "Turing actually started out with a standard form that he described in Section 1. (...) Turing quickly abandoned his own rules. He allowed printing multiple symbols and moving multiple squares in single operations. This was done solely so the machine tables didn't go on for pages and pages. Now he'd like to return to his original restrictions."
+
+p132
+
+- TU: "In the first place let us suppose that the table is given in the same form as the first table, for example, I on p. 233. That is to say, that the entry in the operations column is always of one of the forms E: E, R: E, L: Pα: Pα, R: Pα, L: R: L: or no entry at all."
+
+- PE: "Turing uses colons to separate the nine different possibilities. These possibilities result from the three types of printing (erase, print a character, or neither) in combination with the three kinds of movement (left, right, or none)."
+
+- TU: "the table can always be put into this form by introducing more m-configurations."
+
+- PE: "For example, the table for Example II (page 87) began with configuration *b*. (...) To adhere to Turing's original (and reinstated) restrictions, this single configuration must be split into six simple configurations. (...) Now each operation consists solely of a printing operation (or not) followed by a possible left or right movement by one square."
+
+p133
+
+Combination: marking + displacement. Marking is dual (erase|write) and so is movement (left|right). Combined with no-ops, that's 9. But it is 9 per each possible printed symbol? Only for those where you print (not for those where you erase or where you don't mark).
+
+- TU: "Now let us give numbers to the m-configurations, calling them q1, ..., qr, as in Section 1. The initial m-configuration is alwayas to be called q1."
+
+- PE: "If there happen to be 237 different m-configurations in a machine, they are now to be labeled q1 through q237. For the revised beginning of Example II, the first six m-configurations can be renamed q1 through q6."
+
+- TU: "We also give numbers to the symbols S1, ..., Sm, and in particular, blank = S0, 0 = S1, 1 = S2."
+
+- PE: "It's a little confusing that a subscripted 1 means the symbol 0 and a subscripted 2 means the symbol 1, but we'll have to live with it. The Example II machine also needs to print ə and x, so the following equivalencies would be defined for this machine: S0 means a blank, S1 means 0, S2 means 1, S3 means ə, and S4 means x. The machine that computes the square root of 2 requires symbols up to S14. (...) The imposition of a uniform naming system has resulted in these lines taking on very similar patterns. In the general case, Turing identifies three different standard forms:"
+
+p134
+
+- TU: "The lines of the table are now of form:
+```
+m-config   symbol   operations   final m-config
+qi         Sj       PSk, L       qm              (N1)
+qi         Sj       PSk, R       qm              (N2)
+qi         Sj       PSk          qm              (N3)
+```
+
+- PE: "At the ar right, Turin
