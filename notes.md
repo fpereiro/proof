@@ -2130,4 +2130,71 @@ qi         Sj       PSk, R       qm              (N2)
 qi         Sj       PSk          qm              (N3)
 ```
 
-- PE: "At the ar right, Turin
+- PE: "At the far right, Turing has labeled these three standard forms N1, N2 and N3. All three print something; the only difference is whether the head moves Left, Right, or not at all. What about erasures? Because Turing defined S0 as a blank symbol, erasures can be performed by printing simply S0:"
+
+- TU: "Lines such as `qi   Sj   E, R   qm` are to be written as `qi   Sj   PS0, R   qm` and lines such as `qi   Sj   R   qm` to be written as `qi   Sj   PSj, R   qm`. In this way we reduce each line of the table to a line of one of the forms (N1), (N2), (N3)."
+
+p135
+
+- PE: "To illustrate the process of standardizing the table, I've been using the first configuration of the Example II table, but that first configuration doesn't even have anything in its *symbol* column because the configuration does the same thing regardless of the symbol. A machine starts with a blank tape so we know that the symbol it reads is a blank. The first configuration of the Example II table converted to standard form becomes:"
+
+```
+configuration       behaviour
+m-config   symbol   operations   final m-config
+q1         S0       PS3, R       q2
+q2         S0       PS3, R       q3
+q3         S0       PS3, R       q4
+q4         S0       PS0, R       q5
+q5         S0       PS1, R       q6
+q6         S0       PS0, R       q7
+```
+
+- PE: "That's easy enough, but let's take a look at the second m-configuration of the Example II machine:"
+
+```
+o   1   R, Px, L, L, L   o
+    0                    q
+```
+
+- PE: "The m-configuration o will become the numbered configuration q7. When the scanned character is 1, the head must move right once, and then left three times. These three left-shifts will require three more m-configurations, q8, q9, and q10. The m-configuration q then becomes q11. Here's m-configuration q7:
+
+p136
+
+```
+configuration       behaviour
+m-config   symbol   operations   final m-config
+q7         S2       PS2, R       q8
+q7         S1       PS1          q11
+```
+
+This is very interesting. It drives home the point that the configuration is the combination of m-config plus symbol.
+
+- PE: "In both cases, the machine prints the scanned character. Here are m-configurations q8, q9, and q10.
+
+```
+q8         S0       PS4, L       q9
+q9         S2       PS2, L       q10
+q10        S0       PS0, L       q7
+```
+
+- PE: "The problem is the *symbol* column. To fill it in correctly, you really have to know what the machine will be encountering. For q8, the machine is scanning a blank square and printing an x. Once it moves left, what's the next scanned character? It's the 1 that was scanned at q7, but in other cases it might not be so obvious. The words "Any" or "Not" or "Else" don't work with this cheme, and in some cases you may have to add specific configurations for every single character the machine is using. It's a mess, but there are always a finite number of characters involved, so it can definitely be done. Let's assume that we have converetd all the configurations of a particular machine into the standard forms that Turing denotes as (N1), (N2), and (N3). When we're finished, and we dispose of the original table, have we lost any information? Yes, we have lost a little bit. We know that S0 is a blank, S1 is a 0 and S2 is a 1, but we no longer know the exact characters meant by S3, S4, and so on. This shouldn't matter. The machines use these characters internally."
+
+- Note: a standard conversion to standard form could be done by scanning the configurations (which have an order in which they are presented), listing in order the different characters printed (so that there's also a table for interpretation of the symbols, so no information is lost as suggested by Petzold) and then expand the configurations into normal form. This would require a two pass process (one for mapping characters, another one for expanding the configurations).
+
+- PE: "Instead of a table, we can express each configuration with a combination of the m-configurations, symbols, L, and R."
+
+- TU: "From each line of form (N1) let us form an expression qi Sj Sk L qm;"
+
+- PE: "This form is sometimes known as a *quintuple* because it's composed of five elements. Despite its cryptic nature, it's still readable: "In m-configuration qi, shen character Sj is scanned, print character Sk, move Left, and switch to m-configuration qm." Similarly for N2 and N3:"
+
+p137
+
+- TU: "from each line of form (N2) we form an expression q1 Sj Sk R qm; and fro each line of form (N3) we form an expression qi Sj Sk N qm."
+
+- PE: "Notice that when the head is not to be moved, the letter is N (meaning No move)."
+
+- TU: "Let us write down all expressions so formed from the table for the machine and separate them by sem-colons. In this way we obtain a complete description of the machine."
+
+- PE: "Turing will show an example shortly. Each configuration is a quintuple, and an entire machine is now expressed as a stream of qunituplets. (Interestingly enough, the quintuples don't have to be in any specific order. It's like a programming language where each statement begins with a label and ends with a *goto*.)"
+
+Interesting! But the same goes for the m-configurations and m-functions; the order is there for us to understand it better, but presumably there can be forward references.
