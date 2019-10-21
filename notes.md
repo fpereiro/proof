@@ -2094,7 +2094,7 @@ p131
 
 - PE: "Turing is about to take the paper in a more unusual direction by using numbers to encode other forms of information. The next section of Turing's paper demonstrates how numbers can represent not photographs or songs, but the machines themselves. Yes, everything is a number. Even Turing Machines are numbers."
 
-- TU: "5. Enumeration of computable sequences. A computable sequence γ is determined by a description of a machine which computes γ. Thus the sequence 001011011101111... is determined by the table on p. 234, and, in fact, any computable sequence is capable of being described in terms of such a table. It will be useful to put these tables into a kind of standard form."
+- TU: "Section 5. Enumeration of computable sequences. A computable sequence γ is determined by a description of a machine which computes γ. Thus the sequence 001011011101111... is determined by the table on p. 234, and, in fact, any computable sequence is capable of being described in terms of such a table. It will be useful to put these tables into a kind of standard form."
 
 - PE: "Turing actually started out with a standard form that he described in Section 1. (...) Turing quickly abandoned his own rules. He allowed printing multiple symbols and moving multiple squares in single operations. This was done solely so the machine tables didn't go on for pages and pages. Now he'd like to return to his original restrictions."
 
@@ -2189,7 +2189,7 @@ q10        S0       PS0, L       q7
 
 p137
 
-- TU: "from each line of form (N2) we form an expression q1 Sj Sk R qm; and fro each line of form (N3) we form an expression qi Sj Sk N qm."
+- TU: "from each line of form (N2) we form an expression q1 Sj Sk R qm; and from each line of form (N3) we form an expression qi Sj Sk N qm."
 
 - PE: "Notice that when the head is not to be moved, the letter is N (meaning No move)."
 
@@ -2198,3 +2198,31 @@ p137
 - PE: "Turing will show an example shortly. Each configuration is a quintuple, and an entire machine is now expressed as a stream of qunituplets. (Interestingly enough, the quintuples don't have to be in any specific order. It's like a programming language where each statement begins with a label and ends with a *goto*.)"
 
 Interesting! But the same goes for the m-configurations and m-functions; the order is there for us to understand it better, but presumably there can be forward references.
+
+- PE: "The next substitution is a radical one. It gets rid of all those subscripts and turns the machine into a stream of capital letters:"
+
+- TU: "In this description we shall replace qi by the letter "D" followed by the letter "A" repeated i times, and Sj by "D" followed by "C" repeated j times.
+
+- PE: "For example, q1 is replaced by DA and q5 is replaced by DAAAAA. (Remember that the first configuration is q1. There is no q0.) As for the symbols, S0 (the blank) is now denoted by D, S1 (the symbol 0) is DC, and S2 (the symbol 1) is DCC. Other symbols are assigned to S3 and greater and become DCCC and so on."
+
+- TU: "This new description of the machine may be called the *standard description* (S.D). It is made up entirely from the letters "A", "C", "D", "L", "R", "N", and from ";".
+
+- PE: "The L, R, and N indicate the moves. Semicolons separate each configuration."
+
+- TU: "If finally we replace "A" by "1", "C" by "@", "D" by "3", "L" by "4", "R" by "5", "N" by "^", and ";" by "7" we shall have a description of the machine in the form of an arabic numeral.
+
+- PE: "This is an important step. Turing has standardized his machines to such an extent that he can now uniquely identify a machine by an integer, and this integer encodes all the states of the machine. Turing was undoubtedly inspired by the approach Godel took in his incompleteness Theorem in converting every mathematical expression into a unique number.
+
+p138
+
+- TU: "The integer represented by this numeral may be called a *description number* (D.N.) of the machine. The D.N determine the S.D and the structure of the machine uniquely. The machine whose D.N is n may be described as M(n). To each computable sequence there corresponds at least one description number, while to no description number does there correspond more than one computable sequence."
+
+- PE: "Since the order of the quintuples doesn't matter, the quintuples can be scrambled without any effect on the sequence the machine computes. It is very clear, then, that multiple description numbers are associated with each computable sequence, but each description number defines a machine that generates only one computable sequence (at least when beginning with a blank tape). Without much fanfare Turing concludes with a result he mentioned in the very beginning of the article:"
+
+- "TU: The computable sequences and numbers are therefore enumerable."
+
+Sequences are mapped onto integers. And because integers are enumerable, so are sequences.
+
+- TU: "Let us find a description number for the machine I of Section 3."
+
+
