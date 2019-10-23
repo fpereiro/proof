@@ -2225,4 +2225,55 @@ Sequences are mapped onto integers. And because integers are enumerable, so are 
 
 - TU: "Let us find a description number for the machine I of Section 3."
 
+p139
 
+- PE: "That machine was originally defined by this table:"
+
+```
+configuration       behaviour
+m-config   symbol   operations   final m-config
+b          none     P0, R        c
+c          none     R            e
+e          none     P1, R        f
+f          none     R            b
+```
+
+- TU: "When we rename the m-configurations its table becomes:"
+
+```
+q1         S0       Ps1, R       q2
+q2         S0       Ps0, R       q3
+q3         S0       Ps2, R       q4
+q4         S0       Ps0, R       q1
+```
+
+- TU: "Other tables could be obtained by adding irrelevant lines such as `q1   S1   PS1, R   q2`.
+
+- PE: "That is, *other tables that produce the same computable sequence* could be obtained by adding lines that never come into play. If the tape is blank when the machine begins, and it always shifts right when a square is printed, the machine will never scan the digit 0."
+
+- TU: "Our first standard form would be `q1 S0 S1 R q2; q2 S0 S0 R q3; q3 S0 S2 R q4; q4 S0 S0 R q1;`
+
+- Note: the only column that has a variable number of symbols is the third one (operations); the other ones have always one symbol; in that way, there's no need to use separators between columns.
+
+- PE: "That's just taking the four-line table and separating the conigurations with semicolons. Converting this to the Standard Description form requires replacing qi with D followed by a quantity of *i* A's (one or more) and replacing Si with D followed by i C's (zero or more)."
+
+p140
+
+- TU: "The standard description is `DADDCRDAA; DAADDRDAAA; DAAADDCCRDAAAA; DAAAADDRDA;`"
+
+- PE: "The Standard Description can be hard to read, but it's used a lot so you should try to get accustomed to it. To decode it into its components, begin by taking note of each D. Each D represents either a configuration or a symbol.
+
+- If the D is followed by one or more A's, it's a configuration. The configuration number is the number of A's.
+- If the D is *not* followed by any A's, it's a symbol. The D in this case is followed by 0 or more C's. D by itself is a blank, DC is a 0, DCC is a 1, and more C's indicate other symbols.
+
+Turing does not use the Description Number as much as the Standard Description (...) Turing doesn't perform any calculations with the number. For the example Turing is showing, you can replace A with 1, C with 2, D with 3, R with 5 and the semicolon with 7 to create a description number:"
+
+- TU: "A description number is `31332531173113353111731113322531111731111335317` and so is `3133253117311335311173111332253111173111133531731323253117`."
+
+- PE: "The second of those numbers is the same as the first except it has extra digits at the end (31323253117) corresponding to the "irrelevant" configuration `q2S1S1Rq2` that Turing defined. The point is this: These two numbers define two different machines, but the two machines both compute exactly the same number, which (as you'll recall) is the binary version of 1/3. A machine with its configurations rearranged still calculates the same number, but its Description Number is different. These numbers are huge!"
+
+p141
+
+- PE: "The accomplishment here is quite interesting. Consider a Turing Machine that calculates π. Normally, we indicate the digits of π with an infinite sequence: π = 3.1415926535897932384626433832795... . Now we can represent π with a *finite* integer - the Description Number of the Turing Machine that calculates the digits. Which is the better representation of π? The first 32 digits followed by an ellipsis? Or de Description Number of the Turing Machine that can generate as many digits as our patience with allow? In a sense, the Description Number is a more fundamental numerical representation of π because it describes the algorithm of calculating the number.
+
+By reducing each machine to a number, Turing has also made it possible, in effect, to generate machines just by enumerating the positive integers. Not every positive integer is a valid Description Number of a Turing Machine, and many valid Description Numbers do not describe circle-free machines, but this enumeration certainly includes all circle-free Turing Machines, each of which corresponds to a computable number. Therefore, computable numbers are enumberable."
