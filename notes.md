@@ -2276,4 +2276,16 @@ p141
 
 - PE: "The accomplishment here is quite interesting. Consider a Turing Machine that calculates π. Normally, we indicate the digits of π with an infinite sequence: π = 3.1415926535897932384626433832795... . Now we can represent π with a *finite* integer - the Description Number of the Turing Machine that calculates the digits. Which is the better representation of π? The first 32 digits followed by an ellipsis? Or de Description Number of the Turing Machine that can generate as many digits as our patience with allow? In a sense, the Description Number is a more fundamental numerical representation of π because it describes the algorithm of calculating the number.
 
-By reducing each machine to a number, Turing has also made it possible, in effect, to generate machines just by enumerating the positive integers. Not every positive integer is a valid Description Number of a Turing Machine, and many valid Description Numbers do not describe circle-free machines, but this enumeration certainly includes all circle-free Turing Machines, each of which corresponds to a computable number. Therefore, computable numbers are enumberable."
+By reducing each machine to a number, Turing has also made it possible, in effect, to generate machines just by enumerating the positive integers. Not every positive integer is a valid Description Number of a Turing Machine, and many valid Description Numbers do not describe circle-free machines, but this enumeration certainly includes all circle-free Turing Machines, each of which corresponds to a computable number. Therefore, computable numbers are enumberable. That's an important finding, although possibly a disturbing one, for it implies than most - nay (...) virtually all - real numbers are not computable."
+
+That's not necessarily disturbing. Perhaps it's just natural.
+
+p142
+
+- TU: "A number which is a description number of a circle-free machine will be called a *satisfactory* number. In Section 8 it is shown that there can be no general process for determining whether a given number is satisfactory or not."
+
+- PE: "It's easy to determine whether a particular integer is a well-formed Description Number, but Turing is now asserting that there's no general process to determine whether a particular Description Number represents a circle-free machine and prints a continuing series of 0s and 1s like it's supposed to. There's no general process for determining whether the machine might scan a character it's not expecting, or gets into an infinite loop printing blanks, whether it crashes, burns (...)."
+
+p143
+
+- PE: "The machine that Turing describes in the next section of his paper is known today as the Universal Turing Machine, so called because it's the only machine we need. The individual computing machines presented earlier were not guaranteed to be implemented similarly or even to have interchangeable parts. This Universal Machine, however, can simulate other machines when supplied with their Standard Descriptions. The Universal Machine is, we would say today, *programmable*."
