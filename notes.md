@@ -2289,3 +2289,13 @@ p142
 p143
 
 - PE: "The machine that Turing describes in the next section of his paper is known today as the Universal Turing Machine, so called because it's the only machine we need. The individual computing machines presented earlier were not guaranteed to be implemented similarly or even to have interchangeable parts. This Universal Machine, however, can simulate other machines when supplied with their Standard Descriptions. The Universal Machine is, we would say today, *programmable*."
+
+- TU: "Section 6. The universal computing machine.
+
+It is possible to invent a single machine which can be used to compute any computable sequence. If this machine U is supplied with a tape on the beginning of which is written the S.D of some computing machine M, then U will compute the same sequence as M. In this section I explain in outline the behaviour of the machine. The next section is devoted to giving the complete table for U."
+
+- PE: "The machines described so far basically have no input because they begin with a blank tape. The machines generate output in the form of a sequence of 0s and 1s, temporarily interspersed, perhaps, with some other characters used as markers or a scratchpad. In contrast, the Universal Machine U requires actual input, specifically a tape that contains the Standard Description of M - the sequences of lettesr A, C, D, L, N and R that describe all the configurations of M. The U machine reads and interprets that Standard Description and prints the same output that M would print."
+
+p144
+
+- PE: "But that's not entirely true. The output of U will *not* be identical to the output of M. In the general case, there is no way that U can perfectly mimic M. Machine M probably begins with a blank tape, but machine U doesn't get a blank tape - it gets a tape with the Standard Description of M already on it. What happens if M doesn't quite follow Turing's conventions but instead writes output in both directions? Any attempt to emulate M precisely could easily result in writing over that Standard Description.
