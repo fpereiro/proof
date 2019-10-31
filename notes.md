@@ -202,7 +202,7 @@ p85
 
 - PE: "(...) he's proposing that the tape end up like this: "ee0 0 1 0 1 1 0 0 1 1 1 0 ..."".
 
-- PE: "The e character is known (...) as a *schwa*." Turing uses the *schwa* for what programmes call a *sentinel*. It's a special character that, in this case, indicates the boundary of the number. The machine can move its head to the very beginning of the tape by moving left whenever the scanned square is *not* the schwa."
+- PE: "The ə character is known (...) as a *schwa*." Turing uses the *schwa* for what programmes call a *sentinel*. It's a special character that, in this case, indicates the boundary of the number. The machine can move its head to the very beginning of the tape by moving left whenever the scanned square is *not* the schwa."
 
 p86
 
@@ -2298,4 +2298,40 @@ It is possible to invent a single machine which can be used to compute any compu
 
 p144
 
-- PE: "But that's not entirely true. The output of U will *not* be identical to the output of M. In the general case, there is no way that U can perfectly mimic M. Machine M probably begins with a blank tape, but machine U doesn't get a blank tape - it gets a tape with the Standard Description of M already on it. What happens if M doesn't quite follow Turing's conventions but instead writes output in both directions? Any attempt to emulate M precisely could easily result in writing over that Standard Description.
+- PE: "But that's not entirely true. The output of U will *not* be identical to the output of M. In the general case, there is no way that U can perfectly mimic M. Machine M probably begins with a blank tape, but machine U doesn't get a blank tape - it gets a tape with the Standard Description of M already on it. What happens if M doesn't quite follow Turing's conventions but instead writes output in both directions? Any attempt to emulate M precisely could easily result in writing over that Standard Description. Turing says that U is supplied with a tape "on the beginning of which" is a Standard Description of machine M. A tape that is infinite in both directions does not have a "beginning". Turing is implicitly restricting the output of U to that part of the tape after the Standard Description. (...) Certainly this Universal Machine would require its own scratchpad area, so its output will be different from the machine that it's trying to emulate. (...) Turing doesn't guarantee that his Universal Machine will faithfully duplicate the output of the machine that it is emulating. He says only that "U will compute the same sequence as M. In reality, U prints a lot of extra output *in addition to* this sequence. Turing approaches the design of the Universal Machine from a rather odd direction."
+
+- TU: "Let us first suppose that we have a machine M' which will write down on the F-squares the successive complete configurations of M."
+
+- PE: "As you'll recall, a complete configuration is a "snapshot" of the tape after an operation has completed, together with the position of the head and the next m-configuration. The successive complete configurations provide an entire history of the operations of the machine."
+
+- TU: "These might be expressed in the same form as on p. 235, using the second description, (C), with all symbols on one line."
+
+p145
+
+- PE: "In this notation the successive complete configurations are separated by colons. Within each complete configuration, the German letter representing the next m-configuration precedes the next scanned symbol."
+
+- TU: "Or, better, we could transform this description (as in Section 5) by replacing each m-configuration by "D" followed by "A" repeated the appropriate number of times, and by replacing each symbol by "D" followed by "C" repeated the appropriate number of times. The numbers of letters "A" and "C" are to agree with the numbers chosen in Sedction 5, so that, in particular, "0" is replaced by "DC", "1" by "DCC", and the blanks by "D".
+
+- PE: "Turing devised this Standard Description (as he called it) to encode the states of a machine. Now he is proposing to use it to represent the complete configurations."
+
+- TU: "These substitutions are to be made after the complete configurations have been put together, as in (C). Difficulties arise if we do the substitution first. In each complete configuration the blanks would all have to be replaced by "D", so that the complete configuration would not be expressed as a finite sequence of symbols."
+
+I think that by "finite", Turing means "unbroken", because complete configurations must start finite.
+
+- PE: "The letter D represents a blank square. Turing doesn't want any breaks to appear in the complete configurations. He wants each complete configuration to be an unbroken series of letters. Turing's phrase, "so that the complete configuration would not be expressed as a finite sequence of letters" is not quite clear. I suggest the word "not" should be "now". Certainly he doesn't want an infinite series of D symbols to represent a blank tape. Each complete configuration is finite."
+
+p146
+
+- TU: "If in the description of the machine II of Section 3, we replace "o" by "DAA", "ə" by DCC, "q" by "DAAA", then the sequence (C) becomes: `DA : DCCCDCCCDAADCDDC : DCCCDCCCDAAADCDDC : ... (C1)`. (This is the sequence of symbols on F-squares.)"
+
+- PE: "Turing's not mentioning *all* the substitutions he's making. He's also replacing b with DA, blanks with D and 0s with DC."
+
+Comparing both:
+
+```
+b_:ə___ə___o__0_ 0_:ə___ə___q___0_ 0_: ...
+DA:DCCCDCCCDAADCDDC:DCCCDCCCDAAADCDDC: ...
+```
+
+- PE: The parenthetical comment refers to the output of the M' machine that Turing is proposing. The normal M machine prints 0s and 1s on F-squares and uses the E-squares for other symbols to help it in computing the 0s and 1s. The M' machine points the successive complete configurations of M on F-squares and uses the E-squares to aid itself in constructing these successive complete configurations. The complete configurations represented in this way can be hard to read. As I've said before, it helps to take note of each D, which represents either a configuration or a symbol.
+- If the D is followed by one or more A's, it's a configuration. The configuration number is the number of A's.
