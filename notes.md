@@ -2334,4 +2334,15 @@ DA:DCCCDCCCDAADCDDC:DCCCDCCCDAAADCDDC: ...
 ```
 
 - PE: The parenthetical comment refers to the output of the M' machine that Turing is proposing. The normal M machine prints 0s and 1s on F-squares and uses the E-squares for other symbols to help it in computing the 0s and 1s. The M' machine points the successive complete configurations of M on F-squares and uses the E-squares to aid itself in constructing these successive complete configurations. The complete configurations represented in this way can be hard to read. As I've said before, it helps to take note of each D, which represents either a configuration or a symbol.
-- If the D is followed by one or more A's, it's a configuration. The configuration number is the number of A's.
+   - If the D is followed by one or more A's, it's a configuration. The configuration number is the number of A's.
+   - If the D is *not* followed by any A's, it's a symbol. The D in this case is followed by zero or more C's. D by itself is a blank, DC is a 0, DCC is a 1, and more C's indicate other symbols."
+
+- TU: "It is not difficult to see that if M can be constructed, then so can M'. The manner of operation of M' could be made to depend on having the rules of operation (i.e., the S.D) of M written somewhere within itself (i.e. within M'); each step could be carried out by referring to these rules."
+
+- PE: "This idea of M' having the Standard Description of M "written somewhere within itself" is an entirely new concept. Where is it written? How is it accessed? Turing is pursuing this M' machine in a way that's distracting from his goal, although it does seem reasonable that M' could be constructed."
+
+- TU: "We have only to regard the rules as being capable of being taken out and exchanged for others and we have something very akin to the universal machine."
+
+p147
+
+- PE: "Turing said at the outset of this section that U is supplied with a tape containing the Standard Description of M. That's what "capable of being taken out and exchanged for others" means. We can give U a tape containing the Standard Description of whatever machine we want U to emulate. (...) U starts with a tape on which the Standard Description of M is printed. It is responsible for printing the successive complete configurations of M.
