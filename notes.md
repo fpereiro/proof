@@ -2351,4 +2351,16 @@ p147
 
 - TU: "One thing is lacking: at present the machine M' prints no figures. We may correct this by printing between each successive pair of complete configurations the figures which appear in the new configuration but not in the old. Then (C1) becomes `DA : 0 : 0 : DCCCDCCCDAADCDDC : DCCC (C2)`. It is not altogether obvious that the E-squares leave enough room for the necessary "rough work", but this is, in fact, the case."
 
-- PE: "Turing wants M' (and U) to print the same 0s and 1s that M prints, because then it's possible to say that M' computes the same sequence as M. The only difference is that these digits will now be buried in the output between successive complete configurations of the machine. This is why Turing requires his machines to print the computed numbers consecutively, and to not change a number once it's been printed. Without this requirement, the numbers printed by M' (and U) would be a total jumble."
+p148
+
+- PE: "Turing wants M' (and U) to print the same 0s and 1s that M prints, because then it's possible to say that M' computes the same sequence as M. The only difference is that these digits will now be buried in the output between successive complete configurations of the machine. This is why Turing requires his machines to print the computed numbers consecutively, and to not change a number once it's been printed. Without this requirement, the numbers printed by M' (and U) would be a total jumble. Turing says that M' should print all figures (0s or 1s) "which appear in the new configuration but not in the old." When you reduce a machine to the standard form (that is, only one printed symbol and one head movement per operation), there are frequently occasions when the machine scans a 0 or 1 symbol on its way somewhere else. The machine must reprint the 0 or 1 in these cases. M' should ignore the times that M prints a 0 or 1 over itself. M' (and, by implication, the Universal Machine) should print a 0 or 1 *only when the scanned symbol is a blank*. Turing concludes this section by suggestiong that the complete configurations could be expressed in numerical form, but this is something he never uses."
+
+- TU: "The sequences of letters between the colons in expressions such as (C1) may be used as standard descriptions of the complete configurations. When the letters are replaced by figures, as in Section 5, we shall a numberical description of the complete configuration, which may be called its description number."
+
+p149
+
+- PE: "Now let's forget all about M' and start looking at U. It is well known that Turing's description of the Universal Machine contains a few bugs. (...) Because the Universal Machine is so essential to Turing's arguments in the rest of his paper, he proves the existence of such a machine by actually constructing it in full, excruciating detail."
+
+- TU: "Section 7: Detailed description of the universal machine. A table is given below of the behaviour of this universal machine. The m-configurations of which the machine is capable are all those occurring in the first and last columns of the table, together with all those which occur when we write out the unabbreviated tables of those which appear in the table in the form of m-functions. E.g., e (anf) appears in the table and is a m-function."
+
+- PE:
