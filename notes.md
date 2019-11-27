@@ -2363,4 +2363,43 @@ p149
 
 - TU: "Section 7: Detailed description of the universal machine. A table is given below of the behaviour of this universal machine. The m-configurations of which the machine is capable are all those occurring in the first and last columns of the table, together with all those which occur when we write out the unabbreviated tables of those which appear in the table in the form of m-functions. E.g., e (anf) appears in the table and is a m-function."
 
-- PE:
+- PE: "The m-configuration `anf` is part of Turing's Universal Machine. Towards the end of the machine, a particular configuration has `e (anf)` in its *final m-config* column. The skeleton table for `e` (...):"
+
+```
+e  (𝕮)                ə        R        e1 (𝕮)
+                      not ə    L        e  (𝕮)
+
+e1 (𝕮)                any      R,E,R    e1 (𝕮)
+                      none              𝕮
+```
+
+p150
+
+- PE: "Turing now shows the unabbreviated table when `anf` is substituted by 𝕮:"
+
+```
+e  (anf)              ə        R        e1 (anf)
+                      not ə    L        e  (anf)
+
+e1 (anf)              any      R,E,R    e1 (anf)
+                      none              anf
+```
+
+TU: "Consequently, `e1 (anf)` is an m-configuration of U."
+
+PE: "Turing begins by describing a tape encoded with the Standard Description of some machine. This is the tape the Universal Machine will read and interpret."
+
+TU: "When U is ready to start work the tape running through it bears on it the symbol ə on an F-square and again ə on the next E-square; after this, on F-squares only, comes the S.D of the machine followed by a double colon "::" (a single symbol, on an F-square). The S.D consists of a number of instructions, separated by semi-colons."
+
+Then: `əə<S.D of the machine on F-squares only, instructions separated by semi-colons>::
+
+- PE: "That, by the way, is Turing's first use of the word *instructions* in this paper. The word is appropriate here because the configurations of the machines are now playing a different role; they have become instructions to the Universal Machine. Earlier (...) Turing showed each configuration followed by a semicolon, however, the Universal Machine requires that each instruction *begin* with a semicolon. This is just one of several little "bugs" in the description of the Universal Machine."
+
+- PE: "To illustrate the workings of U, let's supply it with a simple M. This machine is a simplified form of the machine that prints alternating 0s and 1s."
+
+```
+q1         S0       Ps1, R       q2
+q2         S0       Ps0, R       q3
+q3         S0       Ps2, R       q4
+q4         S0       Ps0, R       q1
+```
