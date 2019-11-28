@@ -2398,8 +2398,40 @@ Then: `əə<S.D of the machine on F-squares only, instructions separated by semi
 - PE: "To illustrate the workings of U, let's supply it with a simple M. This machine is a simplified form of the machine that prints alternating 0s and 1s."
 
 ```
-q1         S0       Ps1, R       q2
-q2         S0       Ps0, R       q3
-q3         S0       Ps2, R       q4
-q4         S0       Ps0, R       q1
+q1         S0       PS1, R       q2
+q2         S0       PS2, R       q1
 ```
+
+- PE: "This simplified machine has just two configurations rather than four and doesn't skip any squares. Here's a tape prepared in accordance with Turing's directions, but with the semicolons preceding each instruction. Because the tape is so long, I've shown it on two lines:"
+
+p151
+
+`əə; D A D D C R D A A ; D A A D D C C R D A ::`
+
+- PE: "The double colon separates the instructions of M from the successive complete configurations of M that U will print. Turing reminds us how these instructions are coded:"
+
+- TU: "Each instruction consists of five consecutive parts: (i) "D" followed by a sequence of letters "A". This describes the relevant M-configuration."
+
+- PE: "At least one A must follow a D to signify an m-configuration, that is, the configurations begin at q1 and there is no q0."
+
+m-configurations are thus 1-indexed, not 0-indexed.
+
+- TU: "(ii) "D" followed by a sequence of letters "C". This describes the scanned symbol."
+
+- PE: "For symbols, a D by itself means a blank; a D with one C means 0, and with two Cs means 1."
+
+- TU: "(iii) "D" followed by another sequence of letters "C". This describes the symbol into which the scanned symbol is to be changed. (iv) "L", "R", or "N", describing whether the machine is to move to left, right, or not at all. (v) "D" followed by a sequence of letters "A". This describes the final m-configuration."
+
+Print and move, not move and print.
+
+- PE: "The Universal Machine needs to print complete configurations, which require the letters A, C, and D, and it also needs to print the computable sequence which is composed of 0s and 1s. The Universal Machine uses lower-case letters as markers in the E-squares. In summary:"
+
+- TU: "The machine U is to be capable of printing "A", "C", "D", "0", "1", "u", "v", "w", "x", "y", "z"."
+
+p152
+
+- PE: "Turing forgot to include the colon (which separates the successive complete configurations) in this list."
+
+- TU: "The S.D is formed from ";', "A", "C", "D", "L", "R", "N".
+
+- PE: "Turing next presents one last function that the Universal Machine requires."
