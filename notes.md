@@ -2435,3 +2435,20 @@ p152
 - TU: "The S.D is formed from ";', "A", "C", "D", "L", "R", "N".
 
 - PE: "Turing next presents one last function that the Universal Machine requires."
+
+- TU: "Subsidiary skeleton table."
+
+```
+con  (𝕮, α)     Not A    R, R         con  (𝕮, α)
+                A        L, Pα, R     con1 (𝕮, α)
+
+con1 (𝕮, α)     A        R, Pα, R     con1 (𝕮, α)
+                D        R, Pα, R     con2 (𝕮, α)
+
+con2 (𝕮, α)     C        R, Pα, R     con2 (𝕮, α)
+                Not C    R, R         𝕮
+
+
+// con (𝕮, α). Starting from an F-square, S say, the sequence C of symbols describing a configuration closest on the right of S is marked out with letters α. -> 𝕮
+// con (𝕮). In the final configuration the machine is scanning the square which is four squares to the right of the last square of C. C is left unmarked.
+```
