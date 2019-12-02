@@ -2452,3 +2452,26 @@ con2 (𝕮, α)     C        R, Pα, R     con2 (𝕮, α)
 // con (𝕮, α). Starting from an F-square, S say, the sequence C of symbols describing a configuration closest on the right of S is marked out with letters α. -> 𝕮
 // con (𝕮). In the final configuration the machine is scanning the square which is four squares to the right of the last square of C. C is left unmarked.
 ```
+
+- PE: "The m-function con stands for "configuration," and it's missing a line: `con1 (𝕮, α)   None   PD, R, Pα, R, R, R   𝕮`. We'll see how this missing line comes into play shortly. The job of the con function is to mark a configuration with the symbol given as the second argument. Suppose the head is on the semicolon preceding an instruction:"
+                       _
+`əə; D A D D C R D A A|;|D A A D D C C R D A ::`
+
+p152-153
+- PE: The con function moves right two squares at a time until it encounters an A. It prints an α to the left of the A. The con1 function continues printing markers to the right of each A until it encounters a D. It prints a marker to the right of that D as well and then goes to con2. The con2 function prints markers to the right of each C (if any). For example, there are no C's in the configuration because the scanned square is a blank, so the result is:
+                                   _
+`əə; D A D D C R D A A ; DαAαAαDαD|C|C R D A ::`
+
+- PE: "The explanatory paragraphs in the skeleton table for con are a bit confusing because Turing uses the letter C to stand for a whole seuence of symbols defining a configuration, and the same letter is part of the Standard Description. The first sentence of the second paragraph (beginning "In the final configuration") indicates that the head is left four squares to the right of the last square of the configuration (that is, the last square of the scanned character). The sentence "C is left unmarked" meaning "The configuration is left unmarked" applies only when the second argument to con is blank."
+
+- PE: "The description of the Universal Machine occupies just two pagse in Turing's paper. Turing has previously defined his m-functions with such skill that in many cases, the m-configurations of U simply refer to a particular function. As usual, the machine mbegins with m-configuration b."
+
+- TU: "The table for U:"
+
+```
+b                                   f (b1, b1, ::)
+b1   R, R, P:, R, R, PD, R, R, PA   anf
+// b. The machine prints :DA on the F-squares after :: -> anf
+```
+
+- PE: "The m-function f finds the double colon that separates the instructions from the complete configurations. As you'll recall, each complete configuration shows all the symbols on the tape, with the m-configuration preceding the scanned square. When a machine begins, the first m-configuration is q1, which has a Standard Description of DA. That's what b1 prints, starting with a colon that will delimit each complete configuration:"
