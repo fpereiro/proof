@@ -2475,3 +2475,40 @@ b1   R, R, P:, R, R, PD, R, R, PA   anf
 ```
 
 - PE: "The m-function f finds the double colon that separates the instructions from the complete configurations. As you'll recall, each complete configuration shows all the symbols on the tape, with the m-configuration preceding the scanned square. When a machine begins, the first m-configuration is q1, which has a Standard Description of DA. That's what b1 prints, starting with a colon that will delimit each complete configuration:"
+
+`əə; D A D D C R D A A ; D A A D D C C R D A :: : D A...`
+
+- PE: "The next m-configuration of U is anf, which Donald Davies suggets stands for *anfang*, the German word for *beginning*. The g function in the first line was mistakenly indicated as q in the tables of functions. It searches for the last occurrence of its second argument:
+
+p154
+
+```
+anf                  g (anf1, :)
+anf1                 con (kom, y)
+// anf. The machine marks the configuration in the last complete configuration with y. -> kom
+```
+
+- PE: "After g finds the colon (which precedes the current complete configuration), con marks the m-configuration with the letter y. The additional line I've added to con1 also comes into play: it prints a D (representing a blank sqquare) and marks that square as well:
+
+`əə; D A D D C R D A A ; D A A D D C C R D A :: : DyAyDy...`
+
+-PE: "Whenever con is marking an m-configuration in a complete configuration and comes to a blank square when it is expecting to find a D that represents the scanned symbol, con1 prints a D. This is how the tape gets progressively longer as more squares are required. Now the machine must locate the instruction whose configuration matches the symbols in the complete configurations marked with y. There are multiple instructions, of course, but they are easy to locate because each one is preceded by a semicolon. These instructions are tested starting with the last instruction and working towards the beginning. The m-configuration kom (...), possibly one of several abbreviations meant to suggest the word *compare*"
+
+```
+      ;            R, Pz, L   con (lrm, x)
+kom   z            L, L       kom
+      not z nor ;  L          kom
+```
+
+p155
+
+- PE: "The first time through, kom finds the last (rightmost) instruction, prints a z following the semicolon, and then marks the configuration that follows using con."
+
+`əə; D A D D C R D A A ;zDxAxAxDxD C C R D A :: : DyAyDy...`
+
+- PE: "The z marker indicates that this instruction has been checked. On subsequent attempts to find a match, kom skips past all semicolons previously marked with z. The m-configuration kmp (another abbreviation for *compare*?) uses cpe to compare the configuration marked x (which is the m-configuration and scanned symbol of an instruction) and the configuration marked y (which is currently m-configuration and scanned symbol indicated in the complete configuration).
+
+```
+kmp        cpe (e (kom, x, y), sim, x, y)
+// kmp. The machine compares the sequences marked x and y. It erases all letters x and y. -> sim if they are alike. Otherwise -> kom.
+```
