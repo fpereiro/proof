@@ -2337,6 +2337,8 @@ DA:DCCCDCCCDAADCDDC:DCCCDCCCDAAADCDDC: ...
    - If the D is followed by one or more A's, it's a configuration. The configuration number is the number of A's.
    - If the D is *not* followed by any A's, it's a symbol. The D in this case is followed by zero or more C's. D by itself is a blank, DC is a 0, DCC is a 1, and more C's indicate other symbols."
 
+This is a critical point: from a normal machine that writes results on F squares and scratchpad in the E squares, to a machine that simulates another machine by writing the output of the simple machine on F squares, and uses the E squares for its own scratchpad. This means that the output of M' is M. This makes perfect sense.
+
 - TU: "It is not difficult to see that if M can be constructed, then so can M'. The manner of operation of M' could be made to depend on having the rules of operation (i.e., the S.D) of M written somewhere within itself (i.e. within M'); each step could be carried out by referring to these rules."
 
 - PE: "This idea of M' having the Standard Description of M "written somewhere within itself" is an entirely new concept. Where is it written? How is it accessed? Turing is pursuing this M' machine in a way that's distracting from his goal, although it does seem reasonable that M' could be constructed."
@@ -2512,3 +2514,21 @@ p155
 kmp        cpe (e (kom, x, y), sim, x, y)
 // kmp. The machine compares the sequences marked x and y. It erases all letters x and y. -> sim if they are alike. Otherwise -> kom.
 ```
+
+- PE: "The cpe function erases the markers as it compares the letters marked with those markers. If there's a match, then all the x and y markers have been erased, and we head to sim (meaning *similar*). If the configurations marked x and y do not match (as they won't in our example), then the first argument of cpe takes over, which is an e (erase) function that erases all the remaining x and y markers and eventually retreats to kom to try the next instruction."
+
+- PE: "A little problem with the kmp function is that TUring never defined a version of e that has one m-configuration argument and two symbol arguments. Moreover, he can't go back to kom because some or all of the y markers have been erased by cpe. He really needs to go back to anf to mark the configuration again. Donald Davies suggests that the instruction should really read:
+
+```
+kmp        cpe (e (e (anf, x), y), sim, x, y)
+```
+
+p156
+
+- PE: "In our example, anf1 will re-mark the m-configuration and scanned symbol in the complete configuration, and kom will mark the next instruction (working backwards through the instructions):"
+
+`əə;zDxAxDxD C R D A A ;zD A A D D C C R D A :: : DyAyDy...`
+
+- PE: "This time, the cpe function invoked by kmp will detect a match and head to sim. All the x and y markers will be gone, but the z markers remain. The leftmost z marker precedes the instruction that U must carry out. Turing summarizes the progress so far:"
+
+- TU: "anf. Taking the long view, the last instruction relevant to the last configuration is found. It can be recognized afterwards as the instruction following the last semi-colon marked z. -> sim
