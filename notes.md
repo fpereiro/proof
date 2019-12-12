@@ -2349,15 +2349,17 @@ This is a critical point: from a normal machine that writes results on F squares
 
 p147
 
-- PE: "Turing said at the outset of this section that U is supplied with a tape containing the Standard Description of M. That's what "capable of being taken out and exchanged for others" means. We can give U a tape containing the Standard Description of whatever machine we want U to emulate. (...) U starts with a tape on which the Standard Description of M is printed. It is responsible for printing the successive complete configurations of M. The Standard Description and the complete configurations use the same encoding: Each complete configurationcontains a sequence of letters, mostly indicating the symbols printed on the tape. Each complete configuration also includes a D followed by one or more A's indicating the next m-configuration preceding the scanned symbol, for example: `DAADCC`. This sequence of letters appearing in a complete configuration indicates that the next m-configuration is q3 and the next scanned symbol is a 1. Somewhere in the Standard Description of M is a sequence of letters matching these letters exactly (If not, then something has gone wrong and M is not circle-free.) All that U needs to do to determine the next configuration is to find a match. When U finds the matching configuration, it has immediate access to the configuration's operation - the symbol to be printed, a code indicating how to move the head, and the next m-configuration. U must then create a new complete configuration based on the last complete configuration and incorporating the printed character and the next m-configuration."
+- PE: "Turing said at the outset of this section that U is supplied with a tape containing the Standard Description of M. That's what "capable of being taken out and exchanged for others" means. We can give U a tape containing the Standard Description of whatever machine we want U to emulate. (...) U starts with a tape on which the Standard Description of M is printed. It is responsible for printing the successive complete configurations of M. The Standard Description and the complete configurations use the same encoding: Each complete configuration contains a sequence of letters, mostly indicating the symbols printed on the tape. Each complete configuration also includes a D followed by one or more A's indicating the next m-configuration preceding the scanned symbol, for example: `DAADCC`. This sequence of letters appearing in a complete configuration indicates that the next m-configuration is q3 and the next scanned symbol is a 1. Somewhere in the Standard Description of M is a sequence of letters matching these letters exactly (If not, then something has gone wrong and M is not circle-free.) All that U needs to do to determine the next configuration is to find a match. When U finds the matching configuration, it has immediate access to the configuration's operation - the symbol to be printed, a code indicating how to move the head, and the next m-configuration. U must then create a new complete configuration based on the last complete configuration and incorporating the printed character and the next m-configuration."
 
-- PE: "The Universal Machine might be easier to conceive if you consider that the fisrt complete configuration of a machine's operation is trivial, and each step from one complete configuration to the next involves only a small change. It's really just a matter of comparing and copying symbols, and Turing has already defined an arsenal of m-functions that perform these very chores. For now, he's still talking about M' rather than U, and M' only prints the complete configurations of M."
+- PE: "The Universal Machine might be easier to conceive if you consider that the first complete configuration of a machine's operation is trivial, and each step from one complete configuration to the next involves only a small change. It's really just a matter of comparing and copying symbols, and Turing has already defined an arsenal of m-functions that perform these very chores. For now, he's still talking about M' rather than U, and M' only prints the complete configurations of M."
 
 - TU: "One thing is lacking: at present the machine M' prints no figures. We may correct this by printing between each successive pair of complete configurations the figures which appear in the new configuration but not in the old. Then (C1) becomes `DA : 0 : 0 : DCCCDCCCDAADCDDC : DCCC (C2)`. It is not altogether obvious that the E-squares leave enough room for the necessary "rough work", but this is, in fact, the case."
 
+It seems like the figures are printed when they are printed for the first time only, *after* the complete configuration that generates them.
+
 p148
 
-- PE: "Turing wants M' (and U) to print the same 0s and 1s that M prints, because then it's possible to say that M' computes the same sequence as M. The only difference is that these digits will now be buried in the output between successive complete configurations of the machine. This is why Turing requires his machines to print the computed numbers consecutively, and to not change a number once it's been printed. Without this requirement, the numbers printed by M' (and U) would be a total jumble. Turing says that M' should print all figures (0s or 1s) "which appear in the new configuration but not in the old." When you reduce a machine to the standard form (that is, only one printed symbol and one head movement per operation), there are frequently occasions when the machine scans a 0 or 1 symbol on its way somewhere else. The machine must reprint the 0 or 1 in these cases. M' should ignore the times that M prints a 0 or 1 over itself. M' (and, by implication, the Universal Machine) should print a 0 or 1 *only when the scanned symbol is a blank*. Turing concludes this section by suggestiong that the complete configurations could be expressed in numerical form, but this is something he never uses."
+- PE: "Turing wants M' (and U) to print the same 0s and 1s that M prints, because then it's possible to say that M' computes the same sequence as M. The only difference is that these digits will now be buried in the output between successive complete configurations of the machine. This is why Turing requires his machines to print the computed numbers consecutively, and to not change a number once it's been printed. Without this requirement, the numbers printed by M' (and U) would be a total jumble. Turing says that M' should print all figures (0s or 1s) "which appear in the new configuration but not in the old." When you reduce a machine to the standard form (that is, only one printed symbol and one head movement per operation), there are frequently occasions when the machine scans a 0 or 1 symbol on its way somewhere else. The machine must reprint the 0 or 1 in these cases. M' should ignore the times that M prints a 0 or 1 over itself. M' (and, by implication, the Universal Machine) should print a 0 or 1 *only when the scanned symbol is a blank*. Turing concludes this section by suggesting that the complete configurations could be expressed in numerical form, but this is something he never uses."
 
 - TU: "The sequences of letters between the colons in expressions such as (C1) may be used as standard descriptions of the complete configurations. When the letters are replaced by figures, as in Section 5, we shall a numberical description of the complete configuration, which may be called its description number."
 
@@ -2366,6 +2368,8 @@ p149
 - PE: "Now let's forget all about M' and start looking at U. It is well known that Turing's description of the Universal Machine contains a few bugs. (...) Because the Universal Machine is so essential to Turing's arguments in the rest of his paper, he proves the existence of such a machine by actually constructing it in full, excruciating detail."
 
 - TU: "Section 7: Detailed description of the universal machine. A table is given below of the behaviour of this universal machine. The m-configurations of which the machine is capable are all those occurring in the first and last columns of the table, together with all those which occur when we write out the unabbreviated tables of those which appear in the table in the form of m-functions. E.g., e (anf) appears in the table and is a m-function."
+
+The "all those occurring in the first and last columns of the table" statement can be applicable to get all the m-configurations of any machine.
 
 - PE: "The m-configuration `anf` is part of Turing's Universal Machine. Towards the end of the machine, a particular configuration has `e (anf)` in its *final m-config* column. The skeleton table for `e` (...):"
 
@@ -2397,6 +2401,10 @@ TU: "When U is ready to start work the tape running through it bears on it the s
 
 Then: `əə<S.D of the machine on F-squares only, instructions separated by semi-colons>::
 
+Interesting: because U uses the F-squares to store the emulated machine's instructions, and the E-squares as its own scratchpad area, it needs schwas on the first F-square and the first E-square to mark the beginning of the tape.
+
+Also interesting: the schwas that U uses are not encoded, they're just schwas. But there are encoded schwas within the emulated machine.
+
 - PE: "That, by the way, is Turing's first use of the word *instructions* in this paper. The word is appropriate here because the configurations of the machines are now playing a different role; they have become instructions to the Universal Machine. Earlier (...) Turing showed each configuration followed by a semicolon, however, the Universal Machine requires that each instruction *begin* with a semicolon. This is just one of several little "bugs" in the description of the Universal Machine."
 
 - PE: "To illustrate the workings of U, let's supply it with a simple M. This machine is a simplified form of the machine that prints alternating 0s and 1s."
@@ -2406,7 +2414,7 @@ q1         S0       PS1, R       q2
 q2         S0       PS2, R       q1
 ```
 
-- PE: "This simplified machine has just two configurations rather than four and doesn't skip any squares. Here's a tape prepared in accordance with Turing's directions, but with the semicolons preceding each instruction. Because the tape is so long, I've shown it on two lines:"
+- PE: "This simplified machine has just two configurations rather than four and doesn't skip any squares. Here's a tape prepared in accordance with Turing's directions, but with the semicolons preceding each instruction."
 
 p151
 
@@ -2466,7 +2474,7 @@ p152-153
                                    _
 `əə; D A D D C R D A A ; DαAαAαDαD|C|C R D A ::`
 
-- PE: "The explanatory paragraphs in the skeleton table for con are a bit confusing because Turing uses the letter C to stand for a whole seuence of symbols defining a configuration, and the same letter is part of the Standard Description. The first sentence of the second paragraph (beginning "In the final configuration") indicates that the head is left four squares to the right of the last square of the configuration (that is, the last square of the scanned character). The sentence "C is left unmarked" meaning "The configuration is left unmarked" applies only when the second argument to con is blank."
+- PE: "The explanatory paragraphs in the skeleton table for con are a bit confusing because Turing uses the letter C to stand for a whole sequence of symbols defining a configuration, and the same letter is part of the Standard Description. The first sentence of the second paragraph (beginning "In the final configuration") indicates that the head is left four squares to the right of the last square of the configuration (that is, the last square of the scanned character). The sentence "C is left unmarked" meaning "The configuration is left unmarked" applies only when the second argument to con is blank."
 
 - PE: "The description of the Universal Machine occupies just two pagse in Turing's paper. Turing has previously defined his m-functions with such skill that in many cases, the m-configurations of U simply refer to a particular function. As usual, the machine mbegins with m-configuration b."
 
@@ -2533,4 +2541,31 @@ p156
 
 - PE: "This time, the cpe function invoked by kmp will detect a match and head to sim. All the x and y markers will be gone, but the z markers remain. The leftmost z marker precedes the instruction that U must carry out. Turing summarizes the progress so far:"
 
-- TU: "anf. Taking the long view, the last instruction relevant to the last configuration is found. It can be recognized afterwards as the instruction following the last semi-colon marked z. -> sim
+- TU: "anf. Taking the long view, the last instruction relevant to the last configuration is found. It can be recognized afterwards as the instruction following the last semi-colon marked z. -> sim"
+
+- PE: "Actually, it's the *first* (leftmost) semicolon marked `z`, but the last instruction tested. The m-configuration sim begins by using f' to find that marker and position itself at the semicolon preceding the instruction. As you'll recall, the instruction has five parts: the m-configuration, the scanned symbol, the symbol to print, an L, N or R, and the final m-configuration."
+
+- TU:
+
+```
+sim                             f' (sim1, sim1, z)
+sim1                            con (sim2, )
+sim2   A                        sim3
+       not A   R, Pu, R, R, R   sim2
+sim3   not A   L, Py            e (mk, z)
+       A       L, Py, R, R, R   sim3
+
+// sim. The machine marks out the isntructions. That part of the instructions which refers to the operations to be carried out is marked with u, and the final m-configuration with y. The letters z are erased.
+```
+
+- PE: "The m-configuration sim1 refers to the con function with a blank second argument. This essentially skips past the m-configuration and the scanned symbol, putting the head at the second character of the print operation."
+
+p157
+             _
+`əə;zD A D D C R D A A ; D A A D D C C R D A :: : D A D ...`
+
+- PE: "The second line for m-configuration sim2 is incorrect. Emil Post suggests it should move the head *left* before printing a u. The two m-configurations sim2 and sim3 mark the operation (the symbol to be printed and the head-movement letter) and the next m-configuration The e function erases the z marker before heading to mk."
+
+`əə;zD A D DuCuRuDyAyAy; D A A D D C C R D A :: : D A D ...`
+
+- PE: "The m-configuration mk (which looks like mf but is actually mk and perhaps stands for *mark*) now marks the last complete configuration. The first argument to the g function (which is mistakenly q in the tables of functions) should be mk1, rather than mk."
