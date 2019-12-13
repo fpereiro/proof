@@ -2569,3 +2569,40 @@ p157
 `əə;zD A D DuCuRuDyAyAy; D A A D D C C R D A :: : D A D ...`
 
 - PE: "The m-configuration mk (which looks like mf but is actually mk and perhaps stands for *mark*) now marks the last complete configuration. The first argument to the g function (which is mistakenly q in the tables of functions) should be mk1, rather than mk."
+
+- TU:
+
+```
+mk                            g (mk1, :)
+
+mk1   not A   R, R            mk1
+      A       L, L, L, L      mk2
+
+      C       R, Px, L, L, L  mk2
+mk2   :                       mk4
+      D       R, Px, L, L, L  mk3
+
+mk3   not :   R, Pv, L, L, L  mk3
+      :                       mk4
+
+mk4                           con (l (l (mk5)), )
+
+mk5   Any     R, Pw, R        mk5
+      None    P:              sh
+
+// mk. The last complete configuration is marked out into four sections. The configuration is left unmarked. The symbol directly preceding it is marked with x. The remainder of the complete configuration is divided into two parts, of which the first is marked with v and the last with w. A colon is printed after the whole. -> sh
+```
+
+p157/158
+
+- PE: "The m-configuration mk uses g to find the rightmost colon. That colon precedes the last complete configuration. THe complete configuration is on F-squares and, in general, consists mostly of D's followed by zero or more C's, each of which represents a symbol on the tape. Buried somewhere within these symbols is an m-configuration, which is a D followed by one or more A's. The m-configuration mk1 looks for the m-configuration buried within the complete configuration. When it finds an A, it moves the head left to the last symbol of the square that precedes the m-configuration. That square is marked with x. Then, mk3 has the job of marking all the preceding characters with v. When mk3 gets to the colon, mk4 takes over. It uses con to skip over the m-configuration and the scanned character. It stops when it finds something other than a C. Except for the scanned character, the other symbols are marked with w. Finally, mk5 prints a colon."
+
+- PE: "Here's a complete configuration that's a bit more complex than the simple example we've been looking at:"
+
+`: D C D D A D C D D C   ...`
+
+- PE: "This complete configuration represents a tape starting with a 0 (DC) and a blank (D). The next square is the scanned square, indicated by the configuration q1 (DA). The scanned square is a 0 (DC), which is followed by a blank (D) and a 0 (DC). When mk is through with this, it looks like this:"
+
+`: DvCvDxD A D C DwDwCw: ...`
+
+The "marking" of a complete configuration with a m-configuration is done to the left, instead of to the right (as the marking of F-squares with E-squares is done). I find it mnemonically helpful to see this as a contrast.
