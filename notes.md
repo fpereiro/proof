@@ -2606,3 +2606,40 @@ p157/158
 `: DvCvDxD A D C DwDwCw: ...`
 
 The "marking" of a complete configuration with a m-configuration is done to the left, instead of to the right (as the marking of F-squares with E-squares is done). I find it mnemonically helpful to see this as a contrast.
+
+- PE: "The only thing unmarked is the configuration (which consists of the m-configuration DA and the scanned symbol DC). In our much simpler example, there are no symbols to the left of the m-configuration and no symbols to the right of the scanned square, so the v, x and w markers don't play a role:"
+
+`əə; D A D DuCuRuDyAyAy; D A A D D C C R D A :: : D A D ...`
+
+- PE: "Everything is now marked. The operation and final m-configuration of the instruction jis marked with u and y, and portions of the complete configuration are marked with v, x, and w. The Universal Machine needs to print a 0 or 1 if the instruction is printing a 0 or 1 except in those cases when a machine reprints a 0 and 1 because it's just scanned a 0 or 1. The Universal Mahchine should print a 0 or 1 only if the scanned square is blank. That's the job of `sh` (which may stand for `show`).
+
+p159
+
+TU:
+
+```
+sh                         f (sh1, inst, u)
+
+sh1           L, L, L      sh2
+
+sh2   D       R, R, R, R   sh3
+      not D                inst
+
+
+sh3   C       R, R         sh4
+      not C                inst
+
+
+sh4   C       R, R         sh5
+      not C                pe2 (inst, 0, :)
+
+
+sh5   C                    inst
+      not C                pe2 (inst, 1, :)
+
+// sh. The instructions (marked u) are examined. If it is found that they involve "Print 0" or "Print 1", then 0: or 1: is printed at the end.
+```
+
+- PE: "First, sh locates the leftmost u marker, and sh1 moves the head left three places to be positioned over the last symbol representing the scanned square. That symbol will be a D if the scanned square is a blank. If it's not D, then the rest of these m-configurations are skipped by heading to inst. If the scanned character is a blank, then sh2 goes to sh3 (not sh2 as the table indicates) and then sh3, sh4 and sh5 check if the printed instruction is DC (to print 0) or DCC (print 1). If so, then pe2 prints that figure and a colon at the end of the tape. The example tape now looks like this:"
+
+`əə; D A D DuCuRuDyAyAy; D A A D D C C R D A :: : D A D : 0 : ...`
