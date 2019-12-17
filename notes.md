@@ -2643,3 +2643,9 @@ sh5   C                    inst
 - PE: "First, sh locates the leftmost u marker, and sh1 moves the head left three places to be positioned over the last symbol representing the scanned square. That symbol will be a D if the scanned square is a blank. If it's not D, then the rest of these m-configurations are skipped by heading to inst. If the scanned character is a blank, then sh2 goes to sh3 (not sh2 as the table indicates) and then sh3, sh4 and sh5 check if the printed instruction is DC (to print 0) or DCC (print 1). If so, then pe2 prints that figure and a colon at the end of the tape. The example tape now looks like this:"
 
 `əə; D A D DuCuRuDyAyAy; D A A D D C C R D A :: : D A D : 0 : ...`
+
+- PE: "The sh section of the table is obviously simplified by the use of binary numbers rather than decimal. Decimal numbers would require eight more m-configurations (sh6 through sh13) to print digits 2 through 9. Whether a 0 or 1 ,or neither, is printed, the Universal Machine goes to inst (which may stand for *instruction* but perhaps *instigate* is more descriptive). The last remaining job is to render the next complete configuration of M. The next complete configuration includes all the symbols in the current configuration marked x, v and w because those symbols will remain unchanged. The m-configuration and the scanned square, however, will be replaced. They will be replaced with the m-configuration marked y and the symbol marked with u."
+
+p160
+
+- PE: "The inst table has another reerence to the g function that was defined originally as q. Also, the ec5 function on the fifth line should be ce5 like the third and fourth lines."
