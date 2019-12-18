@@ -2648,4 +2648,39 @@ sh5   C                    inst
 
 p160
 
-- PE: "The inst table has another reerence to the g function that was defined originally as q. Also, the ec5 function on the fifth line should be ce5 like the third and fourth lines."
+- PE: "The inst table has another reference to the g function that was defined originally as q. Also, the ec5 function on the fifth line should be ce5 like the third and fourth lines."
+
+- TU:
+
+```
+inst                   g (l (inst1), u)
+
+inst1       α   R, E   inst1 (α)
+
+inst1 (L)              ce5 (??, v, y, x, u, w)
+
+inst1 (R)              ce5 (??, v, x, u, y, w)
+
+inst1 (N)              ce5 (??, v, x, y, u w)
+
+??                     e (anf)
+```
+
+- PE: "The function cd5 wasn't actually defined, nor was ce4. Basing them on ce3 we can easily create them:"
+
+```
+ce4 (𝕭, α, β, γ, D)                        ce (ce3 (𝕭, β, γ, D), α)
+ce5 (𝕭, α, β, γ, D, E)                     ce (ce4 (𝕭, β, γ, D, E), α)
+```
+
+- PE: "The ce5 function sequentially copies symbols marked α to the end of the tape, then symbols marked β, and so forth, erasing the markers in the process. The m-configuration inst refers to g, which goes to the rightmost symbol marked u; that symbol is L, R, or N. The m-configuration inst1 scans that symbol, erases it, and then goes to inst1 (L), inst1 (R) or inst1 (N) depending on the symbol. It's clear what Turing wants to do here, but I really must protest the introduction of a new syntax at this point in the machine, particularly when it's not necessary. Let's replace the entire inst1 configuration with the following:"
+
+```
+        L   R, E   ce5 (??, v, y, x, u, w)
+inst1   R   R, E   ce5 (??, v, x, u, y, w)
+        N   R, E   ce5 (??, v, x, y, u, w)
+```
+
+- PE: "In all three cases, the squares marked v are copied to the end of the tape first, and those marked w are copied last. The symbols marked v are all those on the left part of the complete configuration up to (and not including) the square to the left of the scanned square. That square is marked x. The symbols marked w are all those to the right of the scanned square."
+
+p161
