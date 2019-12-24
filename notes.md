@@ -2460,7 +2460,6 @@ con1 (𝕮, α)     A        R, Pα, R     con1 (𝕮, α)
 con2 (𝕮, α)     C        R, Pα, R     con2 (𝕮, α)
                 Not C    R, R         𝕮
 
-
 // con (𝕮, α). Starting from an F-square, S say, the sequence C of symbols describing a configuration closest on the right of S is marked out with letters α. -> 𝕮
 // con (𝕮). In the final configuration the machine is scanning the square which is four squares to the right of the last square of C. C is left unmarked.
 ```
@@ -2657,13 +2656,13 @@ inst                   g (l (inst1), u)
 
 inst1       α   R, E   inst1 (α)
 
-inst1 (L)              ce5 (??, v, y, x, u, w)
+inst1 (L)              ce5 (ov, v, y, x, u, w)
 
-inst1 (R)              ce5 (??, v, x, u, y, w)
+inst1 (R)              ce5 (ov, v, x, u, y, w)
 
-inst1 (N)              ce5 (??, v, x, y, u w)
+inst1 (N)              ce5 (ov, v, x, y, u w)
 
-??                     e (anf)
+ov                     e (anf)
 ```
 
 - PE: "The function cd5 wasn't actually defined, nor was ce4. Basing them on ce3 we can easily create them:"
@@ -2676,11 +2675,114 @@ ce5 (𝕭, α, β, γ, D, E)                     ce (ce4 (𝕭, β, γ, D, E), �
 - PE: "The ce5 function sequentially copies symbols marked α to the end of the tape, then symbols marked β, and so forth, erasing the markers in the process. The m-configuration inst refers to g, which goes to the rightmost symbol marked u; that symbol is L, R, or N. The m-configuration inst1 scans that symbol, erases it, and then goes to inst1 (L), inst1 (R) or inst1 (N) depending on the symbol. It's clear what Turing wants to do here, but I really must protest the introduction of a new syntax at this point in the machine, particularly when it's not necessary. Let's replace the entire inst1 configuration with the following:"
 
 ```
-        L   R, E   ce5 (??, v, y, x, u, w)
-inst1   R   R, E   ce5 (??, v, x, u, y, w)
-        N   R, E   ce5 (??, v, x, y, u, w)
+        L   R, E   ce5 (ov, v, y, x, u, w)
+inst1   R   R, E   ce5 (ov, v, x, u, y, w)
+        N   R, E   ce5 (ov, v, x, y, u, w)
 ```
 
 - PE: "In all three cases, the squares marked v are copied to the end of the tape first, and those marked w are copied last. The symbols marked v are all those on the left part of the complete configuration up to (and not including) the square to the left of the scanned square. That square is marked x. The symbols marked w are all those to the right of the scanned square."
 
 p161
+
+- PE: "The three copies in the middle of ce5 depend on whether the head is moving left, right, or not at all. The order is:
+Left:  Next m-configuration / Symbol left of head  / Printed symbol
+Right: Symbol left of head  / Printed symbol       / Next m-configuration
+None:  Symbol left of head  / Next m-configuration / Printed symbol
+
+For example, if the head is moving left, then the next m-configuration is inserted before the square to the left of the previous head position. If the head is moving right, the next m-configuration is to the right of the printed symbol. Each of the ce5 functions goes to ov (which probably stands for *over*). The e function erases all E-squares, and goes to anf for the next move. Our tape now looks like this:"
+
+`əə; D A D D C R D A A ; D A A D D C C R D A :: : D A D : 0 : D C D A A ...`
+
+- PE: "The second compelte configuration contains the symbols DC (meaning 0) followed by DAA, which indicates the new m-configuration q2."
+
+- PE: "The Universal Machine as Turing has defined it has a few limitations. It cannot emulate just any genearl Turing Machine. It won't work right with any machine that moves its head anywhere left of its initial position because it has no way of inserting blanks to the left of the complete configurations. (Indeed, the process of inserting blanks to the *right* is something that Turing omitted in the con function.) The Universal Machine also works correctly only with machines that replace blanks with 0s or 1s and do so in a uniform left-to-right manner. The Universal Machine can handle machines that perform otherwise, but it won't print the correct sequence of 0s and 1s. Despite these limitations, and the little misprints and bugs, Turing has done something quite extraordinary. He has demonstrated the generality of computation by showing that a single universal machine can be suitably programmed to carry out the operation of any computing machine."
+
+This assertion would require a proof that any possible machine that will compute the same sequence can be written according to the limitations imposed by U.
+
+The complete table for U:
+
+```
+ce4 (𝕭, α, β, γ, D)                                                  ce (ce3 (𝕭, β, γ, D), α)
+ce5 (𝕭, α, β, γ, D, E)                                               ce (ce4 (𝕭, β, γ, D, E), α)
+
+e  (anf)                 ə            R                              e1 (anf)
+                         not ə        L                              e  (anf)
+
+e1 (anf)                 any          R,E,R                          e1 (anf)
+                         none                                        anf
+
+con  (𝕮, α)              Not A        R, R                           con  (𝕮, α)
+                         A            L, Pα, R                       con1 (𝕮, α)
+
+con1 (𝕮, α)              A            R, Pα, R                       con1 (𝕮, α)
+                         D            R, Pα, R                       con2 (𝕮, α)
+
+con2 (𝕮, α)              C            R, Pα, R                       con2 (𝕮, α)
+                         Not C        R, R                           𝕮
+
+b                                                                    f (b1, b1, ::)
+b1                                    R, R, P:, R, R, PD, R, R, PA   anf
+
+anf                                                                  g (anf1, :)
+anf1                                                                 con (kom, y)
+
+
+                         ;            R, Pz, L                       con (lrm, x)
+kom                      z            L, L                           kom
+                         not z nor ;  L                              kom
+
+kmp                                                                  cpe (e (e (anf, x), y), sim, x, y)
+
+sim                                                                  f' (sim1, sim1, z)
+sim1                                                                 con (sim2, )
+sim2                     A                                           sim3
+                         not A        R, Pu, R, R, R                 sim2
+sim3                     not A        L, Py                          e (mk, z)
+                         A            L, Py, R, R, R                 sim3
+
+mk                                                                   g (mk1, :)
+
+mk1                      not A        R, R                           mk1
+      A       L, L, L, L      mk2
+
+      C       R, Px, L, L, L  mk2
+mk2   :                       mk4
+      D       R, Px, L, L, L  mk3
+
+mk3   not :   R, Pv, L, L, L  mk3
+      :                       mk4
+
+mk4                           con (l (l (mk5)), )
+
+mk5   Any     R, Pw, R        mk5
+      None    P:              sh
+
+sh                         f (sh1, inst, u)
+
+sh1           L, L, L      sh2
+
+sh2   D       R, R, R, R   sh3
+      not D                inst
+
+
+sh3   C       R, R         sh4
+      not C                inst
+
+
+sh4   C       R, R         sh5
+      not C                pe2 (inst, 0, :)
+
+
+sh5   C                    inst
+      not C                pe2 (inst, 1, :)
+
+inst                   g (l (inst1), u)
+
+inst1       α   R, E   inst1 (α)
+
+        L   R, E   ce5 (ov, v, y, x, u, w)
+inst1   R   R, E   ce5 (ov, v, x, u, y, w)
+        N   R, E   ce5 (ov, v, x, y, u, w)
+
+ov                     e (anf)
+```
