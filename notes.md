@@ -2361,7 +2361,7 @@ p148
 
 - PE: "Turing wants M' (and U) to print the same 0s and 1s that M prints, because then it's possible to say that M' computes the same sequence as M. The only difference is that these digits will now be buried in the output between successive complete configurations of the machine. This is why Turing requires his machines to print the computed numbers consecutively, and to not change a number once it's been printed. Without this requirement, the numbers printed by M' (and U) would be a total jumble. Turing says that M' should print all figures (0s or 1s) "which appear in the new configuration but not in the old." When you reduce a machine to the standard form (that is, only one printed symbol and one head movement per operation), there are frequently occasions when the machine scans a 0 or 1 symbol on its way somewhere else. The machine must reprint the 0 or 1 in these cases. M' should ignore the times that M prints a 0 or 1 over itself. M' (and, by implication, the Universal Machine) should print a 0 or 1 *only when the scanned symbol is a blank*. Turing concludes this section by suggesting that the complete configurations could be expressed in numerical form, but this is something he never uses."
 
-- TU: "The sequences of letters between the colons in expressions such as (C1) may be used as standard descriptions of the complete configurations. When the letters are replaced by figures, as in Section 5, we shall a numberical description of the complete configuration, which may be called its description number."
+- TU: "The sequences of letters between the colons in expressions such as (C1) may be used as standard descriptions of the complete configurations. When the letters are replaced by figures, as in Section 5, we shall a numerical description of the complete configuration, which may be called its description number."
 
 p149
 
@@ -2466,16 +2466,16 @@ con2 (𝕮, α)     C        R, Pα, R     con2 (𝕮, α)
 
 - PE: "The m-function con stands for "configuration," and it's missing a line: `con1 (𝕮, α)   None   PD, R, Pα, R, R, R   𝕮`. We'll see how this missing line comes into play shortly. The job of the con function is to mark a configuration with the symbol given as the second argument. Suppose the head is on the semicolon preceding an instruction:"
                        _
-`əə; D A D D C R D A A|;|D A A D D C C R D A ::`
+`əə; D A D D C R D A A ; D A A D D C C R D A ::`
 
 p152-153
 - PE: The con function moves right two squares at a time until it encounters an A. It prints an α to the left of the A. The con1 function continues printing markers to the right of each A until it encounters a D. It prints a marker to the right of that D as well and then goes to con2. The con2 function prints markers to the right of each C (if any). For example, there are no C's in the configuration because the scanned square is a blank, so the result is:
                                    _
-`əə; D A D D C R D A A ; DαAαAαDαD|C|C R D A ::`
+`əə; D A D D C R D A A ; DαAαAαDαD C C R D A ::`
 
 - PE: "The explanatory paragraphs in the skeleton table for con are a bit confusing because Turing uses the letter C to stand for a whole sequence of symbols defining a configuration, and the same letter is part of the Standard Description. The first sentence of the second paragraph (beginning "In the final configuration") indicates that the head is left four squares to the right of the last square of the configuration (that is, the last square of the scanned character). The sentence "C is left unmarked" meaning "The configuration is left unmarked" applies only when the second argument to con is blank."
 
-- PE: "The description of the Universal Machine occupies just two pagse in Turing's paper. Turing has previously defined his m-functions with such skill that in many cases, the m-configurations of U simply refer to a particular function. As usual, the machine mbegins with m-configuration b."
+- PE: "The description of the Universal Machine occupies just two pagse in Turing's paper. Turing has previously defined his m-functions with such skill that in many cases, the m-configurations of U simply refer to a particular function. As usual, the machine begins with m-configuration b."
 
 - TU: "The table for U:"
 
@@ -2499,7 +2499,7 @@ anf1                 con (kom, y)
 // anf. The machine marks the configuration in the last complete configuration with y. -> kom
 ```
 
-- PE: "After g finds the colon (which precedes the current complete configuration), con marks the m-configuration with the letter y. The additional line I've added to con1 also comes into play: it prints a D (representing a blank sqquare) and marks that square as well:
+- PE: "After g finds the colon (which precedes the current complete configuration), con marks the m-configuration with the letter y. The additional line I've added to con1 also comes into play: it prints a D (representing a blank square) and marks that square as well:
 
 `əə; D A D D C R D A A ; D A A D D C C R D A :: : DyAyDy...`
 
@@ -2726,7 +2726,6 @@ b1                                    R, R, P:, R, R, PD, R, R, PA   anf
 anf                                                                  g (anf1, :)
 anf1                                                                 con (kom, y)
 
-
                          ;            R, Pz, L                       con (lrm, x)
 kom                      z            L, L                           kom
                          not z nor ;  L                              kom
@@ -2743,46 +2742,44 @@ sim3                     not A        L, Py                          e (mk, z)
 mk                                                                   g (mk1, :)
 
 mk1                      not A        R, R                           mk1
-      A       L, L, L, L      mk2
+                         A            L, L, L, L                     mk2
 
-      C       R, Px, L, L, L  mk2
-mk2   :                       mk4
-      D       R, Px, L, L, L  mk3
+                         C            R, Px, L, L, L                 mk2
+mk2                      :                                           mk4
+                         D            R, Px, L, L, L                 mk3
 
-mk3   not :   R, Pv, L, L, L  mk3
-      :                       mk4
+mk3                      not :        R, Pv, L, L, L                 mk3
+                         :                                           mk4
 
-mk4                           con (l (l (mk5)), )
+mk4                                                                  con (l (l (mk5)), )
 
-mk5   Any     R, Pw, R        mk5
-      None    P:              sh
+mk5                      any          R, Pw, R                       mk5
+                         none         P:                             sh
 
-sh                         f (sh1, inst, u)
+sh                                                                   f (sh1, inst, u)
 
-sh1           L, L, L      sh2
+sh1                                   L, L, L                        sh2
 
-sh2   D       R, R, R, R   sh3
-      not D                inst
-
-
-sh3   C       R, R         sh4
-      not C                inst
+sh2                      D            R, R, R, R                     sh3
+                         not D                                       inst
 
 
-sh4   C       R, R         sh5
-      not C                pe2 (inst, 0, :)
+sh3                      C            R, R                           sh4
+                         not C                                       inst
 
 
-sh5   C                    inst
-      not C                pe2 (inst, 1, :)
+sh4                      C            R, R                           sh5
+                         not C                                       pe2 (inst, 0, :)
 
-inst                   g (l (inst1), u)
 
-inst1       α   R, E   inst1 (α)
+sh5                      C                                           inst
+                         not C                                       pe2 (inst, 1, :)
 
-        L   R, E   ce5 (ov, v, y, x, u, w)
-inst1   R   R, E   ce5 (ov, v, x, u, y, w)
-        N   R, E   ce5 (ov, v, x, y, u, w)
+inst                                                                 g (l (inst1), u)
 
-ov                     e (anf)
+                         L            R, E                           ce5 (ov, v, y, x, u, w)
+inst1                    R            R, E                           ce5 (ov, v, x, u, y, w)
+                         N            R, E                           ce5 (ov, v, x, y, u, w)
+
+ov                                                                   e (anf)
 ```
