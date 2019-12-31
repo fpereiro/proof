@@ -2783,3 +2783,32 @@ inst1                    R            R, E                           ce5 (ov, v,
 
 ov                                                                   e (anf)
 ```
+
+
+Petzold's example in sequence:
+
+```
+        əə; D A D D C R D A A ; D A A D D C C R D A ::
+                      _
+        əə; D A D D C R D A A ; D A A D D C C R D A ::
+                                        _
+con:    əə; D A D D C R D A A ; DαAαAαDαD C C R D A ::
+
+begin:  əə; D A D D C R D A A ; D A A D D C C R D A :: : D A...
+
+anf:    əə; D A D D C R D A A ; D A A D D C C R D A :: : DyAyDy...
+
+kom:    əə; D A D D C R D A A ;zDxAxAxDxD C C R D A :: : DyAyDy...
+
+kmp:    əə;zDxAxDxD C R D A A ;zD A A D D C C R D A :: : DyAyDy...
+                    _
+sim:    əə;zD A D D C R D A A ; D A A D D C C R D A :: : D A D ...
+
+        əə;zD A D DuCuRuDyAyAy; D A A D D C C R D A :: : D A D ...
+
+mk:     əə; D A D DuCuRuDyAyAy; D A A D D C C R D A :: : D A D ...
+
+sh:     əə; D A D DuCuRuDyAyAy; D A A D D C C R D A :: : D A D : 0 : ...
+
+inst:   əə; D A D D C R D A A ; D A A D D C C R D A :: : D A D : 0 : D C D A A ...
+```
