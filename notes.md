@@ -2665,7 +2665,7 @@ inst1 (N)              ce5 (ov, v, x, y, u w)
 ov                     e (anf)
 ```
 
-- PE: "The function cd5 wasn't actually defined, nor was ce4. Basing them on ce3 we can easily create them:"
+- PE: "The function ce5 wasn't actually defined, nor was ce4. Basing them on ce3 we can easily create them:"
 
 ```
 ce4 (𝕭, α, β, γ, D)                        ce (ce3 (𝕭, β, γ, D), α)
@@ -2695,7 +2695,7 @@ For example, if the head is moving left, then the next m-configuration is insert
 
 - PE: "The second compelte configuration contains the symbols DC (meaning 0) followed by DAA, which indicates the new m-configuration q2."
 
-- PE: "The Universal Machine as Turing has defined it has a few limitations. It cannot emulate just any genearl Turing Machine. It won't work right with any machine that moves its head anywhere left of its initial position because it has no way of inserting blanks to the left of the complete configurations. (Indeed, the process of inserting blanks to the *right* is something that Turing omitted in the con function.) The Universal Machine also works correctly only with machines that replace blanks with 0s or 1s and do so in a uniform left-to-right manner. The Universal Machine can handle machines that perform otherwise, but it won't print the correct sequence of 0s and 1s. Despite these limitations, and the little misprints and bugs, Turing has done something quite extraordinary. He has demonstrated the generality of computation by showing that a single universal machine can be suitably programmed to carry out the operation of any computing machine."
+- PE: "The Universal Machine as Turing has defined it has a few limitations. It cannot emulate just any general Turing Machine. It won't work right with any machine that moves its head anywhere left of its initial position because it has no way of inserting blanks to the left of the complete configurations. (Indeed, the process of inserting blanks to the *right* is something that Turing omitted in the con function.) The Universal Machine also works correctly only with machines that replace blanks with 0s or 1s and do so in a uniform left-to-right manner. The Universal Machine can handle machines that perform otherwise, but it won't print the correct sequence of 0s and 1s. Despite these limitations, and the little misprints and bugs, Turing has done something quite extraordinary. He has demonstrated the generality of computation by showing that a single universal machine can be suitably programmed to carry out the operation of any computing machine."
 
 This assertion would require a proof that any possible machine that will compute the same sequence can be written according to the limitations imposed by U.
 
