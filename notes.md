@@ -2812,3 +2812,20 @@ sh:     əə; D A D DuCuRuDyAyAy; D A A D D C C R D A :: : D A D : 0 : ...
 
 inst:   əə; D A D D C R D A A ; D A A D D C C R D A :: : D A D : 0 : D C D A A ...
 ```
+
+Reconstruction of the UTM:
+
+- To set up the UTM to run/interpret a machine M:
+   - Put two schwas.
+   - For each of the configurations of M, encode them, prepend them with a semicolon, and write them on F-squares.
+   - Put a double colon afterwards, on an F-square, to mark the end of the encoded M configurations.
+
+- What the UTM does when interpreting the machine:
+   - Writes complete configurations of M and, sometimes, 0s or 1s; each of them is prepended by a colon.
+
+- How to encode the configuration of a machine?
+   1. **Configuration number**: Each configuration has a number (the number in which it is presented; this, interestingly enough, means that while you can change the order of the configurations without altering the machine's logic, the references between configurations also have to be updated), starting with 1. Encode it by writing a `D`, followed by a number of `A`s that is equivalent to the configuration's number.
+   2. **Symbol number**: each case of the configuration corresponds to a symbol. This symbol needs to be mapped to a number (also interestingly enough: a particular symbol can be replaced by other, as long as the entire machine is updated to reflect this; the only symbols that cannot be substituted by others are 0 and 1, because those are the ones expected to be outputted).
+
+- Going from the skeleton tables to strict configurations.
+
