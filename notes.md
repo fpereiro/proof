@@ -122,7 +122,7 @@ p80
 
 - "This table (and all succeeding tables of the same kind) is to be understood to mean that for a configuration described in the first two columsn the operations in the third column are carried out successively, and the machine then goes over into the m-configuration described in the last column."
 
-- PE: "The table has four columns, separated into two pairs: 1) configuration: a) m-config; b) symbol; 2) behaviour: a) operations; b) final m-config." Note: configuration is input, behaviour is output; 1a) and 2b) pertain to the m-config; 1b) and 2a) pertain to the tape (both the symbols and the position). A Turing machine operates on itself. But so far it doesn't write its own m-configurations, otherwise it would be self-modifiable at that level too.
+- PE: "The table has four columns, separated into two pairs: 1) configuration: a) m-config; b) symbol; 2) behaviour: a) operations; b) final m-config." Note: configuration is input, behaviour is output; 1a) and 2b) pertain to the m-config; 1b) and 2a) pertain to the tape (both the symbols and the position). A Turing machine operates on itself. But so far it doesn't write its own m-configurations, otherwise it would be self-modifiable on that level too.
 
 - "When the second column is left blank, it is understood that the behaviour of the third and fourth columns applies for any symbol and no symbol." So, "any" symbol is anything except blank, and if the column itself is blank it means both any symbol and no symbol.
 
@@ -2825,7 +2825,23 @@ Reconstruction of the UTM:
 
 - How to encode the configuration of a machine?
    1. **Configuration number**: Each configuration has a number (the number in which it is presented; this, interestingly enough, means that while you can change the order of the configurations without altering the machine's logic, the references between configurations also have to be updated), starting with 1. Encode it by writing a `D`, followed by a number of `A`s that is equivalent to the configuration's number.
-   2. **Symbol number**: each case of the configuration corresponds to a symbol. This symbol needs to be mapped to a number (also interestingly enough: a particular symbol can be replaced by other, as long as the entire machine is updated to reflect this; the only symbols that cannot be substituted by others are 0 and 1, because those are the ones expected to be outputted).
+   2. **Scanned symbol number**: each case of the configuration corresponds to a symbol. This symbol needs to be mapped to a number (also interestingly enough: a particular symbol can be replaced by other, as long as the entire machine is updated to reflect this; the only symbols that cannot be substituted by others are 0 and 1, because those are the ones expected to be outputted). Encode it by writing a `D`, followed by a number of `C`s. Symbols start at 0.
+   3. **Printed symbol number**: each of the symbols is overwritten (if necessary with the same symbol). This symbol is encoded using the same mapping as that of the **scanned symbol numbers from #2: `D` followed by a number of `C`s.
+   4. **Direction of the movement**: `L` (move one left), `R` (move one right) or `N` (no move).
+   5. **Next configuration number**: This configuration is encoded in the same way as the **configuration number** in #1: `D` followed a number of `A`s.
 
-- Going from the skeleton tables to strict configurations.
+- Symbols printed by the UTM: `:ACD01uvwxyz`. Note that `LRN` (the movement letters) are not included, nor the semicolons that separate the machine instructions, nor the double colon for separating the instructions from the complete configurations, nor the schwas. The UTM already receives a tape where the instructions are already printed.
+
+- Review of terms:
+   - m-configuration: state of mind.
+   - Machine: set of m-configurations.
+   - Configuration: current m-configuration + scanned symbol.
+   - Automatic machines: those that depend on the configuration exclusively to guide their action, without external human choice.
+   - Complete configuration: current m-configuration + scanned symbol + contents of the entire tape.
+   - Circular machines: those that get stuck and don't continue printing 0s and 1s. These are the bad ones.
+   - Circle-free machines: those that never get stuck and continue printing 0s and 1s. These are the good ones.
+   - Computable sequence: a sequence that can be computed by a circle-free machine.
+   - m-configuration structure: a number of
+
+- Going from the m-functions skeleton tables to strict configurations.
 
