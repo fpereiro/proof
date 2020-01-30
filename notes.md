@@ -74,7 +74,7 @@ p72
 
 - "If at each stage the motion of a machine (in the sense of Section 1) is *completely* determined by the configuration, we shall call the machine an "automatic machine" (or a-machine)." Those are the default now.
 
-- "For some purposes we might use machines (choice machines or c-machines) whose motion is only partially determined by the configuration (hence the use of the word "possible" in Section 1)." A program waiting for input from the user is a c-machine.
+- "For some purposes we might use machines (choice machines or c-machines) whose motion is only partially determined by the configuration (hence the use of the word "possible" in Section 1)." A program waiting for input from the user is a c-machine. Perhaps we could also call machines that don't require user input but make decisions based on a source of noise an i-machine (*i* stands for indeterminate), as long as the source of noise cannot be determined (otherwise it would be a c-machine).
 
 - "When such a machine reaches one of these ambiguous configurations, it cannot go on until some arbitrary choice has been made by an external operator. This would be the case if we were using machines to deal with axiomatic systems." Why do axioms require human and presumably non-algorithmic input? In any case, it's amazing that Turing is writing of "machines to deal with axiomatic systems."
 
@@ -116,7 +116,7 @@ p79
 
 p79-80
 
-- "The machine is to have the for m-configurations b, c, k, e and is capable of printing "0" and "1". THe behavior of the machine is described in the following table in which "R" means "the machine moves so that it scans the square immediatelyon the right of the one it was scanning previously." Similarly for "L". "E" means "the scanned symbol is erased" and "P" stands for "prints"".
+- "The machine is to have the for m-configurations b, c, k, e and is capable of printing "0" and "1". THe behavior of the machine is described in the following table in which "R" means "the machine moves so that it scans the square immediately on the right of the one it was scanning previously." Similarly for "L". "E" means "the scanned symbol is erased" and "P" stands for "prints"".
 
 p80
 
@@ -2833,15 +2833,16 @@ Reconstruction of the UTM:
 - Symbols printed by the UTM: `:ACD01uvwxyz`. Note that `LRN` (the movement letters) are not included, nor the semicolons that separate the machine instructions, nor the double colon for separating the instructions from the complete configurations, nor the schwas. The UTM already receives a tape where the instructions are already printed.
 
 - Review of terms:
-   - m-configuration: state of mind.
-   - Machine: set of m-configurations.
-   - Configuration: current m-configuration + scanned symbol.
-   - Automatic machines: those that depend on the configuration exclusively to guide their action, without external human choice.
-   - Complete configuration: current m-configuration + scanned symbol + contents of the entire tape.
-   - Circular machines: those that get stuck and don't continue printing 0s and 1s. These are the bad ones.
-   - Circle-free machines: those that never get stuck and continue printing 0s and 1s. These are the good ones.
-   - Computable sequence: a sequence that can be computed by a circle-free machine.
-   - m-configuration structure: a number of
+   - *m-configuration*: state of mind.
+   - *machine*: set of m-configurations.
+   - *configuration*: current m-configuration + scanned symbol.
+   - *automatic machines*: those that rely on the configuration exclusively to guide their next action, without external human choice. All the machines in this proof are automatic.
+   - *complete configuration*: current m-configuration + scanned symbol + contents of the entire tape.
+   - *circular machines*: those that get stuck and don't continue printing 0s and 1s. These are the bad ones.
+   - *circle-free machines*: those that never get stuck and continue printing 0s and 1s. These are the good ones.
+   - *computable sequence*: a sequence that can be computed by a circle-free machine.
+   - *m-configuration structure*: for each possible scanned symbol, a number of operations (consisting of a single printing operation (blank is also a symbol) and moving one to the left or one to the right) and a final m-configuration (which also can be the current m-configuration).
+   - *tape*: a medium divided in squares, which has a first square and extends infinitely to the right as needed.
+   - *starting m-configuration*: the current m-configuration at the beginning of the operation of the machine. For each of the machine, Turing always names it *b* (for *begin*).
 
 - Going from the m-functions skeleton tables to strict configurations.
-
