@@ -186,7 +186,7 @@ b        0        R, R, P1      b
 
 Then a mconf can have multiple shifting (moving the tape) and printing operations. However (and it'll be interesting to see if this changes) it can only take input (read a square) at the beginning, and then it can only set the next mconf once. No concept of function calls from within the operations.
 
-- PE: "The important lesson is that any particular sequence can be cmputed by a variety of different machines. However, a particular automatic machine starting with a blank tape always computes the same sequence."
+- PE: "The important lesson is that any particular sequence can be computed by a variety of different machines. However, a particular automatic machine starting with a blank tape always computes the same sequence."
 
 p85
 
@@ -2844,5 +2844,11 @@ Reconstruction of the UTM:
    - *m-configuration structure*: for each possible scanned symbol, a number of operations (consisting of a single printing operation (blank is also a symbol) and moving one to the left or one to the right) and a final m-configuration (which also can be the current m-configuration).
    - *tape*: a medium divided in squares, which has a first square and extends infinitely to the right as needed.
    - *starting m-configuration*: the current m-configuration at the beginning of the operation of the machine. For each of the machine, Turing always names it *b* (for *begin*).
+   - *relaxed m-configuration format*: allows multiple movements and print statements in arbitrary order. The required conversion process from this relaxed format to the original/strict, I'll name *type 1 conversion*. We should be able to do it automatically.
+   - *numeric squares or F-squares*: alternated squares on odd indexes (1, 3, 5), including the very first square. Whatever is written on these squares will not be deleted by a machine. Contain the result outputted by a machine.
+   - *intermediate squares or non-numeric squares or E-squares*: alternated squares on even indexes (2, 4, 6). Their contents can be overwritten. Serves as a "scratchpad" area.
+   - *marking*: the character on the E-square to the right of a F-square is said to *mark* said F-square. Marks are to the right of what they're marking.
+   - *Turing convention machine*: A machine which only uses half of an infinite tape (in other words, only writes to the right, not to the left, of a given (first) square); and that doesn't overwrite the contents of F-squares and that writes its numeric output on F-squares.
+   - *any character*: meant to be a catch-all for all the characters not specified for a certain m-configuration. The required conversion process from this to an explicit list of all the other possible cases, I'll name *type 2 conversion*. NOTE: exhaustive vs reduced by preliminary logic?
 
 - Going from the m-functions skeleton tables to strict configurations.
