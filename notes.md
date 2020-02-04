@@ -1,6 +1,6 @@
-## Notes
+# Notes
 
-### Petzold 2008 on Turing 1936
+## Petzold 2008 on Turing 1936
 
 p64
 
@@ -206,7 +206,7 @@ p85
 
 p86
 
-- PE: "(Why are two schwas? Only one is required in this example, but Turing later creates a machine that requires to scwas for a sentinel. Perhaps he added a second schwa in this example just for consistency.)"
+- PE: "(Why are two schwas? Only one is required in this example, but Turing later creates a machine that requires to schwas for a sentinel. Perhaps he added a second schwa in this example just for consistency.)"
 
 - PE: "In the first example machine, the blank squares between the 0 and 1 digits served no purpose. Here they will play an important role."
 
@@ -1672,7 +1672,7 @@ e1   (1m)
 - Important reminder: the first square of the tape (and all odd numbered squares, 3th, 5th, and so forth) are F-squares, that is, output. The markings are on the E-squares to the right of each of the F-squares. Most of the machines that Turing presents have two schwas, so the first F-square and E-square both contain schwas.
 - Same list but grouping functions by families, describing them in detail and tracking interdependencies:
 
-## f (find)
+### f (find)
 
 f    (2m+1s)
 f1   (2m+1s)
@@ -1738,7 +1738,7 @@ f'':
    - when the second blank is found, start going left until finding 2arg.
    - when 2arg is found, -> 1arg.
 
-## e (erase)
+### e (erase)
 
 e  (2m+1s)
 e  (1m+1s)
@@ -1779,7 +1779,7 @@ Important assumption: 1arg e will erase E-squares if it is called to the right o
 
 - Note: while 3arg e1 doesn't use its second and third arguments, its three arguments distinguish it from the 1arg version, which is different. That's likely the reason for which Turing defined it as a 3arg function that only uses 1arg.
 
-## pe (print at the end)
+### pe (print at the end)
 
 pe   (1m+1s)
 pe1  (1m+1s)
@@ -1802,7 +1802,7 @@ pe2:
    - go right in twos until finding the first blank F-square.
    - print 3arg, then -> 1arg.
 
-## c (copy)
+### c (copy)
 
 c    (2m+1s)
 c1   (1m)
@@ -1826,7 +1826,7 @@ c:
 
 Note: since c will write what it finds to the *left* of its 3arg on an F-square, it is almost certain that 3arg will be a symbol that can be found on E-squares. In other words, c is a function called with markers (E-squares) as its symbolic argument.
 
-## ce (copy and erase)
+### ce (copy and erase)
 
 ce  (2m+1s)
 ce  (1m+1s)
@@ -1898,7 +1898,7 @@ ce2:
          - go back to the step marked with a *.
       - if it finds two consecutive blanks, advance one more position and -> 1arg.
 
-## re (replace)
+### re (replace)
 
 re   (2m+1s)
 re   (2m+2s)
@@ -1924,7 +1924,7 @@ Interdependencies:
       - go back to the beginning of the function.
    - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
-## cr (copy and replace)
+### cr (copy and replace)
 
 cr   (2m+1s)
 cr   (1m+1s)
@@ -1964,7 +1964,7 @@ Interdependencies:
 
 - Note: 2arg cr, if it finds 2arg, will be trapped in an infinite loop where it keeps adding character X to the leftmost free F-square, because 2arg is deleted and reprinted, so it's always there. This is peculiar. Now, Turing states "The m-configuration cr (𝕭, α) is taken up when no letters α are on the tape." It is possible then that 2arg cr is only meant to be called when we know that 2arg is absent from the tape, and in that case we're just interested on finding two consecutive blanks, advancing one more position and -> 2arg. But why not just use f instead? Interestingly enough, Petzold states: "These functions are not used elsewhere in Turing's paper.", which probably means that this function is erroneously defined, and since the error doesn't create further errors down the chain, it can be safely ignored.
 
-## cp (compare)
+### cp (compare)
 
 cp   (3m+2s)
 cp1  (2m+1s)
@@ -1992,7 +1992,7 @@ cp:
       - if it finds 5arg, -> 2arg.
       - if it finds two consecutive blanks, advance one more position and -> 3arg.
 
-## cpe (compare and erase)
+### cpe (compare and erase)
 
 cpe  (3m+2s)
 cpe  (2m+2s)
@@ -2048,7 +2048,7 @@ Interdependencies:
       - if it finds 4arg, -> 1arg.
       - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
-## Summary of all functions by family
+### Summary of all functions by family
 
 1. **find** (5 functions, 6 helper functions)
    - f: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find the leftmost 3arg and -> 1arg; 2) otherwise, go to the square after the two consecutive blanks and -> 2arg.
@@ -2177,7 +2177,7 @@ q9         S2       PS2, L       q10
 q10        S0       PS0, L       q7
 ```
 
-- PE: "The problem is the *symbol* column. To fill it in correctly, you really have to know what the machine will be encountering. For q8, the machine is scanning a blank square and printing an x. Once it moves left, what's the next scanned character? It's the 1 that was scanned at q7, but in other cases it might not be so obvious. The words "Any" or "Not" or "Else" don't work with this cheme, and in some cases you may have to add specific configurations for every single character the machine is using. It's a mess, but there are always a finite number of characters involved, so it can definitely be done. Let's assume that we have converetd all the configurations of a particular machine into the standard forms that Turing denotes as (N1), (N2), and (N3). When we're finished, and we dispose of the original table, have we lost any information? Yes, we have lost a little bit. We know that S0 is a blank, S1 is a 0 and S2 is a 1, but we no longer know the exact characters meant by S3, S4, and so on. This shouldn't matter. The machines use these characters internally."
+- PE: "The problem is the *symbol* column. To fill it in correctly, you really have to know what the machine will be encountering. For q8, the machine is scanning a blank square and printing an x. Once it moves left, what's the next scanned character? It's the 1 that was scanned at q7, but in other cases it might not be so obvious. The words "Any" or "Not" or "Else" don't work with this scheme, and in some cases you may have to add specific configurations for every single character the machine is using. It's a mess, but there are always a finite number of characters involved, so it can definitely be done. Let's assume that we have convered all the configurations of a particular machine into the standard forms that Turing denotes as (N1), (N2), and (N3). When we're finished, and we dispose of the original table, have we lost any information? Yes, we have lost a little bit. We know that S0 is a blank, S1 is a 0 and S2 is a 1, but we no longer know the exact characters meant by S3, S4, and so on. This shouldn't matter. The machines use these characters internally."
 
 - Note: a standard conversion to standard form could be done by scanning the configurations (which have an order in which they are presented), listing in order the different characters printed (so that there's also a table for interpretation of the symbols, so no information is lost as suggested by Petzold) and then expand the configurations into normal form. This would require a two pass process (one for mapping characters, another one for expanding the configurations).
 
@@ -2813,7 +2813,7 @@ sh:     əə; D A D DuCuRuDyAyAy; D A A D D C C R D A :: : D A D : 0 : ...
 inst:   əə; D A D D C R D A A ; D A A D D C C R D A :: : D A D : 0 : D C D A A ...
 ```
 
-Reconstruction of the UTM:
+### Reconstruction of the UTM & review from the beginning
 
 - To set up the UTM to run/interpret a machine M:
    - Put two schwas.
@@ -2838,17 +2838,19 @@ Reconstruction of the UTM:
    - *configuration*: current m-configuration + scanned symbol.
    - *automatic machines*: those that rely on the configuration exclusively to guide their next action, without external human choice. All the machines in this proof are automatic.
    - *complete configuration*: current m-configuration + scanned symbol + contents of the entire tape.
+   - *symbols of the first kind*: 0s and 1s.
+   - *symbols of the second kind*: symbols other than 0s and 1s.
    - *circular machines*: those that get stuck and don't continue printing 0s and 1s. These are the bad ones.
    - *circle-free machines*: those that never get stuck and continue printing 0s and 1s. These are the good ones.
    - *computable sequence*: a sequence that can be computed by a circle-free machine.
    - *m-configuration structure*: for each possible scanned symbol, a number of operations (consisting of a single printing operation (blank is also a symbol) and moving one to the left or one to the right) and a final m-configuration (which also can be the current m-configuration).
-   - *tape*: a medium divided in squares, which has a first square and extends infinitely to the right as needed.
+   - *tape*: a medium divided in squares, which has a first square and extends infinitely to the right as needed. Each square can contain one character at a time, including the blank character.
    - *starting m-configuration*: the current m-configuration at the beginning of the operation of the machine. For each of the machine, Turing always names it *b* (for *begin*).
    - *relaxed m-configuration format*: allows multiple movements and print statements in arbitrary order. The required conversion process from this relaxed format to the original/strict, I'll name *type 1 conversion*. We should be able to do it automatically.
    - *numeric squares or F-squares*: alternated squares on odd indexes (1, 3, 5), including the very first square. Whatever is written on these squares will not be deleted by a machine. Contain the result outputted by a machine.
    - *intermediate squares or non-numeric squares or E-squares*: alternated squares on even indexes (2, 4, 6). Their contents can be overwritten. Serves as a "scratchpad" area.
    - *marking*: the character on the E-square to the right of a F-square is said to *mark* said F-square. Marks are to the right of what they're marking.
    - *Turing convention machine*: A machine which only uses half of an infinite tape (in other words, only writes to the right, not to the left, of a given (first) square); and that doesn't overwrite the contents of F-squares and that writes its numeric output on F-squares.
-   - *any character*: meant to be a catch-all for all the characters not specified for a certain m-configuration. The required conversion process from this to an explicit list of all the other possible cases, I'll name *type 2 conversion*. NOTE: exhaustive vs reduced by preliminary logic?
+   - *any character*: meant to be a catch-all for all the characters not specified for a certain m-configuration. The required conversion process from this to an explicit list of all the other possible cases, I'll name *type 2 conversion*.
 
 - Going from the m-functions skeleton tables to strict configurations.
