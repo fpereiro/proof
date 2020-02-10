@@ -2815,24 +2815,7 @@ inst:   əə; D A D D C R D A A ; D A A D D C C R D A :: : D A D : 0 : D C D A A
 
 ### Reconstruction of the UTM & review from the beginning
 
-- To set up the UTM to run/interpret a machine M:
-   - Put two schwas.
-   - For each of the configurations of M, encode them, prepend them with a semicolon, and write them on F-squares.
-   - Put a double colon afterwards, on an F-square, to mark the end of the encoded M configurations.
-
-- What the UTM does when interpreting the machine:
-   - Writes complete configurations of M and, sometimes, 0s or 1s; each of them is prepended by a colon.
-
-- How to encode the configuration of a machine?
-   1. **Configuration number**: Each configuration has a number (the number in which it is presented; this, interestingly enough, means that while you can change the order of the configurations without altering the machine's logic, the references between configurations also have to be updated), starting with 1. Encode it by writing a `D`, followed by a number of `A`s that is equivalent to the configuration's number.
-   2. **Scanned symbol number**: each case of the configuration corresponds to a symbol. This symbol needs to be mapped to a number (also interestingly enough: a particular symbol can be replaced by other, as long as the entire machine is updated to reflect this; the only symbols that cannot be substituted by others are 0 and 1, because those are the ones expected to be outputted). Encode it by writing a `D`, followed by a number of `C`s. Symbols start at 0.
-   3. **Printed symbol number**: each of the symbols is overwritten (if necessary with the same symbol). This symbol is encoded using the same mapping as that of the **scanned symbol numbers from #2: `D` followed by a number of `C`s.
-   4. **Direction of the movement**: `L` (move one left), `R` (move one right) or `N` (no move).
-   5. **Next configuration number**: This configuration is encoded in the same way as the **configuration number** in #1: `D` followed a number of `A`s.
-
-- Symbols printed by the UTM: `:ACD01uvwxyz`. Note that `LRN` (the movement letters) are not included, nor the semicolons that separate the machine instructions, nor the double colon for separating the instructions from the complete configurations, nor the schwas. The UTM already receives a tape where the instructions are already printed.
-
-- Review of terms:
+**Review of terms:**
    - *m-configuration*: state of mind.
    - *machine*: set of m-configurations.
    - *configuration*: current m-configuration + scanned symbol.
@@ -2846,18 +2829,37 @@ inst:   əə; D A D D C R D A A ; D A A D D C C R D A :: : D A D : 0 : D C D A A
    - *m-configuration structure*: for each possible scanned symbol, a number of operations (consisting of a single printing operation (blank is also a symbol) and moving one to the left or one to the right) and a final m-configuration (which also can be the current m-configuration).
    - *tape*: a medium divided in squares, which has a first square and extends infinitely to the right as needed. Each square can contain one character at a time, including the blank character.
    - *starting m-configuration*: the current m-configuration at the beginning of the operation of the machine. For each of the machine, Turing always names it *b* (for *begin*).
-   - *relaxed m-configuration format*: allows multiple print statements and movements in arbitrary order. The required conversion process from this relaxed format to the original/strict, I'll name *type 1 conversion*. We should be able to do it automatically.
    - *numeric squares or F-squares*: alternated squares on odd indexes (1, 3, 5), including the very first square. Whatever is written on these squares will not be deleted by a machine. Contain the result outputted by a machine.
    - *intermediate squares or non-numeric squares or E-squares*: alternated squares on even indexes (2, 4, 6). Their contents can be overwritten. Serves as a "scratchpad" area.
    - *marking*: the character on the E-square to the right of a F-square is said to *mark* said F-square. Marks are to the right of what they're marking.
    - *Turing convention machine*: A machine which only uses half of an infinite tape (in other words, only writes to the right, not to the left, of a given (first) square); and that doesn't overwrite the contents of F-squares and that writes its numeric output on F-squares.
-   - *any character*: meant to be a catch-all for all the characters not specified for a certain m-configuration. The required conversion process from this to an explicit list of all the other possible cases, I'll name *type 2 conversion*. This also should be done for those configurations of the type `not x`, where `x` is a symbol.
-   - *skeleton tables*: a shorthand for creating m-configurations from generic elements. They use uppercase/capital German letters to represent m-configuration variables, and lowercase/small Greek letters to represent symbol variables.
-   - *complete tables*: the tables generated by expanding the skeleton tables into fully specified m-configurations without variables. This process, I'll name *type 3 conversion*.
+   - *any character*: meant to be a catch-all for all the characters not specified for a certain m-configuration. The required conversion process from this to an explicit list of all the other possible cases, I'll name *type 1 conversion*. This also should be done for those configurations of the type `not x`, where `x` is a symbol.
+   - *relaxed m-configuration format*: allows multiple print statements and movements in arbitrary order. The required conversion process from this relaxed format to the original/strict, I'll name *type 2 conversion*.
+   - *skeleton tables/m-functions*: a shorthand for creating m-configurations from generic elements. They use uppercase/capital German letters to represent m-configuration variables, and lowercase/small Greek letters to represent symbol variables.
+   - *complete tables*: the tables generated by expanding the skeleton tables/m-functions into fully specified m-configurations without variables. This process, I'll name *type 3 conversion*.
 
-- Putting machines in strict configurations:
+Because the Universal Turing machine requires the executed/interpreted machine to be encoded, and that encoding relies on the machine being written in strict form, we need to find an algorithm to convert the three machines presented in the paper (zeroes & ones, increasing sequences of 1s, and the universal machine itself with all its helper functions) into strict form so that then they can be encoded and executed/interpreted by the universal machine.
 
-- *zeroes and ones* machine is already in a strict configuration, because 1) there's a single print and move per combination of m-configuration and symbol; 2) the symbol column only has symbols (instead of a negation or a catch-all); and 3) there's no skeleton tables.
+Let's recap the types of conversions we need to make:
+- Type 1: for each combination of symbol & operations, any symbol that is not a proper symbol (that is, either `any` or `not x`), should be expanded to all the possible symbols within the same m-configuration..
+- Type 2: for each combination of symbol & operations, any operation set that doesn't consist of a print and a move (because there's either less or more move or printing operations) should be expanded into separate m-configurations.
+- Type 3: for each skeleton table/m-function, substitute by each of its distinct executions (as per the unique combination of arguments it will receive along the course of the entire computation) so that it is expanded into a set of m-configurations.
+
+If this process were to be systematized/automated (and those two operations should be the same one to the extent that all the systematized operations can be done by a machine), it would make sense to do it in this order:
+
+- Type 3 conversion first, to get a list of m-configurations.
+- Type 2 conversion afterwards, which will likely create further m-configurations.
+- Type 1 conversion finally, which will likely create more branches on existing m-configurations.
+
+**Requirements for each conversion type:**
+
+- Type 3 conversion requires deriving somehow a list of all combinations of arguments passed to each m-function.
+- Type 2 conversion requires us to know what character should be printed when no character should be printed on the abbreviated form; this is highly nontrivial.
+- Type 1 conversion only requires us to know the entire list of symbols that the machine will produce.
+
+**Putting machines in strict configurations:**
+
+- *zeroes and ones* machine is already in a strict configuration, because 1) there's a single print and move per combination of m-configuration and symbol; 2) the symbol column only has symbols (instead of a negation or a catch-all); and 3) there's no skeleton tables/m-functions.
 
 ```
 configuration         behaviour
@@ -2890,7 +2892,9 @@ f        any     R, R                                    f
 f        none    P0, L, L                                o
 ```
 
-- After type 1 conversion:
+There's no need to perform type 3 conversion since there are no m-functions in this machine.
+
+- After type 2 conversion:
 
 ```
 configuration                        behaviour
@@ -2916,6 +2920,12 @@ p        none    L, L                                    p
 f        any     R, R                                    f
 f        none    P0, L, L                                o
 ```
+
+How to systematically perform type 2 conversion (and perhaps type 1 conversion)? Both seem to ask of us the same thing: for all the times where this m-configuration is called, what will the scanned symbol be?
+
+
+
+- The UTM is given as follows:
 
 ```
 f (𝕮, 𝕭, α)           ə        L        f1 (𝕮, 𝕭, α)
@@ -2983,4 +2993,111 @@ e  (𝕮)                ə        R        e1 (𝕮)
 
 e1 (𝕮)                any      R,E,R    e1 (𝕮)
                       none              𝕮
+
+ce4 (𝕭, α, β, γ, D)                                                  ce (ce3 (𝕭, β, γ, D), α)
+ce5 (𝕭, α, β, γ, D, E)                                               ce (ce4 (𝕭, β, γ, D, E), α)
+
+e  (anf)                 ə            R                              e1 (anf)
+                         not ə        L                              e  (anf)
+
+e1 (anf)                 any          R,E,R                          e1 (anf)
+                         none                                        anf
+
+con  (𝕮, α)              Not A        R, R                           con  (𝕮, α)
+                         A            L, Pα, R                       con1 (𝕮, α)
+
+con1 (𝕮, α)              A            R, Pα, R                       con1 (𝕮, α)
+                         D            R, Pα, R                       con2 (𝕮, α)
+
+con2 (𝕮, α)              C            R, Pα, R                       con2 (𝕮, α)
+                         Not C        R, R                           𝕮
+
+b                                                                    f (b1, b1, ::)
+b1                                    R, R, P:, R, R, PD, R, R, PA   anf
+
+anf                                                                  g (anf1, :)
+anf1                                                                 con (kom, y)
+
+                         ;            R, Pz, L                       con (lrm, x)
+kom                      z            L, L                           kom
+                         not z nor ;  L                              kom
+
+kmp                                                                  cpe (e (e (anf, x), y), sim, x, y)
+
+sim                                                                  f' (sim1, sim1, z)
+sim1                                                                 con (sim2, )
+sim2                     A                                           sim3
+                         not A        R, Pu, R, R, R                 sim2
+sim3                     not A        L, Py                          e (mk, z)
+                         A            L, Py, R, R, R                 sim3
+
+mk                                                                   g (mk1, :)
+
+mk1                      not A        R, R                           mk1
+                         A            L, L, L, L                     mk2
+
+                         C            R, Px, L, L, L                 mk2
+mk2                      :                                           mk4
+                         D            R, Px, L, L, L                 mk3
+
+mk3                      not :        R, Pv, L, L, L                 mk3
+                         :                                           mk4
+
+mk4                                                                  con (l (l (mk5)), )
+
+mk5                      any          R, Pw, R                       mk5
+                         none         P:                             sh
+
+sh                                                                   f (sh1, inst, u)
+
+sh1                                   L, L, L                        sh2
+
+sh2                      D            R, R, R, R                     sh3
+                         not D                                       inst
+
+
+sh3                      C            R, R                           sh4
+                         not C                                       inst
+
+
+sh4                      C            R, R                           sh5
+                         not C                                       pe2 (inst, 0, :)
+
+
+sh5                      C                                           inst
+                         not C                                       pe2 (inst, 1, :)
+
+inst                                                                 g (l (inst1), u)
+
+                         L            R, E                           ce5 (ov, v, y, x, u, w)
+inst1                    R            R, E                           ce5 (ov, v, x, u, y, w)
+                         N            R, E                           ce5 (ov, v, x, y, u, w)
+
+ov                                                                   e (anf)
 ```
+
+
+
+
+
+
+
+
+
+- To set up the UTM to run/interpret a machine M:
+   - Put two schwas.
+   - For each of the configurations of M, encode them, prepend them with a semicolon, and write them on F-squares.
+   - Put a double colon afterwards, on an F-square, to mark the end of the encoded M configurations.
+
+- What the UTM does when interpreting the machine:
+   - Writes complete configurations of M and, sometimes, 0s or 1s; each of them is prepended by a colon.
+
+- How to encode the configuration of a machine?
+   1. **Configuration number**: Each configuration has a number (the number in which it is presented; this, interestingly enough, means that while you can change the order of the configurations without altering the machine's logic, the references between configurations also have to be updated), starting with 1. Encode it by writing a `D`, followed by a number of `A`s that is equivalent to the configuration's number.
+   2. **Scanned symbol number**: each case of the configuration corresponds to a symbol. This symbol needs to be mapped to a number (also interestingly enough: a particular symbol can be replaced by other, as long as the entire machine is updated to reflect this; the only symbols that cannot be substituted by others are 0 and 1, because those are the ones expected to be outputted). Encode it by writing a `D`, followed by a number of `C`s. Symbols start at 0.
+   3. **Printed symbol number**: each of the symbols is overwritten (if necessary with the same symbol). This symbol is encoded using the same mapping as that of the **scanned symbol numbers from #2: `D` followed by a number of `C`s.
+   4. **Direction of the movement**: `L` (move one left), `R` (move one right) or `N` (no move).
+   5. **Next configuration number**: This configuration is encoded in the same way as the **configuration number** in #1: `D` followed a number of `A`s.
+
+- Symbols printed by the UTM: `:ACD01uvwxyz`. Note that `LRN` (the movement letters) are not included, nor the semicolons that separate the machine instructions, nor the double colon for separating the instructions from the complete configurations, nor the schwas. The UTM already receives a tape where the instructions are already printed.
+
