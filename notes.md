@@ -2854,8 +2854,14 @@ If this process were to be systematized/automated (and those two operations shou
 **Requirements for each conversion type:**
 
 - Type 3 conversion requires deriving somehow a list of all combinations of arguments passed to each m-function.
-- Type 2 conversion requires us to know what character should be printed when no character should be printed on the abbreviated form; this is highly nontrivial.
+- Type 2 conversion requires us to know what character should be printed when no character should be printed on the abbreviated form.
 - Type 1 conversion only requires us to know the entire list of symbols that the machine will produce.
+
+How to systematically perform type 2 conversion and perhaps type 1 conversion? Both seem to ask of us the same thing: for all the times where this m-configuration is called, what will the scanned symbol be? To answer this exactly, we would need to reproduce the machine or at least come up with a proof that narrows down the possibilities of what characters a given m-configuration will see. Another approach which would create perhaps unnecessary branches, but would still be correct, is to create as many branches as there are symbols, both for type 2 and type 1 conversion. In the case where no symbol is printed, then the symbol to be reprinted is that which has been scanned.
+
+So, if it is possible to perform a brute force conversion of type 1 & 2, as long as we know all the symbols that will be printed, we only have left the question of type 3 conversion. Can this be done in brute force? At the very list, we'd need to track which functions call each other and create a graph of dependencies. Perhaps by creating this graph, we can then create an exhaustive, yet finite, list of replacements, without having to make a reduction proof of how exactly will the machine behave.
+
+This analysis of the machine is perhaps related to computability itself, because in essence it consists in proving that a machine will behave on a certain way without going through all of the execution steps (which are infinite). In other words, it is the finding of repeatable patterns in an infinite sequence.
 
 **Putting machines in strict configurations:**
 
@@ -2920,8 +2926,6 @@ p        none    L, L                                    p
 f        any     R, R                                    f
 f        none    P0, L, L                                o
 ```
-
-How to systematically perform type 2 conversion (and perhaps type 1 conversion)? Both seem to ask of us the same thing: for all the times where this m-configuration is called, what will the scanned symbol be?
 
 
 
