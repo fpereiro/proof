@@ -224,7 +224,7 @@ p87
 configuration                        behaviour
 mconf   symbol              operations              final mconf
 
-b        none    Pe, R, Pe, R, P0, R, R, P0, L, L        o
+b        none    Pə, R, Pə, R, P0, R, R, P0, L, L        o
 
 o         1      R, Px, L, L, L                          o
 o         0                                              q
@@ -2112,7 +2112,7 @@ p133
 
 Combination: marking + displacement. Marking is dual (erase|write) and so is movement (left|right). Combined with no-ops, that's 9. But it is 9 per each possible printed symbol? Only for those where you print (not for those where you erase or where you don't mark).
 
-- TU: "Now let us give numbers to the m-configurations, calling them q1, ..., qr, as in Section 1. The initial m-configuration is alwayas to be called q1."
+- TU: "Now let us give numbers to the m-configurations, calling them q1, ..., qr, as in Section 1. The initial m-configuration is always to be called q1."
 
 - PE: "If there happen to be 237 different m-configurations in a machine, they are now to be labeled q1 through q237. For the revised beginning of Example II, the first six m-configurations can be renamed q1 through q6."
 
@@ -2209,7 +2209,7 @@ Interesting! But the same goes for the m-configurations and m-functions; the ord
 
 - PE: "The L, R, and N indicate the moves. Semicolons separate each configuration."
 
-- TU: "If finally we replace "A" by "1", "C" by "@", "D" by "3", "L" by "4", "R" by "5", "N" by "^", and ";" by "7" we shall have a description of the machine in the form of an arabic numeral.
+- TU: "If finally we replace "A" by "1", "C" by "2", "D" by "3", "L" by "4", "R" by "5", "N" by "^", and ";" by "7" we shall have a description of the machine in the form of an arabic numeral.
 
 - PE: "This is an important step. Turing has standardized his machines to such an extent that he can now uniquely identify a machine by an integer, and this integer encodes all the states of the machine. Turing was undoubtedly inspired by the approach Godel took in his incompleteness Theorem in converting every mathematical expression into a unique number.
 
@@ -2865,24 +2865,24 @@ This analysis of the machine is perhaps related to computability itself, because
 
 **Putting machines in strict configurations:**
 
-- *zeroes and ones* machine is already in a strict configuration, because 1) there's a single print and move per combination of m-configuration and symbol; 2) the symbol column only has symbols (instead of a negation or a catch-all); and 3) there's no skeleton tables/m-functions.
+- The *zeroes and ones* machine only requires us to add a print statement to m-configurations `c` and `f` (type 2 conversion). The symbol column only has symbols (instead of a negation or a catch-all); and 3) there's no skeleton tables/m-functions.
 
 ```
 configuration         behaviour
 mconf   symbol   operations   final mconf
-b        none       P0, R         c
-c        none           R         k
-k        none       P1, R         f
-f        none           R         b
+b        none       P0,    R         c
+c        none       Pnone, R         k
+k        none       P1,    R         f
+f        none       Pnone, R         b
 ```
 
-- *incrementing sequences of ones* machine is given as follows:
+- The *incrementing sequences of ones* machine is given as follows:
 
 ```
 configuration                        behaviour
 mconf   symbol              operations              final mconf
 
-b        none    Pe, R, Pe, R, P0, R, R, P0, L, L        o
+b        none    Pə, R, Pə, R, P0, R, R, P0, L, L        o
 
 o         1      R, Px, L, L, L                          o
 o         0                                              q
@@ -2897,6 +2897,8 @@ p        none    L, L                                    p
 f        any     R, R                                    f
 f        none    P0, L, L                                o
 ```
+
+Let's list all the characters that this machine prints: ` 01əx`, that is: blank, zero, one, schwa and `x`. The blank is printed when `E` is specified.
 
 There's no need to perform type 3 conversion since there are no m-functions in this machine.
 
@@ -2927,9 +2929,10 @@ f        any     R, R                                    f
 f        none    P0, L, L                                o
 ```
 
+N
 
 
-- The UTM is given as follows:
+- The *universal machine* is given as follows:
 
 ```
 f (𝕮, 𝕭, α)           ə        L        f1 (𝕮, 𝕭, α)
