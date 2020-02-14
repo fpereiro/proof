@@ -2865,6 +2865,8 @@ This analysis of the machine is perhaps related to computability itself, because
 
 **Putting machines in strict configurations:**
 
+Note: in all these expansions, we will assume that all three machines are correct Turing convention machines.
+
 - The *zeroes and ones* machine only requires us to add a print statement to m-configurations `c` and `f` (type 2 expansion). The symbol column only has symbols (instead of a negation or a catch-all); and 3) there's no skeleton tables/m-functions.
 
 ```
@@ -2898,7 +2900,7 @@ f        any     R, R                                    f
 f        none    P0, L, L                                o
 ```
 
-Let's list all the characters that this machine prints: ` 01əx`, that is: blank, zero, one, schwa and `x`. The blank is printed when `E` is specified.
+Let's list all the characters that this machine prints: ` 01əx`, that is: blank (none), zero, one, schwa and `x`. The blank is printed when `E` is specified.
 
 There's no need to perform type 3 expansion since there are no m-functions in this machine.
 
@@ -2931,13 +2933,18 @@ o3        none   Pnone, L                                o
 o3        x      Px,    L                                o
 ```
 
-Interestingly, just by knowing whether we are on a F-square or an E-square we can reduce the number of possible scanned symbols, and thus also the number of symbols to be printed (if there's a "no print" command). We can also derive another rule, which is that schwas don't get printed over, so if there's an order to print that square with something that is not a schwa, then we can assume there will be no schwa in that square to begin with!
-Step by step:
+- We need to expand `R, Px, L, L, L` to strict form:
+   - We start by changing the combination of `o` & `1` to printing 1 (in effect, leaving the same character in place) and then `R`. Then we call `o1`, a new m-configuration.
+   - `o1` will only scan E-squares, so it can either see a blank/none, a `x` or a schwa (those are the only symbols of the second kind). But because schwas are not overwritten, and also because this configuration goes right from a character that is not a schwa, the only possible scanned characters are either blank or `x`. We create two branches for each of them. In each of them, we add a no-op print (a print that prints whatever was scanned) and move `L`. We then go into `o2`, a new configuration.
+   - `o2` will only scan F-squares, so it could see either a `0`, a `1` or a blank. However, the last invocation of `o` could only have seen a `0` or `1`, so there's no need to set up a case for blank. So we create a branch for `0` and another one for `1`, with no-op prints and then moving to the left. We then go into `o3`, a new configuration.
+   - `o3` will only scan E-squares. It could scan a blank, a schwa or an `x`. But because after moving left it calls `o`, and `o` only sees `0` and `1`, it cannot be a schwa (schwas would have to be even further left). So that reduces it to either a blank or an `x`. We create a branch for each with a no-op print, move left and call `o`.
 
+- `q` is much easier:
 
 ```
 q        0, 1    R, R                                    q
 q        none    P1, L                                   p
+```
 
 p         x      E, R                                    q
 p         e      R                                       f
