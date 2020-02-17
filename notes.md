@@ -2910,15 +2910,15 @@ There's no need to perform type 3 expansion since there are no m-functions in th
 configuration                        behaviour
 mconf   symbol              operations              final mconf
 
-b        none               Pe,    R                     b1
-b1       none               Pe,    R                     b2
+b        none               Pə,    R                     b1
+b1       none               Pə,    R                     b2
 b2       none               P0,    R                     b3
 b3       none               Pnone, R                     b4
 b4       none               P0,    L                     b5
 b5       none               Pnone, L                     o
 ```
 
-The type 2 expansion of `b` doesn't have to exhaust all possibilities, since we know that this configuration is only called at the beginning on a blank tape - it becomes only slightly less trivial to figure out what to print when the machine backtracks, but a simple straightforward representation of what happens at the beginning should do.
+The type 2 expansion of `b` doesn't have to exhaust all possibilities, since we know that this configuration is only called at the beginning on a blank tape - it becomes only slightly less trivial to figure out what to print when the machine backtracks, but a simple straightforward representation of what happens at the beginning is sufficient. Namely, when it backtracks the first time, we know that there's a blank on that square.
 
 - Type 2 expansion of `o`:
 
@@ -2939,20 +2939,49 @@ o3        x      Px,    L                                o
    - `o2` will only scan F-squares, so it could see either a `0`, a `1` or a blank. However, the last invocation of `o` could only have seen a `0` or `1`, so there's no need to set up a case for blank. So we create a branch for `0` and another one for `1`, with no-op prints and then moving to the left. We then go into `o3`, a new configuration.
    - `o3` will only scan E-squares. It could scan a blank, a schwa or an `x`. But because after moving left it calls `o`, and `o` only sees `0` and `1`, it cannot be a schwa (schwas would have to be even further left). So that reduces it to either a blank or an `x`. We create a branch for each with a no-op print, move left and call `o`.
 
-- `q` is much easier:
+- Type 2 expansion of `q`:
 
 ```
-q        0, 1    R, R                                    q
-q        none    P1, L                                   p
+q        0       P0, R                                    q1
+q        1       P1, R                                    q1
+q        none    P1, L                                    p
+q1       none    Pnone, R                                 p
+q1       x       Px, R                                    p
 ```
 
-p         x      E, R                                    q
-p         e      R                                       f
-p        none    L, L                                    p
+- We create lines for each of the cases of `0` and `1` (this would be actually a sort of type 1 expansion, but we do it here). We print whatever character is there (either 0 or 1) and move right to an E-square. We define `q1`, a new configuration, as the next one.
+- The branch for `none` is left as is, since there's nothing to expand.
+- `q1` has one branch for blank and one for `x` - since we're moving right from a square containing a 0 or 1, we don't consider it possible to see a schwa here. We print whatever character is already there and move to `p`.
 
+- Type 2 expansion of `p`:
+
+```
+p         x      Pnone, R                                q
+p         ə      Pə,    R                                f
+p         none   Pnone, L                                p1
+p1        0      P0,    L                                p
+p1        1      P1,    L                                p
+p1        none   Pnone, L                                p
+p1        ə      Pə,    L                                p
+```
+
+- We replace `E` with `Pnone` on the first line. We also add a print schwa command.
+- For the case of `none`, we reprint that character and go to a new m-configuration `p1`.
+- `p1` can be called on any F-square, including a schwa, since we're going left. We create four branches for it, all of them leading back to `p`.
+
+- Type 2 expansion of `f`:
+
+```
 f        any     R, R                                    f
 f        none    P0, L, L                                o
 ```
+
+- Because `f` is only called from `p` from F-square and itself with 2x, ...
+
+
+
+
+
 
 
 - The *universal machine* is given as follows:
