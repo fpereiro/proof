@@ -2848,8 +2848,10 @@ Let's recap the types of expansions we need to make:
 If this process were to be systematized/automated (and those two operations should be the same one to the extent that all the systematized operations can be done by a machine), it would make sense to do it in this order:
 
 - Type 3 expansion first, to get a list of m-configurations.
+- Type 1 expansion, which will likely create more branches on existing m-configurations.
 - Type 2 expansion afterwards, which will likely create further m-configurations.
-- Type 1 expansion finally, which will likely create more branches on existing m-configurations.
+
+Type 1 expansion is required before type 2 because if there's the need to print the character that's already there, we need to define exactly which one it is, so we cannot allow an `any` or `not X` symbol placeholder, but an actual symbol.
 
 **Requirements for each expansion type:**
 
@@ -2863,11 +2865,13 @@ So, if it is possible to perform a brute force expansion of type 1 & 2, as long 
 
 This analysis of the machine is perhaps related to computability itself, because in essence it consists in proving that a machine will behave on a certain way without going through all of the execution steps (which are infinite). In other words, it is the finding of repeatable patterns in an infinite sequence.
 
-**Putting machines in strict configurations:**
+#### Putting machines in strict configurations
 
 Note: in all these expansions, we will assume that all three machines are correct Turing convention machines.
 
-- The *zeroes and ones* machine only requires us to add a print statement to m-configurations `c` and `f` (type 2 expansion). The symbol column only has symbols (instead of a negation or a catch-all); and 3) there's no skeleton tables/m-functions.
+##### Zeroes and ones
+
+The *zeroes and ones* machine only requires us to add a print statement to m-configurations `c` and `f` (type 2 expansion). The symbol column only has symbols (instead of a negation or a catch-all); and 3) there's no skeleton tables/m-functions.
 
 ```
 configuration         behaviour
@@ -2878,7 +2882,9 @@ k        none       P1,    R         f
 f        none       Pnone, R         b
 ```
 
-- The *incrementing sequences of ones* machine is given as follows:
+##### Incrementing sequences of ones
+
+The *incrementing sequences of ones* machine is given as follows:
 
 ```
 configuration                        behaviour
@@ -2904,7 +2910,7 @@ Let's list all the characters that this machine prints: ` 01əx`, that is: blank
 
 There's no need to perform type 3 expansion since there are no m-functions in this machine.
 
-- Type 2 expansion of `b`:
+Type 2 expansion of `b`:
 
 ```
 configuration                        behaviour
@@ -2920,7 +2926,7 @@ b5       none               Pnone, L                     o
 
 The type 2 expansion of `b` doesn't have to exhaust all possibilities, since we know that this configuration is only called at the beginning on a blank tape - it becomes only slightly less trivial to figure out what to print when the machine backtracks, but a simple straightforward representation of what happens at the beginning is sufficient. Namely, when it backtracks the first time, we know that there's a blank on that square.
 
-- Type 2 expansion of `o`:
+Type 2 expansion of `o`:
 
 ```
 o         0      P0,    N                                q
@@ -2933,13 +2939,13 @@ o3        none   Pnone, L                                o
 o3        x      Px,    L                                o
 ```
 
-- We need to expand `R, Px, L, L, L` to strict form:
-   - We start by changing the combination of `o` & `1` to printing 1 (in effect, leaving the same character in place) and then `R`. Then we call `o1`, a new m-configuration.
-   - `o1` will only scan E-squares, so it can either see a blank/none, a `x` or a schwa (those are the only symbols of the second kind). But because schwas are not overwritten, and also because this configuration goes right from a character that is not a schwa, the only possible scanned characters are either blank or `x`. We create two branches for each of them. In each of them, we add a no-op print (a print that prints whatever was scanned) and move `L`. We then go into `o2`, a new configuration.
-   - `o2` will only scan F-squares, so it could see either a `0`, a `1` or a blank. However, the last invocation of `o` could only have seen a `0` or `1`, so there's no need to set up a case for blank. So we create a branch for `0` and another one for `1`, with no-op prints and then moving to the left. We then go into `o3`, a new configuration.
-   - `o3` will only scan E-squares. It could scan a blank, a schwa or an `x`. But because after moving left it calls `o`, and `o` only sees `0` and `1`, it cannot be a schwa (schwas would have to be even further left). So that reduces it to either a blank or an `x`. We create a branch for each with a no-op print, move left and call `o`.
+We need to expand `R, Px, L, L, L` to strict form:
+- We start by changing the combination of `o` & `1` to printing 1 (in effect, leaving the same character in place) and then `R`. Then we call `o1`, a new m-configuration.
+- `o1` will only scan E-squares, so it can either see a blank/none, a `x` or a schwa (those are the only symbols of the second kind). But because schwas are not overwritten, and also because this configuration goes right from a character that is not a schwa, the only possible scanned characters are either blank or `x`. We create two branches for each of them. In each of them, we add a no-op print (a print that prints whatever was scanned) and move `L`. We then go into `o2`, a new configuration.
+- `o2` will only scan F-squares, so it could see either a `0`, a `1` or a blank. However, the last invocation of `o` could only have seen a `0` or `1`, so there's no need to set up a case for blank. So we create a branch for `0` and another one for `1`, with no-op prints and then moving to the left. We then go into `o3`, a new configuration.
+- `o3` will only scan E-squares. It could scan a blank, a schwa or an `x`. But because after moving left it calls `o`, and `o` only sees `0` and `1`, it cannot be a schwa (schwas would have to be even further left). So that reduces it to either a blank or an `x`. We create a branch for each with a no-op print, move left and call `o`.
 
-- Type 2 expansion of `q`:
+Type 1 & 2 expansion of `q`:
 
 ```
 q        0       P0, R                                    q1
@@ -2949,11 +2955,11 @@ q1       none    Pnone, R                                 p
 q1       x       Px, R                                    p
 ```
 
-- We create lines for each of the cases of `0` and `1` (this would be actually a sort of type 1 expansion, but we do it here). We print whatever character is there (either 0 or 1) and move right to an E-square. We define `q1`, a new configuration, as the next one.
+- We create lines for each of the cases of `0` and `1` (type 1 expansion). We print whatever character is there (either 0 or 1) and move right to an E-square. We define `q1`, a new configuration, as the next one.
 - The branch for `none` is left as is, since there's nothing to expand.
 - `q1` has one branch for blank and one for `x` - since we're moving right from a square containing a 0 or 1, we don't consider it possible to see a schwa here. We print whatever character is already there and move to `p`.
 
-- Type 2 expansion of `p`:
+Type 2 expansion of `p`:
 
 ```
 p         x      Pnone, R                                q
@@ -2969,22 +2975,31 @@ p1        ə      Pə,    L                                p
 - For the case of `none`, we reprint that character and go to a new m-configuration `p1`.
 - `p1` can be called on any F-square, including a schwa, since we're going left. We create four branches for it, all of them leading back to `p`.
 
-- Type 2 expansion of `f`:
+Type 2 expansion of `f`:
 
 ```
-f        any     R, R                                    f
-f        none    P0, L, L                                o
+f        0       P0,    R                                f1
+f        1       P1,    R                                f1
+f        none    P0,    L                                f2
+f1       x       Px,    R                                f
+f1       none    Pnone, R                                f
+f2       x       Px,    L                                o
+f2       none    Pnone, L                                o
+f2       ə       Pə,    L                                o
 ```
 
-- Because `f` is only called from `p` from F-square and itself with 2x, ...
+- Because `f` goes right in twos until finding a blank on which it then prints `0`, it must be only called on F-squares (otherwise a `0` would be printed on an E-square!). Hence, we expand `any` into a branch for `0` and another one for `1`.
+- `f1` is called on an E-square that doesn't contain a schwa (because we're going right from squares with numbers). We expand it.
+- When `f` sees `none`, we need to expand the second movement; this takes place on an E-square that could have any value, so we create three branches for it.
+
+Expanded machine:
 
 
 
 
+##### Universal machine
 
-
-
-- The *universal machine* is given as follows:
+The *universal machine* is given as follows:
 
 ```
 f (𝕮, 𝕭, α)           ə        L        f1 (𝕮, 𝕭, α)
@@ -3138,25 +3153,22 @@ ov                                                                   e (anf)
 
 
 
+#### Encoding machines so that they can be executed by the Universal Machine
 
-
-
-
-
-- To set up the UTM to run/interpret a machine M:
+To set up the UTM to run/interpret a machine M:
    - Put two schwas.
    - For each of the configurations of M, encode them, prepend them with a semicolon, and write them on F-squares.
    - Put a double colon afterwards, on an F-square, to mark the end of the encoded M configurations.
 
-- What the UTM does when interpreting the machine:
-   - Writes complete configurations of M and, sometimes, 0s or 1s; each of them is prepended by a colon.
+What the UTM does when interpreting the machine: writes complete configurations of M and, sometimes, 0s or 1s; each of them is prepended by a colon.
 
-- How to encode the configuration of a machine?
+How to encode the configuration of a machine?
    1. **Configuration number**: Each configuration has a number (the number in which it is presented; this, interestingly enough, means that while you can change the order of the configurations without altering the machine's logic, the references between configurations also have to be updated), starting with 1. Encode it by writing a `D`, followed by a number of `A`s that is equivalent to the configuration's number.
    2. **Scanned symbol number**: each case of the configuration corresponds to a symbol. This symbol needs to be mapped to a number (also interestingly enough: a particular symbol can be replaced by other, as long as the entire machine is updated to reflect this; the only symbols that cannot be substituted by others are 0 and 1, because those are the ones expected to be outputted). Encode it by writing a `D`, followed by a number of `C`s. Symbols start at 0.
    3. **Printed symbol number**: each of the symbols is overwritten (if necessary with the same symbol). This symbol is encoded using the same mapping as that of the **scanned symbol numbers from #2: `D` followed by a number of `C`s.
    4. **Direction of the movement**: `L` (move one left), `R` (move one right) or `N` (no move).
    5. **Next configuration number**: This configuration is encoded in the same way as the **configuration number** in #1: `D` followed a number of `A`s.
 
-- Symbols printed by the UTM: `:ACD01uvwxyz`. Note that `LRN` (the movement letters) are not included, nor the semicolons that separate the machine instructions, nor the double colon for separating the instructions from the complete configurations, nor the schwas. The UTM already receives a tape where the instructions are already printed.
+Symbols printed by the UTM: ` :ACD01uvwxyz`. Note that `LRN` (the movement letters) are not included, nor the semicolons that separate the machine instructions, nor the double colon for separating the instructions from the complete configurations, nor the schwas. The UTM already receives a tape where the instructions are already printed.
 
+The UTM cannot interpret only itself, but it could well interpret itself interpreting another machine.
