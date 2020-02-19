@@ -2994,8 +2994,49 @@ f2       ə       Pə,    L                                o
 
 Expanded machine:
 
+```
+configuration              behaviour
+mconf   symbol    operations        final mconf
 
+b        none    Pə,    R           b1
+b1       none    Pə,    R           b2
+b2       none    P0,    R           b3
+b3       none    Pnone, R           b4
+b4       none    P0,    L           b5
+b5       none    Pnone, L           o
 
+o         0      P0,    N           q
+o         1      P1,    R           o1
+o1        none   Px,    L           o2
+o1        x      Px,    L           o2
+o2        0      P0,    L           o3
+o2        1      P1,    L           o3
+o3        none   Pnone, L           o
+o3        x      Px,    L           o
+
+q         0      P0, R              q1
+q         1      P1, R              q1
+q         none   P1, L              p
+q1        none   Pnone, R           p
+q1        x      Px, R              p
+
+p         x      Pnone, R           q
+p         ə      Pə,    R           f
+p         none   Pnone, L           p1
+p1        0      P0,    L           p
+p1        1      P1,    L           p
+p1        none   Pnone, L           p
+p1        ə      Pə,    L           p
+
+f         0      P0,    R           f1
+f         1      P1,    R           f1
+f         none   P0,    L           f2
+f1        x      Px,    R           f
+f1        none   Pnone, R           f
+f2        x      Px,    L           o
+f2        none   Pnone, L           o
+f2        ə      Pə,    L           o
+```
 
 ##### Universal machine
 
