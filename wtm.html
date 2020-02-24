@@ -498,8 +498,8 @@
                none: ['P1', 'L', 'p'],
             },
             q1: {
-               none: ['P ', 'R', 'p'],
-               x:    ['Px', 'R', 'p']
+               none: ['P ', 'R', 'q'],
+               x:    ['Px', 'R', 'q']
             },
             p: {
                x:    ['P ', 'R', 'q'],
@@ -570,7 +570,7 @@
                   var machine = Data.machines [State.machine];
                   var cconfig = machine [State.config];
                   var ctape   = teishi.c (State.tape [State.position]);
-                  if (ctape === undefined) ctape = 'none';
+                  if (ctape === undefined || ctape === ' ') ctape = 'none';
                   var match = cconfig [ctape];
                   if (! match) match = cconfig ['else'];
                   if (! match) {

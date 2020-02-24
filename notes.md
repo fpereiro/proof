@@ -2951,13 +2951,13 @@ Type 1 & 2 expansion of `q`:
 q        0       P0, R                                    q1
 q        1       P1, R                                    q1
 q        none    P1, L                                    p
-q1       none    Pnone, R                                 p
-q1       x       Px, R                                    p
+q1       none    Pnone, R                                 q
+q1       x       Px, R                                    q
 ```
 
 - We create lines for each of the cases of `0` and `1` (type 1 expansion). We print whatever character is there (either 0 or 1) and move right to an E-square. We define `q1`, a new configuration, as the next one.
 - The branch for `none` is left as is, since there's nothing to expand.
-- `q1` has one branch for blank and one for `x` - since we're moving right from a square containing a 0 or 1, we don't consider it possible to see a schwa here. We print whatever character is already there and move to `p`.
+- `q1` has one branch for blank and one for `x` - since we're moving right from a square containing a 0 or 1, we don't consider it possible to see a schwa here. We print whatever character is already there and go back to `q`.
 
 Type 2 expansion of `p`:
 
