@@ -3222,3 +3222,32 @@ c        none       Pnone, R         k
 k        none       P1,    R         f
 f        none       Pnone, R         b
 ```
+
+The blank is symbol 0, the 0 is symbol 1, the 1 is symbol 2; there's no further symbols printed, so that's it. We have four configurations.
+
+Encoding it in place:
+
+```
+DA       D       DC,    R         DAA
+DAA      D       D,     R         DAAA
+DAAA     D       DCC,   R         DAAAA
+DAAAA    D       D,     R         DA
+```
+
+Placed continuously per line, and separated by semicolons:
+
+```
+DADDCRDAA; DAADDRDAAA; DAAADDCCRDAAAA; DAAAADDRDA
+```
+
+This matches exactly the standard description example provided by Turing. However, since Petzold reminds us that the encoded machine should have each instruction prepended by a semicolon (instead of appended), we switch it.
+
+```
+; DADDCRDAA; DAADDRDAAA; DAAADDCCRDAAAA; DAAAADDRDA
+```
+
+We put the schwas at the beginning and put the encoded machine in F-squares. We put a double colon afterwards to mark the end. This is the first machine, fully encoded:
+
+```
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ::
+```
