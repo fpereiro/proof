@@ -29,7 +29,7 @@
          // *** MACHINES ***
 
          B.do ('set', ['Data', 'machines', 'Zeroes and Ones'], {
-            begin: {
+            b: {
                none: ['P0', 'R', 'c'],
             },
             c: {
@@ -39,12 +39,12 @@
                none: ['P1', 'R', 'f'],
             },
             f: {
-               none: ['R', 'begin'],
+               none: ['R', 'b'],
             },
          });
 
          B.do ('set', ['Data', 'machines', '1/4'], {
-            begin: {
+            b: {
                none: ['P0', 'R', 'c'],
             },
             c: {
@@ -62,15 +62,15 @@
          });
 
          B.do ('set', ['Data', 'machines', '1/4, condensed'], {
-            begin: {
-               none: ['P0', 'begin'],
-               0:    ['R', 'R', 'P1', 'begin'],
-               1:    ['R', 'R', 'P0', 'begin'],
+            b: {
+               none: ['P0', 'b'],
+               0:    ['R', 'R', 'P1', 'b'],
+               1:    ['R', 'R', 'P0', 'b'],
             },
          });
 
          B.do ('set', ['Data', 'machines', '001011011101111011111...'], {
-            begin: {
+            b: {
                none: ['Pə', 'R', 'Pə', 'R', 'P0', 'R', 'R', 'P0', 'L', 'L', 'o'],
             },
             o: {
@@ -95,7 +95,7 @@
          });
 
          B.do ('set', ['Data', 'machines', 'Square root of 2'], {
-            begin: {
+            b: {
                none: ['Pə', 'R', 'P1', 'new']
             },
             new:   {
@@ -233,7 +233,7 @@
                '1':  ['R', 'E', 'R', 'print-digit (A)'],
                none: ['PA', 'R', 'R', 'R', 'cleanup'],
             },
-            begin: {
+            b: {
                none: ['Pə', 'R', 'P1', 'goto-sentinel (mark-digits)']
             },
             'mark-digits': {
@@ -328,21 +328,7 @@
          });
 
          B.do ('set', ['Data', 'machines', 'Universal Turing Machine'], {
-            begin: {
-               else: ['Pə', 'R', 'Pə', 'R', 'test'],
-            },
-            test: {
-               else: ['dummy1'],
-            },
-            dummy1: {
-               else: ['dummy1'],
-            },
-            dummy2: {
-               else: ['dummy2'],
-            },
-            dummy3: {
-               else: ['dummy3'],
-            },
+            // *** HELPER FUNCTIONS ***
             'mfun: f (𝕮, 𝕭, α)': {
                ə:    ['L', 'f1 (𝕮, 𝕭, α)'],
                else: ['L', 'f (𝕮, 𝕭, α)'],
@@ -460,22 +446,37 @@
                none: ['𝕮'],
                else: ['R', 'E', 'R', 'e1 (𝕮)'],
             },
+            // *** FUNCTIONS ***
+            b: {
+               else: (function () {
+                  var ops = [];
+                  dale.do ('əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥'.split (''), function (v) {
+                     ops.push ('P' + v);
+                     ops.push ('R');
+                  });
+                  ops.push ('f (b1, b1, ፥)');
+                  return ops;
+               }) (),
+            },
+            b1: {
+               else: ['R', 'R', 'P:', 'R', 'R', 'PD', 'R', 'R', 'PA', 'anf']
+            },
          });
 
          B.do ('set', ['Data', 'machines', 'Zeroes and ones - strict form'], {
-            begin: {none: ['P0', 'R', 'c']},
-            c:     {none: ['P ', 'R', 'k']},
-            k:     {none: ['P1', 'R', 'f']},
-            f:     {none: ['P ', 'R', 'begin']},
+            b: {none: ['P0', 'R', 'c']},
+            c: {none: ['P ', 'R', 'k']},
+            k: {none: ['P1', 'R', 'f']},
+            f: {none: ['P ', 'R', 'b']},
          });
 
          B.do ('set', ['Data', 'machines', '001011011101111011111... - strict form'], {
-            begin: {none: ['Pə', 'R', 'b1']},
-            b1:    {none: ['Pə', 'R', 'b2']},
-            b2:    {none: ['P0', 'R', 'b3']},
-            b3:    {none: ['P ', 'R', 'b4']},
-            b4:    {none: ['P0', 'L', 'b5']},
-            b5:    {none: ['P ', 'L', 'o']},
+            b:  {none: ['Pə', 'R', 'b1']},
+            b1: {none: ['Pə', 'R', 'b2']},
+            b2: {none: ['P0', 'R', 'b3']},
+            b3: {none: ['P ', 'R', 'b4']},
+            b4: {none: ['P0', 'L', 'b5']},
+            b5: {none: ['P ', 'L', 'o']},
             o: {
                0: ['P0', 'q'],
                1: ['P1', 'R', 'o1']
@@ -560,7 +561,7 @@
                ['change', ['State', 'machine'], function (x) {
                   if (! B.get ('State', 'machine')) return;
                   State.tape     = [];
-                  State.config   = 'begin';
+                  State.config   = 'b';
                   State.position = 1;
                   State.counter  = 1;
                   State.history  = [];

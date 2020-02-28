@@ -3251,3 +3251,9 @@ We put the schwas at the beginning and put the encoded machine in F-squares. We 
 ```
 əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ::
 ```
+
+There's no double colon symbol in unicode, so let's use the Ethiopic Colon: `፥`.
+
+```
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥
+```
