@@ -461,6 +461,17 @@
             b1: {
                else: ['R', 'R', 'P:', 'R', 'R', 'PD', 'R', 'R', 'PA', 'anf']
             },
+            anf: {
+               else: ['g (anf1, :)'],
+            },
+            anf1: {
+               else: ['con (kom, y)'],
+            },
+            kom: {
+               ';':  ['R', 'Pz', 'L', 'con (lrm, x)'],
+               z:    ['L', 'L', 'kom'],
+               else: ['L', 'kom'],
+            }
          });
 
          B.do ('set', ['Data', 'machines', 'Zeroes and ones - strict form'], {
