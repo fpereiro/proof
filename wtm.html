@@ -471,6 +471,76 @@
                ';':  ['R', 'Pz', 'L', 'con (lrm, x)'],
                z:    ['L', 'L', 'kom'],
                else: ['L', 'kom'],
+            },
+            kmp: {
+               else: ['cpe (e (e (anf, x), y), sim, x, y)'],
+            },
+            sim: {
+               else: ['f\' (sim1, sim1, z)'],
+            },
+            sim1: {
+               // Note: blank is the second argument to `con`!
+               else: ['con (sim2,  )']
+            },
+            sim2: {
+               A:    ['sim3'],
+               else: ['R', 'Pu', 'R', 'R', 'R', 'sim2'],
+            },
+            sim3: {
+               A:    ['L', 'Py', 'R', 'R', 'R', 'sim3'],
+               else: ['L', 'Py', 'e (mk, z)'],
+            },
+            mk: {
+               else: ['g (mk1, :)'],
+            },
+            mk1: {
+               A: ['L', 'L', 'L', 'L', 'mk2'],
+               else: ['R', 'R', 'mk1'],
+            },
+            mk2: {
+               C: ['R', 'Px', 'L', 'L', 'L', 'mk2'],
+               D: ['R', 'Px', 'L', 'L', 'L', 'mk3'],
+               ':': ['mk4'],
+            },
+            mk4: {
+               else: ['con (l (l (mk5)), )'],
+            },
+            mk5: {
+               none: ['P:', 'sh'],
+               else: ['R', 'Pw', 'R', 'mk5'],
+            },
+            sh: {
+               else: ['f (sh1, inst, u)'],
+            },
+            sh1: {
+               else: ['L', 'L', 'L', 'sh2'],
+            },
+            sh2: {
+               D: ['R', 'R', 'R', 'R', 'sh3'],
+               else: ['inst']
+            },
+            sh3: {
+               C: ['R', 'R', 'sh4'],
+               else: ['inst'],
+            },
+            sh4: {
+               C: ['R', 'R', 'sh5'],
+               else: ['pe2 (inst, 0, :)'],
+            },
+            sh5: {
+               C: ['inst'],
+               else: ['pe2 (inst, 1, :)'],
+            },
+            inst: {
+               else: ['g (l (inst1), u)'],
+            },
+            inst1: {
+               L: ['R', 'E', 'ce5 (ov, v, y, x, u, w)'],
+               R: ['R', 'E', 'ce5 (ov, v, x, u, y, w)'],
+               N: ['R', 'E', 'ce5 (ov, v, x, y, u, w)'],
+            },
+            ov: {
+               else: ['e (anf)'],
             }
          });
 
