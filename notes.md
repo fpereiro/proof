@@ -2475,7 +2475,7 @@ p152-153
 
 - PE: "The explanatory paragraphs in the skeleton table for con are a bit confusing because Turing uses the letter C to stand for a whole sequence of symbols defining a configuration, and the same letter is part of the Standard Description. The first sentence of the second paragraph (beginning "In the final configuration") indicates that the head is left four squares to the right of the last square of the configuration (that is, the last square of the scanned character). The sentence "C is left unmarked" meaning "The configuration is left unmarked" applies only when the second argument to con is blank."
 
-- PE: "The description of the Universal Machine occupies just two pagse in Turing's paper. Turing has previously defined his m-functions with such skill that in many cases, the m-configurations of U simply refer to a particular function. As usual, the machine begins with m-configuration b."
+- PE: "The description of the Universal Machine occupies just two pages in Turing's paper. Turing has previously defined his m-functions with such skill that in many cases, the m-configurations of U simply refer to a particular function. As usual, the machine begins with m-configuration b."
 
 - TU: "The table for U:"
 
@@ -2489,7 +2489,7 @@ b1   R, R, P:, R, R, PD, R, R, PA   anf
 
 `əə; D A D D C R D A A ; D A A D D C C R D A :: : D A...`
 
-- PE: "The next m-configuration of U is anf, which Donald Davies suggets stands for *anfang*, the German word for *beginning*. The g function in the first line was mistakenly indicated as q in the tables of functions. It searches for the last occurrence of its second argument:
+- PE: "The next m-configuration of U is anf, which Donald Davies suggests stands for *anfang*, the German word for *beginning*. The g function in the first line was mistakenly indicated as q in the tables of functions. It searches for the last occurrence of its second argument:
 
 p154
 
@@ -2716,6 +2716,7 @@ con  (𝕮, α)              Not A        R, R                           con  (�
 
 con1 (𝕮, α)              A            R, Pα, R                       con1 (𝕮, α)
                          D            R, Pα, R                       con2 (𝕮, α)
+                         none         PD, R, Pα, R, R, R             𝕮
 
 con2 (𝕮, α)              C            R, Pα, R                       con2 (𝕮, α)
                          Not C        R, R                           𝕮
@@ -3124,6 +3125,7 @@ con  (𝕮, α)              Not A        R, R                           con  (�
 
 con1 (𝕮, α)              A            R, Pα, R                       con1 (𝕮, α)
                          D            R, Pα, R                       con2 (𝕮, α)
+                         none         PD, R, Pα, R, R, R             𝕮
 
 con2 (𝕮, α)              C            R, Pα, R                       con2 (𝕮, α)
                          Not C        R, R                           𝕮
