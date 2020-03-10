@@ -2506,7 +2506,7 @@ anf1                 con (kom, y)
 -PE: "Whenever con is marking an m-configuration in a complete configuration and comes to a blank square when it is expecting to find a D that represents the scanned symbol, con1 prints a D. This is how the tape gets progressively longer as more squares are required. Now the machine must locate the instruction whose configuration matches the symbols in the complete configurations marked with y. There are multiple instructions, of course, but they are easy to locate because each one is preceded by a semicolon. These instructions are tested starting with the last instruction and working towards the beginning. The m-configuration kom (...), possibly one of several abbreviations meant to suggest the word *compare*"
 
 ```
-      ;            R, Pz, L   con (lrm, x)
+      ;            R, Pz, L   con (kmp, x)
 kom   z            L, L       kom
       not z nor ;  L          kom
 ```
@@ -2554,7 +2554,7 @@ sim2   A                        sim3
 sim3   not A   L, Py            e (mk, z)
        A       L, Py, R, R, R   sim3
 
-// sim. The machine marks out the isntructions. That part of the instructions which refers to the operations to be carried out is marked with u, and the final m-configuration with y. The letters z are erased.
+// sim. The machine marks out the instructions. That part of the instructions which refers to the operations to be carried out is marked with u, and the final m-configuration with y. The letters z are erased.
 ```
 
 - PE: "The m-configuration sim1 refers to the con function with a blank second argument. This essentially skips past the m-configuration and the scanned symbol, putting the head at the second character of the print operation."
@@ -2727,7 +2727,7 @@ b1                                    R, R, P:, R, R, PD, R, R, PA   anf
 anf                                                                  g (anf1, :)
 anf1                                                                 con (kom, y)
 
-                         ;            R, Pz, L                       con (lrm, x)
+                         ;            R, Pz, L                       con (kmp, x)
 kom                      z            L, L                           kom
                          not z nor ;  L                              kom
 
@@ -3136,7 +3136,7 @@ b1                                    R, R, P:, R, R, PD, R, R, PA   anf
 anf                                                                  g (anf1, :)
 anf1                                                                 con (kom, y)
 
-                         ;            R, Pz, L                       con (lrm, x)
+                         ;            R, Pz, L                       con (kmp, x)
 kom                      z            L, L                           kom
                          not z nor ;  L                              kom
 
@@ -3259,3 +3259,6 @@ There's no double colon symbol in unicode, so let's use the Ethiopic Colon inste
 ```
 əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥
 ```
+
+- b: Print `: D A`, since we start with the first configuration.
+- anf: Mark the configuration in the last complete configuration with y
