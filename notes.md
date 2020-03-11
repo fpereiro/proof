@@ -3261,4 +3261,4 @@ There's no double colon symbol in unicode, so let's use the Ethiopic Colon inste
 ```
 
 - b: Print `: D A`, since we start with the first configuration.
-- anf: Mark the configuration in the last complete configuration with y
+- anf: find the last :. Mark the configuration in the last complete configuration with y
