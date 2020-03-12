@@ -3260,5 +3260,11 @@ There's no double colon symbol in unicode, so let's use the Ethiopic Colon inste
 əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥
 ```
 
+
+What should the machine do?
+- Find the last complete configuration
+- See what configuration it is in and what character it is scanning
+- Find the configuration it is in in the instructions and inside there, the branch for that character, then jump to that instruction
+
 - b: Print `: D A`, since we start with the first configuration.
 - anf: find the last :. Mark the configuration in the last complete configuration with y
