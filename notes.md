@@ -387,7 +387,7 @@ p93
 
 - PE: "Actually, in a still more modified form, it will become *essential*. Turing is already gearing up for a major presentation. He will unveil a Universal Computing Machine - today commonly termed the Universal Turing Machine or UTM - that is a functional (if not exactly commercial) equivalent of a modern computer."
 
-- PE: "Try to notice what's *good* about this final format. The entire history of the operation of a machine has been arranged into a single stream of characters (...). Also notice that Turing has slipped the next m-configuration *in front of* the next scanned character. These two items in combination were defined by Turing as a *configuration*, and this pair of items occurs in the complete configuration in the same order as they occur in the first two columns of a machine table. You can take that m-configuration and symbol pair and scan through the *m-config* and *symbol* columns of a machine table looking for a match. (...) Turing will actually automate this searhcing process when construction his Universal Machine."
+- PE: "Try to notice what's *good* about this final format. The entire history of the operation of a machine has been arranged into a single stream of characters (...). Also notice that Turing has slipped the next m-configuration *in front of* the next scanned character. These two items in combination were defined by Turing as a *configuration*, and this pair of items occurs in the complete configuration in the same order as they occur in the first two columns of a machine table. You can take that m-configuration and symbol pair and scan through the *m-config* and *symbol* columns of a machine table looking for a match. (...) Turing will actually automate this searching process when construction his Universal Machine."
 
 - "The convention of writing the figures only on alternate squares is very useful. I shall always make use of it. I shall call the one sequence of alternate squares F-squares and the other sequence E-squares. The symbols on E-squares will be liable to erasure. The symbols on F-squares form a continuous sequence. There are no blanks until the end is reached."
 
@@ -2821,7 +2821,7 @@ inst:   əə; D A D D C R D A A ; D A A D D C C R D A :: : D A D : 0 : D C D A A
    - *machine*: set of m-configurations.
    - *configuration*: current m-configuration + scanned symbol.
    - *automatic machines*: those that rely on the configuration exclusively to guide their next action, without external human choice. All the machines in this proof are automatic.
-   - *complete configuration*: current m-configuration + scanned symbol + contents of the entire tape.
+   - *complete configuration*: tape with next m-configuration *before* the scanned symbol
    - *symbols of the first kind*: 0s and 1s.
    - *symbols of the second kind*: symbols other than 0s and 1s.
    - *circular machines*: those that get stuck and don't continue printing 0s and 1s. These are the bad ones.
@@ -3260,10 +3260,15 @@ There's no double colon symbol in unicode, so let's use the Ethiopic Colon inste
 əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥
 ```
 
+Note: if both m-configurations and symbols started at 0, `D` could represent either a m-configuration or a symbol (the blank). By starting with m-configurations at 1 (`DA`), the encoding is unambiguous.
+
+Start by printing `D A D`, which is the first m-configuration (`DA`) marking the first square, which is a blank (`D`).
+
+Does each line of a m-configuration represent an instruction? I think so.
 
 What should the machine do?
 - Find the last complete configuration
-- See what configuration it is in and what character it is scanning
+- See what's the next m-configuration and what character it is scanning
 - Find the configuration it is in in the instructions and inside there, the branch for that character, then jump to that instruction
 
 - b: Print `: D A`, since we start with the first configuration.
