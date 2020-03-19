@@ -2451,14 +2451,16 @@ p152
 - TU: "Subsidiary skeleton table."
 
 ```
-con  (𝕮, α)     Not A    R, R         con  (𝕮, α)
-                A        L, Pα, R     con1 (𝕮, α)
+con  (𝕮, α)     not A    R, R                  con  (𝕮, α)
+                A        L, Pα, R              con1 (𝕮, α)
 
-con1 (𝕮, α)     A        R, Pα, R     con1 (𝕮, α)
-                D        R, Pα, R     con2 (𝕮, α)
+con1 (𝕮, α)     A        R, Pα, R              con1 (𝕮, α)
+                D        R, Pα, R              con2 (𝕮, α)
+                // This line added by Petzold
+                none     PD, R, Pα, R, R, R    𝕮
 
-con2 (𝕮, α)     C        R, Pα, R     con2 (𝕮, α)
-                Not C    R, R         𝕮
+con2 (𝕮, α)     C        R, Pα, R              con2 (𝕮, α)
+                not C    R, R                  𝕮
 
 // con (𝕮, α). Starting from an F-square, S say, the sequence C of symbols describing a configuration closest on the right of S is marked out with letters α. -> 𝕮
 // con (𝕮). In the final configuration the machine is scanning the square which is four squares to the right of the last square of C. C is left unmarked.
@@ -2474,6 +2476,20 @@ p152-153
 `əə; D A D D C R D A A ; DαAαAαDαD C C R D A ::`
 
 - PE: "The explanatory paragraphs in the skeleton table for con are a bit confusing because Turing uses the letter C to stand for a whole sequence of symbols defining a configuration, and the same letter is part of the Standard Description. The first sentence of the second paragraph (beginning "In the final configuration") indicates that the head is left four squares to the right of the last square of the configuration (that is, the last square of the scanned character). The sentence "C is left unmarked" meaning "The configuration is left unmarked" applies only when the second argument to con is blank."
+
+Summary of `con`:
+- Go right in twos until finding an A.
+- When finding an
+con  (𝕮, α)     Not A    R, R         con  (𝕮, α)
+                A        L, Pα, R     con1 (𝕮, α)
+
+con1 (𝕮, α)     A        R, Pα, R     con1 (𝕮, α)
+                D        R, Pα, R     con2 (𝕮, α)
+                // This line added by Petzold
+                none     PD, R, Pα, R, R, R,   𝕮
+
+con2 (𝕮, α)     C        R, Pα, R     con2 (𝕮, α)
+                Not C    R, R         𝕮
 
 - PE: "The description of the Universal Machine occupies just two pages in Turing's paper. Turing has previously defined his m-functions with such skill that in many cases, the m-configurations of U simply refer to a particular function. As usual, the machine begins with m-configuration b."
 
@@ -3261,6 +3277,14 @@ There's no double colon symbol in unicode, so let's use the Ethiopic Colon inste
 ```
 
 Note: if both m-configurations and symbols started at 0, `D` could represent either a m-configuration or a symbol (the blank). By starting with m-configurations at 1 (`DA`), the encoding is unambiguous.
+
+- `b`: put the encoded instructions of the interpreted machine on the tape and go back to the beginning of the tape, -> `f (b1, b1, ፥)`.
+- `f`: find the leftmost double colon (the only one) and -> `b1`.
+- `b1`: print `: D A` and -> `anf`.
+- `anf`: -> `g (anf1, :)`
+- `g`: find the rightmost colon (so far the only one) and -> `anf1`.
+- `anf1`: `con (kom, y)`.
+
 
 Start by printing `D A D`, which is the first m-configuration (`DA`) marking the first square, which is a blank (`D`).
 
