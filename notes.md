@@ -3278,13 +3278,21 @@ There's no double colon symbol in unicode, so let's use the Ethiopic Colon inste
 
 Note: if both m-configurations and symbols started at 0, `D` could represent either a m-configuration or a symbol (the blank). By starting with m-configurations at 1 (`DA`), the encoding is unambiguous.
 
+### Interpreting the first machine (zeroes and ones) with the UTM:
+
+**First round**:
+
 - `b`: put the encoded instructions of the interpreted machine on the tape and go back to the beginning of the tape, -> `f (b1, b1, ፥)`.
 - `f`: find the leftmost double colon (the only one) and -> `b1`.
 - `b1`: print `: D A` and -> `anf`.
 - `anf`: -> `g (anf1, :)`
 - `g`: find the rightmost colon (so far the only one) and -> `anf1`.
-- `anf1`: `con (kom, y)`.
-
+- `anf1`: -> `con (kom, y)`.
+- `con`: go right in twos (F-squares) until finding an `A`, then go one left to the `A` and mark it with 2arg (in this case, `y`), go back right to the `A` and -> `con1`.
+- `con1`: the scanned square is an `A`, go one right, print 2arg (`y`) to its right, then go one more to the right. The square is blank! The line added by Petzold to `con1` is the one to be executed: we print `D`, then `y` to its right and advance three squares, then -> `kom`.
+- `kom`: we go one left until we find either a semicolon or a `Z`. This will send us back to the semicolon preceding the last instruction. We move one to the right, we print a `z`, we move back left to the square to the semicolon and -> `con (kmp, x)`.
+- `con`: go right in twos until finding an `A`, go one left and mark it with an `x`, go back right to the `A` and -> `con1`.
+- `con1`: starting at the first `A` of the instruction, go one to the right, print an `x` and go one more to the right to find yet another `A`. Keep repeating this for all `A`s seen until either a `D` or a blank is seen. In this case, we'll encounter a `D`. By this point, the semicolon preceding the instruction will be marked with a `z` and the first `D`, plus all the following `A`s will be marked each by an `x`.
 
 Start by printing `D A D`, which is the first m-configuration (`DA`) marking the first square, which is a blank (`D`).
 
