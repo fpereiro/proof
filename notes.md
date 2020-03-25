@@ -3282,26 +3282,83 @@ Note: if both m-configurations and symbols started at 0, `D` could represent eit
 
 **First round**:
 
-- `b`: put the encoded instructions of the interpreted machine on the tape and go back to the beginning of the tape, -> `f (b1, b1, ፥)`.
-- `f`: find the leftmost double colon (the only one) and -> `b1`.
-- `b1`: print `: D A` and -> `anf`.
-- `anf`: -> `g (anf1, :)`
-- `g`: find the rightmost colon (so far the only one) and -> `anf1`.
-- `anf1`: -> `con (kom, y)`.
-- `con`: go right in twos (F-squares) until finding an `A`, then go one left to the `A` and mark it with 2arg (in this case, `y`), go back right to the `A` and -> `con1`.
-- `con1`: the scanned square is an `A`, go one right, print 2arg (`y`) to its right, then go one more to the right. The square is blank! The line added by Petzold to `con1` is the one to be executed: we print `D`, then `y` to its right and advance three squares, then -> `kom`.
-- `kom`: we go one left until we find either a semicolon or a `Z`. This will send us back to the semicolon preceding the last instruction. We move one to the right, we print a `z`, we move back left to the square to the semicolon and -> `con (kmp, x)`.
-- `con`: go right in twos until finding an `A`, go one left and mark it with an `x`, go back right to the `A` and -> `con1`.
-- `con1`: starting at the first `A` of the instruction, go one to the right, print an `x` and go one more to the right to find yet another `A`. Keep repeating this for all `A`s seen until either a `D` or a blank is seen. In this case, we'll encounter a `D`. By this point, the semicolon preceding the instruction will be marked with a `z` and the first `D`, plus all the following `A`s will be marked each by an `x`.
+1. `b`: put the encoded instructions of the interpreted machine on the tape and go back to the beginning of the tape, -> `f (b1, b1, ፥)`.
 
-Start by printing `D A D`, which is the first m-configuration (`DA`) marking the first square, which is a blank (`D`).
+```
+x
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥
+```
+
+2. `f`: find the leftmost double colon (the only one) and -> `b1`.
+
+```
+                                                                                                x
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥
+```
+
+3. `b1`: print `: D A` and -> `anf`.
+
+```
+                                                                                                      x
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥ : D A
+```
+
+4. `anf`: -> `g (anf1, :)`
+
+```
+                                                                                                      x
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥ : D A
+```
+
+5. `g`: find the rightmost colon (so far the only one) and -> `anf1`.
+
+```
+                                                                                                  x
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥ : D A
+```
+
+6. `anf1`: -> `con (kom, y)`.
+
+```
+                                                                                                  x
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥ : D A
+```
+
+7. `con`: go right in twos (F-squares) until finding an `A`, then go one left, mark it with 2arg (in this case, `y`), go back right to the `A` and -> `con1`.
+
+```
+                                                                                                      x
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥ : DyA
+```
+8. `con1`: the scanned square is an `A`, go one right, print 2arg (`y`) to its right, then go one more to the right. The square is blank! The line added by Petzold to `con1` is the one to be executed: we print `D`, then `y` to its right and advance three squares, then -> `kom`.
+
+```
+                                                                                                            x
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥ : DyAyDy
+```
+
+9. `kom`: we go one left until we find either a semicolon or a `Z`. This will send us back to the semicolon preceding the last instruction. We move one to the right, we print a `z`, we move back left to the square to the semicolon and -> `con (kmp, x)`.
+
+```
+                                                                          x
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ;zD A A A A D D R D A ፥ : DyAyDy
+```
+
+10. `con`: go right in twos until finding an `A`, go one left and mark it with an `x`, go back right to the `A` and -> `con1`.
+
+```
+                                                                              x
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ;zDxA A A A D D R D A ፥ : DyAyDy
+```
+
+11. `con1`: starting at the first `A` of the instruction, go one to the right, print an `x` and go one more to the right to find yet another `A`. Keep repeating this for all `A`s seen until either a `D` or a blank is seen. In this case, we'll encounter a `D`. By this point, the semicolon preceding the instruction will be marked with a `z` and the first `D`, plus all the following `A`s will be marked each by an `x`.
 
 Does each line of a m-configuration represent an instruction? I think so.
+
+
+
 
 What should the machine do?
 - Find the last complete configuration
 - See what's the next m-configuration and what character it is scanning
 - Find the configuration it is in in the instructions and inside there, the branch for that character, then jump to that instruction
-
-- b: Print `: D A`, since we start with the first configuration.
-- anf: find the last :. Mark the configuration in the last complete configuration with y
