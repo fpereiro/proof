@@ -2478,18 +2478,15 @@ p152-153
 - PE: "The explanatory paragraphs in the skeleton table for con are a bit confusing because Turing uses the letter C to stand for a whole sequence of symbols defining a configuration, and the same letter is part of the Standard Description. The first sentence of the second paragraph (beginning "In the final configuration") indicates that the head is left four squares to the right of the last square of the configuration (that is, the last square of the scanned character). The sentence "C is left unmarked" meaning "The configuration is left unmarked" applies only when the second argument to con is blank."
 
 Summary of `con`:
-- Go right in twos until finding an A.
-- When finding an
-con  (𝕮, α)     Not A    R, R         con  (𝕮, α)
-                A        L, Pα, R     con1 (𝕮, α)
+- Go right in twos until finding an `A`, print 1arg to its left and go two to the right.
+- If there's a blank, print `Dα`, go three to the right after the 1arg just printed and -> 1arg.
+- If there's another `A`, print 1arg to its right and go one more to the right. Repeat until no more `A`s are found.
+- If there's a `D`, print 1arg to its right and go one more to the right. Keep on doing this until there're no more `D`s.
+- If there were any `D`s and now they're over:
+   - If there's a `C`, print 1arg to its right and go one more to the right. Repeat until there's no more `C`s.
+   - When finding a character that's not `C`, go two to the right and -> 1arg.
 
-con1 (𝕮, α)     A        R, Pα, R     con1 (𝕮, α)
-                D        R, Pα, R     con2 (𝕮, α)
-                // This line added by Petzold
-                none     PD, R, Pα, R, R, R,   𝕮
-
-con2 (𝕮, α)     C        R, Pα, R     con2 (𝕮, α)
-                Not C    R, R         𝕮
+Summarizing further: what `con` does is to find, within a complete configuration, a sequence of an encoded configuration followed by the scanned square, and marks each of these F-squares with 1arg. When done, it goes to a F-square that's two to the right (four positions) after the last F-square just marked. If, however, the complete configuration is marking no square (because there's a configuration but no symbol afterwards), it initializes the symbol instead, and it still goes to the F-square that's two to the right after the last F-square just initialized.
 
 - PE: "The description of the Universal Machine occupies just two pages in Turing's paper. Turing has previously defined his m-functions with such skill that in many cases, the m-configurations of U simply refer to a particular function. As usual, the machine begins with m-configuration b."
 
@@ -3336,6 +3333,8 @@ x
                                                                                                             x
 əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥ : DyAyDy
 ```
+
+At this point, the first complete configuration printed contains `D A` (the first m-configuration) preceding the square square, which contains a blank (`D`).
 
 9. `kom`: we go one left until we find either a semicolon or a `Z`. This will send us back to the semicolon preceding the last instruction. We move one to the right, we print a `z`, we move back left to the square to the semicolon and -> `con (kmp, x)`.
 
