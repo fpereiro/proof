@@ -2486,7 +2486,7 @@ Summary of `con`:
    - If there's a `C`, print 1arg to its right and go one more to the right. Repeat until there's no more `C`s.
    - When finding a character that's not `C`, go two to the right and -> 1arg.
 
-Summarizing further: what `con` does is to find, within a complete configuration, a sequence of an encoded configuration followed by the scanned square, and marks each of these F-squares with 1arg. When done, it goes to a F-square that's two to the right (four positions) after the last F-square just marked. If, however, the complete configuration is marking no square (because there's a configuration but no symbol afterwards), it initializes the symbol instead, and it still goes to the F-square that's two to the right after the last F-square just initialized.
+Summarizing further: what `con` does is to find, within a complete configuration, a sequence of an encoded configuration followed by the scanned square, and marks each of these F-squares with 1arg. When done, it goes to a F-square that's two to the right (four positions) after the last F-square just marked. If, however, the complete configuration is marking no square (because there's a configuration but no symbol afterwards), it initializes the symbol instead (to an empty blank, represented by `D`), and it still goes to the F-square that's two to the right after the last F-square just initialized.
 
 - PE: "The description of the Universal Machine occupies just two pages in Turing's paper. Turing has previously defined his m-functions with such skill that in many cases, the m-configurations of U simply refer to a particular function. As usual, the machine begins with m-configuration b."
 
@@ -3350,12 +3350,28 @@ At this point, the first complete configuration printed contains `D A` (the firs
 əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ;zDxA A A A D D R D A ፥ : DyAyDy
 ```
 
-11. `con1`: starting at the first `A` of the instruction, go one to the right, print an `x` and go one more to the right to find yet another `A`. Keep repeating this for all `A`s seen until either a `D` or a blank is seen. In this case, we'll encounter a `D`. By this point, the semicolon preceding the instruction will be marked with a `z` and the first `D`, plus all the following `A`s will be marked each by an `x`.
+11. `con1`: starting at the first `A` of the instruction, go one to the right, print an `x` and go one more to the right to find yet another `A`. Keep repeating this for all `A`s seen until either a `D` or a blank is seen. In this case, we'll encounter a `D`. By this point, the semicolon preceding the instruction will be marked with a `z` and the first `D`, plus all the following `A`s will be marked each by an `x`. Then, -> `con2 (kmp, x)`.
+
+```
+                                                                                        x
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ;zDxAxAxAxAxDxD R D A ፥ : DyAyDy
+```
+
+12. `con2`: we're scanning a `D`, so `con2` will go two to the right and -> `kmp`.
+
+```
+                                                                                          x
+əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ;zDxAxAxAxAxDxD R D A ፥ : DyAyDy
+```
+
+
+
+
+
+
+
 
 Does each line of a m-configuration represent an instruction? I think so.
-
-
-
 
 What should the machine do?
 - Find the last complete configuration
