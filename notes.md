@@ -2087,8 +2087,34 @@ Interdependencies:
    - cp: 1) if there's a 4arg between the schwas and the first two consecutive blanks, find it, note the character X printed to its left; 1-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it, note the character Y printed to its left; f X and Y are the same, -> 1arg; if X and Y are not the same, -> 2arg; 1-2) if there's no 5arg between the schwas and the first two consecutive blanks, go to the square after the two consecutive blanks and -> 2arg; 2) if there's no 4arg between the schwas and the first two consecutive blanks; 2-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it and -> 2arg; 2-2) if there's no 5arg, go to the square after the two consecutive blanks and -> 3arg.
 
 9. **compare and erase** (2 functions)
-   - 5arg cpe: 1) if there's a 4arg between the schwas and the first two consecutive blanks, find it, note the character X printed to its left; 1-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it, note the character Y printed to its left; f X and Y are the same, delete the leftmost 4arg and 5arg, then go to the position where 4arg was deleted and -> 1arg; if X and Y are not the same, -> 2arg; 1-2) if there's no 5arg between the schwas and the first two consecutive blanks, go to the square after the two consecutive blanks and -> 2arg; 2) if there's no 4arg between the schwas and the first two consecutive blanks; 2-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it and -> 2arg; 2-2) if there's no 5arg, go to the square after the two consecutive blanks and -> 3arg.
-   - 4arg cpe: 1) if there's a 4arg between the schwas and the first two consecutive blanks, find it, note the character X printed to its left; 1-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it, note the character Y printed to its left; f X and Y are the same, delete the leftmost 4arg and 5arg, then repeat until there's no two 4arg and 5arg marking Xs and Ys that are equal, then go to the position where the last 4arg was deleted and -> 1arg; if X and Y are not the same, -> 2arg; 1-2) if there's no 5arg between the schwas and the first two consecutive blanks, go to the square after the two consecutive blanks and -> 2arg; 2) if there's no 4arg between the schwas and the first two consecutive blanks; 2-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it and -> 2arg; 2-2) if there's no 5arg, go to the square after the two consecutive blanks and -> 3arg.
+   - 5arg cpe: 1) if there's a 4arg between the schwas and the first two consecutive blanks, find it, note the character X printed to its left; 1-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it, note the character Y printed to its left; if X and Y are the same, delete the leftmost 4arg and 5arg, then go to the position where 4arg was deleted and -> 1arg; if X and Y are not the same, -> 2arg; 1-2) if there's no 5arg between the schwas and the first two consecutive blanks, go to the square after the two consecutive blanks and -> 2arg; 2) if there's no 4arg between the schwas and the first two consecutive blanks; 2-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it and -> 2arg; 2-2) if there's no 5arg, go to the square after the two consecutive blanks and -> 3arg.
+   - 4arg cpe: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, note the character X printed to its left; 1-1) if there's a 4arg between the schwas and the first two consecutive blanks, find it, note the character Y printed to its left; 1-1-1) if X and Y are the same, delete the leftmost 3arg and 4arg, then go back to the beginning of the function; 1-1-2) if X and Y are not the same, what happens if they're not the same?
+
+    repeat until there's no two 3arg and 4arg marked by Xs and Ys that are equal, then go to the position where the last 4arg was deleted and -> 1arg; if X and Y are not the same, -> 2arg; 1-2) if there's no 5arg between the schwas and the first two consecutive blanks, go to the square after the two consecutive blanks and -> 2arg; 2) if there's no 4arg between the schwas and the first two consecutive blanks; 2-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it and -> 2arg; 2-2) if there's no 5arg, go to the square after the two consecutive blanks and -> 3arg.
+
+4arg cpe:
+   - go to the leftmost schwa.
+   - go right until finding either 3arg or two consecutive blanks.
+   - if it finds 3arg:
+      - move one to the left and taking note of the character X printed on that square:
+      - go to the leftmost schwa.
+      - go right until finding either 4arg or two consecutive blanks.
+      - if it finds 4arg:
+         - move one to the left and taking note of the character Y printed on that square:
+         - if X and Y are the same:
+            - go to the leftmost schwa.
+            - go right until finding 3arg.
+            - delete it.
+            - go to the leftmost schwa.
+            - go right until finding 4arg.
+            - delete it.
+            - go back to the beginning of the function.
+      - if it finds two consecutive blanks, advance one more position and -> 1arg.
+   - if it finds two consecutive blanks:
+      - go to the leftmost schwa.
+      - go right until finding either 4arg or two consecutive blanks.
+      - if it finds 4arg, -> 1arg.
+      - if it finds two consecutive blanks, advance one more position and -> 2arg.
 
 p131
 
@@ -3364,6 +3390,10 @@ At this point, the first complete configuration printed contains `D A` (the firs
 əə; D A D D C R D A A ; D A A D D R D A A A ; D A A A D D C C R D A A A A ;zDxAxAxAxAxDxD R D A ፥ : DyAyDy
 ```
 
+13. `kmp` is but an invocation of the following: `cpe (e (e (anf, x), y), sim, x, y)`. Let's untangle this:
+
+- This is a call to 4arg `cpe`, with the arguments being `e (e (anf, x), y)`, `sim`, `x` and `y`.
+- Let's recall what 4arg `cpe` does: 1) if there's a 4arg between the schwas and the first two consecutive blanks, find it, note the character X printed to its left; 1-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it, note the character Y printed to its left; f X and Y are the same, delete the leftmost 4arg and 5arg, then repeat until there's no two 4arg and 5arg marking Xs and Ys that are equal, then go to the position where the last 4arg was deleted and -> 1arg; if X and Y are not the same, -> 2arg; 1-2) if there's no 5arg between the schwas and the first two consecutive blanks, go to the square after the two consecutive blanks and -> 2arg; 2) if there's no 4arg between the schwas and the first two consecutive blanks; 2-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it and -> 2arg; 2-2) if there's no 5arg, go to the square after the two consecutive blanks and -> 3arg.
 
 
 
