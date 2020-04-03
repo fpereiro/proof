@@ -1428,7 +1428,7 @@ cpe (𝕬, 𝕮, α, β). The sequence of symbols marked α is compared with the
 
 p124
 
-- PE: "Turing has now exhausted his supply of mnemonic function names, for he names the next one simply q, which unfortunately is the same letter he will shortly use to represent m-configurations in general. (...) I believe that Turing meant for this function to be named g rathern than g. Just as the f function finds the first (that is, leftmost) occurrence of a particular symbol, this function finds the last (rightmost) occurrence of a symbol (...) I'll refer to it as g."
+- PE: "Turing has now exhausted his supply of mnemonic function names, for he names the next one simply q, which unfortunately is the same letter he will shortly use to represent m-configurations in general. (...) I believe that Turing meant for this function to be named g rather than q. Just as the f function finds the first (that is, leftmost) occurrence of a particular symbol, this function finds the last (rightmost) occurrence of a symbol (...) I'll refer to it as g."
 
 - PE: "The single-argument version of g moves to the right until it finds two blanks in a row. That is assumed to be the rightmost end of the tape. The two-argument version of g first uses the one-argument g and then moves left looking for the character α."
 
@@ -2088,33 +2088,7 @@ Interdependencies:
 
 9. **compare and erase** (2 functions)
    - 5arg cpe: 1) if there's a 4arg between the schwas and the first two consecutive blanks, find it, note the character X printed to its left; 1-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it, note the character Y printed to its left; if X and Y are the same, delete the leftmost 4arg and 5arg, then go to the position where 4arg was deleted and -> 1arg; if X and Y are not the same, -> 2arg; 1-2) if there's no 5arg between the schwas and the first two consecutive blanks, go to the square after the two consecutive blanks and -> 2arg; 2) if there's no 4arg between the schwas and the first two consecutive blanks; 2-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it and -> 2arg; 2-2) if there's no 5arg, go to the square after the two consecutive blanks and -> 3arg.
-   - 4arg cpe: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, note the character X printed to its left; 1-1) if there's a 4arg between the schwas and the first two consecutive blanks, find it, note the character Y printed to its left; 1-1-1) if X and Y are the same, delete the leftmost 3arg and 4arg, then go back to the beginning of the function; 1-1-2) if X and Y are not the same, what happens if they're not the same?
-
-    repeat until there's no two 3arg and 4arg marked by Xs and Ys that are equal, then go to the position where the last 4arg was deleted and -> 1arg; if X and Y are not the same, -> 2arg; 1-2) if there's no 5arg between the schwas and the first two consecutive blanks, go to the square after the two consecutive blanks and -> 2arg; 2) if there's no 4arg between the schwas and the first two consecutive blanks; 2-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it and -> 2arg; 2-2) if there's no 5arg, go to the square after the two consecutive blanks and -> 3arg.
-
-4arg cpe:
-   - go to the leftmost schwa.
-   - go right until finding either 3arg or two consecutive blanks.
-   - if it finds 3arg:
-      - move one to the left and taking note of the character X printed on that square:
-      - go to the leftmost schwa.
-      - go right until finding either 4arg or two consecutive blanks.
-      - if it finds 4arg:
-         - move one to the left and taking note of the character Y printed on that square:
-         - if X and Y are the same:
-            - go to the leftmost schwa.
-            - go right until finding 3arg.
-            - delete it.
-            - go to the leftmost schwa.
-            - go right until finding 4arg.
-            - delete it.
-            - go back to the beginning of the function.
-      - if it finds two consecutive blanks, advance one more position and -> 1arg.
-   - if it finds two consecutive blanks:
-      - go to the leftmost schwa.
-      - go right until finding either 4arg or two consecutive blanks.
-      - if it finds 4arg, -> 1arg.
-      - if it finds two consecutive blanks, advance one more position and -> 2arg.
+   - 4arg cpe: 1) if there's a 3arg between the schwas and the first two consecutive blanks, find it, note the character X printed to its left; 1-1) if there's a 4arg between the schwas and the first two consecutive blanks, find it, note the character Y printed to its left; 1-1-1) if X and Y are the same, delete the leftmost 3arg and 4arg, then go back to the position where 3arg was deleted and then go back to the beginning of the function; 1-1-2) if X and Y are not the same, -> 1arg; 1-2) if there's no 4arg between the schwas and the first two consecutive blanks, go to the square after the two consecutive blanks and -> 1arg; 2) if there's no 3arg between the schwas and the first two consecutive blanks; 2-1) if there's a 4arg between the schwas and the first two consecutive blanks, find it and -> 1arg; 2-2 if there's no 4arg, go to the square after the two consecutive blanks and -> 2arg.
 
 p131
 
@@ -2565,7 +2539,7 @@ kmp        cpe (e (kom, x, y), sim, x, y)
 
 - PE: "The cpe function erases the markers as it compares the letters marked with those markers. If there's a match, then all the x and y markers have been erased, and we head to sim (meaning *similar*). If the configurations marked x and y do not match (as they won't in our example), then the first argument of cpe takes over, which is an e (erase) function that erases all the remaining x and y markers and eventually retreats to kom to try the next instruction."
 
-- PE: "A little problem with the kmp function is that TUring never defined a version of e that has one m-configuration argument and two symbol arguments. Moreover, he can't go back to kom because some or all of the y markers have been erased by cpe. He really needs to go back to anf to mark the configuration again. Donald Davies suggests that the instruction should really read:
+- PE: "A little problem with the kmp function is that Turing never defined a version of e that has one m-configuration argument and two symbol arguments. Moreover, he can't go back to kom because some or all of the y markers have been erased by cpe. He really needs to go back to anf to mark the configuration again. Donald Davies suggests that the instruction should really read:
 
 ```
 kmp        cpe (e (e (anf, x), y), sim, x, y)
@@ -3392,8 +3366,9 @@ At this point, the first complete configuration printed contains `D A` (the firs
 
 13. `kmp` is but an invocation of the following: `cpe (e (e (anf, x), y), sim, x, y)`. Let's untangle this:
 
-- This is a call to 4arg `cpe`, with the arguments being `e (e (anf, x), y)`, `sim`, `x` and `y`.
-- Let's recall what 4arg `cpe` does: 1) if there's a 4arg between the schwas and the first two consecutive blanks, find it, note the character X printed to its left; 1-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it, note the character Y printed to its left; f X and Y are the same, delete the leftmost 4arg and 5arg, then repeat until there's no two 4arg and 5arg marking Xs and Ys that are equal, then go to the position where the last 4arg was deleted and -> 1arg; if X and Y are not the same, -> 2arg; 1-2) if there's no 5arg between the schwas and the first two consecutive blanks, go to the square after the two consecutive blanks and -> 2arg; 2) if there's no 4arg between the schwas and the first two consecutive blanks; 2-1) if there's a 5arg between the schwas and the first two consecutive blanks, find it and -> 2arg; 2-2) if there's no 5arg, go to the square after the two consecutive blanks and -> 3arg.
+This is a call to 4arg `cpe`, with the arguments being `e (e (anf, x), y)`, `sim`, `x` and `y`. Let's recall what 4arg `cpe` does: it compares all the F-squares marked by `3arg` and `4arg` respectively, and erases piecemeal the 3arg and 4arg marking them, one at a time. If the comparison fails at any point, -> 1arg. If all the 3arg and 4arg mark squares with the same values, then all of the 3arg and 4arg will be deleted and -> 2arg.
+
+So, in short, `kmp` will compare whether all the squares marked with `x` and those marked with `y` are the same. If they are, -> `sim`, otherwise, all the `x` and `y` will get erased and -> `anf`.
 
 
 
