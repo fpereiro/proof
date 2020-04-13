@@ -3368,7 +3368,18 @@ At this point, the first complete configuration printed contains `D A` (the firs
 
 This is a call to 4arg `cpe`, with the arguments being `e (e (anf, x), y)`, `sim`, `x` and `y`. Let's recall what 4arg `cpe` does: it compares all the F-squares marked by `3arg` and `4arg` respectively, and erases piecemeal the 3arg and 4arg marking them, one at a time. If the comparison fails at any point, -> 1arg. If all the 3arg and 4arg mark squares with the same values, then all of the 3arg and 4arg will be deleted and -> 2arg.
 
-So, in short, `kmp` will compare whether all the squares marked with `x` and those marked with `y` are the same. If they are, -> `sim`, otherwise, all the `x` and `y` will get erased and -> `anf`.
+So, in short, `kmp` will compare whether all the squares marked with `x` and those marked with `y` are the same. If they are, -> `sim`, otherwise, all the `x` and `y` will get erased and -> `anf`. The only difference with the first call to `anf` is that this time there will be already a `z` marking the last instruction, which didn't match the latest complete configuration.
+
+Until an instruction matches the F-squares of the last complete configuration, this cycle will be repeated, with the `z`s marking the intsructions already checked.
+
+Note: Positions in the wtm for each complete comparison: 3333, xx, yy, 9888.
+
+When it finally goes to `sim`, the tape looks like this:
+
+```
+                                                                                                           x
+əə;zD A D D C R D A A ;zD A A D D R D A A A ;zD A A A D D C C R D A A A A ;zD A A A A D D R D A ፥ : D A D
+```
 
 
 
