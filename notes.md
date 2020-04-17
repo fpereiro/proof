@@ -3372,7 +3372,7 @@ So, in short, `kmp` will compare whether all the squares marked with `x` and tho
 
 Until an instruction matches the F-squares of the last complete configuration, this cycle will be repeated, with the `z`s marking the intsructions already checked.
 
-Note: Positions in the wtm for each complete comparison: 3333, xx, yy, 9888.
+Note: Positions in the WTM (Web Turing Machine) for each complete comparison and new call to either `anf` (the first three times) and to `sim` (the last time): 3333, 5906, 8053, 9888.
 
 When it finally goes to `sim`, the tape looks like this:
 
@@ -3381,6 +3381,14 @@ When it finally goes to `sim`, the tape looks like this:
 əə;zD A D D C R D A A ;zD A A D D R D A A A ;zD A A A D D C C R D A A A A ;zD A A A A D D R D A ፥ : D A D
 ```
 
+`sim` will invoke `f' (sim1, sim1, z)`. This will find the leftmost `z`, move one to the left and -> `sim1`.
+
+```
+                      x
+əə;zD A D D C R D A A ;zD A A D D R D A A A ;zD A A A D D C C R D A A A A ;zD A A A A D D R D A ፥ : D A D
+```
+
+`sim1` merely invokes `con (sim2, )` (note that a blank is passed as its second argument. `con` will be invoked on an F-square. It will go right until finding either the first blank F-square at the end of the tape or the first `A`. In this case, it will stop on the first `A` of the first instruction, print a blank to its left (which does nothing since that square was already blank), print a blank to its right (which also does nothing)
 
 
 
