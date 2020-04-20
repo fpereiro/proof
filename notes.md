@@ -3384,14 +3384,30 @@ When it finally goes to `sim`, the tape looks like this:
 `sim` will invoke `f' (sim1, sim1, z)`. This will find the leftmost `z`, move one to the left and -> `sim1`.
 
 ```
-                      x
+  x
 əə;zD A D D C R D A A ;zD A A D D R D A A A ;zD A A A D D C C R D A A A A ;zD A A A A D D R D A ፥ : D A D
 ```
 
-`sim1` merely invokes `con (sim2, )` (note that a blank is passed as its second argument. `con` will be invoked on an F-square. It will go right until finding either the first blank F-square at the end of the tape or the first `A`. In this case, it will stop on the first `A` of the first instruction, print a blank to its left (which does nothing since that square was already blank), print a blank to its right (which also does nothing)
+`sim1` invokes `con (sim2, )` (note that a blank is passed as its second argument. `con` will be invoked on an F-square. It will go right until finding either the first blank F-square at the end of the tape or the first `A`. In this case, it will stop on the first `A` of the first instruction, print a blank to its left (which does nothing since that square was already blank), print a blank to its right (which also does nothing), go two to the right, find a `D`, print a blank to its right (which will do nothing since that square is already blank), go to the next F-square (which contains a `D`) and -> `sim2`. `sim2` will go two to the right and -> `sim2`.
 
+```
+            x
+əə;zD A D D C R D A A ;zD A A D D R D A A A ;zD A A A D D C C R D A A A A ;zD A A A A D D R D A ፥ : D A D
+```
 
+`sim2` is being called on a square with a `C`. It will mark the square to its right with an `u`, then go three further to the right.
 
+```
+                x
+əə;zD A D D CuR D A A ;zD A A D D R D A A A ;zD A A A D D C C R D A A A A ;zD A A A A D D R D A ፥ : D A D
+```
+
+`sim2` will call itself and do this again until it finds an `A`. When it does (in this case, after another iteration), it will call `sim3`.
+
+```
+                    x
+əə;zD A D D CuR DuA A ;zD A A D D R D A A A ;zD A A A D D C C R D A A A A ;zD A A A A D D R D A ፥ : D A D
+```
 
 
 
