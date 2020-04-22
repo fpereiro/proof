@@ -3409,6 +3409,22 @@ When it finally goes to `sim`, the tape looks like this:
 əə;zD A D D CuR DuA A ;zD A A D D R D A A A ;zD A A A D D C C R D A A A A ;zD A A A A D D R D A ፥ : D A D
 ```
 
+If `sim3` sees an `A` (as it does right now), it will go one to the left, print a `y`, go three to the right (that is, to the F-square to the right of the `A` seen at the beginning) and call itself.
+
+```
+                      x
+əə;zD A D D CuR DuAyA ;zD A A D D R D A A A ;zD A A A D D C C R D A A A A ;zD A A A A D D R D A ፥ : D A D
+```
+
+If `sim3` doesn't see an `A` (as it does right now), it will go one to the left, print a `y` and -> `e (mk, z)`.
+
+```
+                     x
+əə;zD A D D CuR DuAyAy;zD A A D D R D A A A ;zD A A A D D C C R D A A A A ;zD A A A A D D R D A ፥ : D A D
+```
+
+`sim` and its related configurations marked some of the F-squares of the instruction that matched the last complete configuration - in this case, the first instruction. The `C` (and presumably all `C`s if there are more) is marked with an `u`; then the `D` at the beginning of the sequence of F-squares that represents the next m-configuration is also marked with an `U`. Then the `A`s to the right of that `D` are all marked with `y`. Interestingly enough, the `R` square (indicating a move to the right) is not marked; also the `D` before the `C` is not marked either.
+
 
 
 Does each line of a m-configuration represent an instruction? I think so.
