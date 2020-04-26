@@ -3425,6 +3425,19 @@ If `sim3` doesn't see an `A` (as it does right now), it will go one to the left,
 
 `sim` and its related configurations marked some of the F-squares of the instruction that matched the last complete configuration - in this case, the first instruction. The `C` (and presumably all `C`s if there are more) is marked with an `u`; then the `D` at the beginning of the sequence of F-squares that represents the next m-configuration is also marked with an `U`. Then the `A`s to the right of that `D` are all marked with `y`. Interestingly enough, the `R` square (indicating a move to the right) is not marked; also the `D` before the `C` is not marked either.
 
+To recap: instructions have the following shape: configuration name, symbol in scanned square, symbol to be printed, movement, next configuration name. So, a configuration, two symbols, a movement and another configuration. The instruction that matched the last complete configuration is found and marked. What has been marked so far is:
+- With an `u`: the `C` of the symbol to be printed and the `D` of the next configuration.
+- with an `y`: the `A`s of the next configuration.
+
+`sim3` will clear out all the `z`s from the instructions, go three squares to the right of the the last printed square and -> `mk`.
+
+```
+                                                                                                           x
+əə; D A D D CuR DuAyAy; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥ : D A D
+```
+
+Note: on this example, the WTM switches to `mk` at position 10452.
+
 
 
 Does each line of a m-configuration represent an instruction? I think so.
