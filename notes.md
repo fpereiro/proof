@@ -3438,7 +3438,21 @@ To recap: instructions have the following shape: configuration name, symbol in s
 
 Note: on this example, the WTM switches to `mk` at position 10452.
 
+`mk` will invoke `g (mk1, :)`, which seeks the first colon (going to the left) and -> `mk1`.
 
+```
+                                                                                                  x
+əə; D A D D CuR DuAyAy; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥ : D A D
+```
+
+`mk1` will go right in twos over the F-squares until finding an `A`. When it does, it will go four squares to the left (that is, two F-squares to the left) and -> `mk2`. In this case, this will bring us back to the colon.
+
+```
+                                                                                                  x
+əə; D A D D CuR DuAyAy; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥ : D A D
+```
+
+If `mk2` sees a colon, it will zip straight into `mk4`.
 
 Does each line of a m-configuration represent an instruction? I think so.
 
