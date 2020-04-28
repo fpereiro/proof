@@ -2466,6 +2466,13 @@ con2 (𝕮, α)     C        R, Pα, R              con2 (𝕮, α)
 // con (𝕮). In the final configuration the machine is scanning the square which is four squares to the right of the last square of C. C is left unmarked.
 ```
 
+Let's summarize what `con` and its associated functions do:
+- This function is called on F-squares.
+- It goes right into twos until finding an `A`; it will print `2arg` to its left, `2arg` to its right and go to the F-square to the right of that where the `A` is.
+   - If the next F-square is blank, it will print `D`, then `2arg`, then go three more to the right and -> `1arg` (this is the line suggested by Davies and added by Petzold).
+   - If the next F-square has an `A`, it will mark the square to its right with `2arg` and keep on repeating this until it sees no more `A`s.
+   - If the next F-square has a `D`, it will mark the square to its right also with `2arg`. Then it will start looking for `C`s and also mark them with `2arg`. When it finds a F-square that doesn't contain a `C`, it will go two to the right and -> `1arg`.
+
 - PE: "The m-function con stands for "configuration," and it's missing a line: `con1 (𝕮, α)   None   PD, R, Pα, R, R, R   𝕮`. We'll see how this missing line comes into play shortly. The job of the con function is to mark a configuration with the symbol given as the second argument. Suppose the head is on the semicolon preceding an instruction:"
                        _
 `əə; D A D D C R D A A ; D A A D D C C R D A ::`
@@ -3452,7 +3459,11 @@ Note: on this example, the WTM switches to `mk` at position 10452.
 əə; D A D D CuR DuAyAy; D A A D D R D A A A ; D A A A D D C C R D A A A A ; D A A A A D D R D A ፥ : D A D
 ```
 
-If `mk2` sees a colon, it will zip straight into `mk4`.
+If `mk2` sees a colon, it will zip straight into `mk4`. `mk4` will merely invoke `con (l (l (mk5)),  )`.
+
+
+
+
 
 Does each line of a m-configuration represent an instruction? I think so.
 
